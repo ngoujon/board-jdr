@@ -1,0 +1,12 @@
+{
+  "_comment": "Workflow API ComfyUI - effets sonores 8-bit (Stable Audio Open 1.0 + T5 base). Placeholders: __PROMPT__, __SECONDS__, __SEED__, __PREFIX__",
+  "1": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "stable-audio-open-1.0.safetensors"}},
+  "2": {"class_type": "CLIPLoader", "inputs": {"clip_name": "t5_base.safetensors", "type": "stable_audio"}},
+  "3": {"class_type": "CLIPTextEncode", "inputs": {"clip": ["2", 0], "text": "__PROMPT__"}},
+  "4": {"class_type": "CLIPTextEncode", "inputs": {"clip": ["2", 0], "text": "music, melody, speech, voice, background noise, hiss, long reverb"}},
+  "5": {"class_type": "ConditioningStableAudio", "inputs": {"positive": ["3", 0], "negative": ["4", 0], "seconds_start": 0.0, "seconds_total": "__SECONDS__"}},
+  "6": {"class_type": "EmptyLatentAudio", "inputs": {"seconds": "__SECONDS__", "batch_size": 1}},
+  "7": {"class_type": "KSampler", "inputs": {"model": ["1", 0], "seed": "__SEED__", "steps": 50, "cfg": 7.0, "sampler_name": "dpmpp_3m_sde_gpu", "scheduler": "exponential", "positive": ["5", 0], "negative": ["5", 1], "latent_image": ["6", 0], "denoise": 1.0}},
+  "8": {"class_type": "VAEDecodeAudio", "inputs": {"samples": ["7", 0], "vae": ["1", 2]}},
+  "9": {"class_type": "SaveAudioMP3", "inputs": {"audio": ["8", 0], "filename_prefix": "__PREFIX__", "quality": "V0"}}
+}

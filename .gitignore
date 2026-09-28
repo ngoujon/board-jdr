@@ -1,0 +1,22 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Exports et paquets publiés (régénérés par tools/publish_update.py)
+/build/
+/dist/
+
+# Données locales de tests (comptes, historique des parties)
+/data.json
+/h.db
+/server/updates/
+/server/lobby_data*.json
+/server/history*.db
+data/i18n/_missing.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Réglages locaux de Claude Code
+/.claude/

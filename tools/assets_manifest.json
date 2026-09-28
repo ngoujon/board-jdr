@@ -1,0 +1,1514 @@
+{
+  "style_prefix": "pixel art, 8bit retro game art, medieval fantasy, ",
+  "style_suffix": ", limited color palette, crisp pixels, detailed sprite work",
+  "negative": "blurry, smooth, 3d render, photo, realistic, text, letters, watermark, signature, frame, border, ui, jpeg artifacts",
+  "images": [
+    {
+      "id": "art_ecuyer",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 101,
+      "out": "assets/art/ecuyer.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a young squire with a wooden shield and short sword standing in a castle courtyard"
+    },
+    {
+      "id": "art_archer",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 102,
+      "out": "assets/art/archer.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a female elf archer in green hood drawing a longbow on castle rampart"
+    },
+    {
+      "id": "art_loup",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 103,
+      "out": "assets/art/loup.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a snarling grey wolf leaping in a dark pine forest at night"
+    },
+    {
+      "id": "art_gardien",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 104,
+      "out": "assets/art/gardien.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a stout dwarf guardian with a huge tower shield blocking a stone bridge"
+    },
+    {
+      "id": "art_chevalier",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 105,
+      "out": "assets/art/chevalier.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a wandering knight in silver armor with glowing holy aura, sword raised"
+    },
+    {
+      "id": "art_pretresse",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 106,
+      "out": "assets/art/pretresse.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a priestess in white and gold robes casting healing light at dawn"
+    },
+    {
+      "id": "art_necromancien",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 107,
+      "out": "assets/art/necromancien.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a hooded necromancer with a skull staff and green magic in a graveyard"
+    },
+    {
+      "id": "art_squelette",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 108,
+      "out": "assets/art/squelette.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "an undead skeleton warrior with rusty sword rising from a grave"
+    },
+    {
+      "id": "art_ogre",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 109,
+      "out": "assets/art/ogre.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a huge green hill ogre with a spiked wooden club, rolling hills"
+    },
+    {
+      "id": "art_templier",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 110,
+      "out": "assets/art/templier.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a templar knight in heavy plate armor with red cross tabard and big shield inside a cathedral"
+    },
+    {
+      "id": "art_griffon",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 111,
+      "out": "assets/art/griffon.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a knight riding a flying griffin charging through the clouds"
+    },
+    {
+      "id": "art_golem",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 112,
+      "out": "assets/art/golem.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a massive stone golem with glowing blue runes in ancient ruins"
+    },
+    {
+      "id": "art_dragon",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 113,
+      "out": "assets/art/dragon.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "an ancient red dragon breathing fire above a burning castle"
+    },
+    {
+      "id": "art_eclair",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 114,
+      "out": "assets/art/eclair.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a purple arcane lightning bolt striking from a wizard hand, magic sparks"
+    },
+    {
+      "id": "art_potion",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 1151,
+      "out": "assets/art/potion.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a glowing red healing potion bottle on a cluttered alchemist wooden table with herbs, candles, books and shelves of jars in the background, full detailed background scenery filling the whole image edge to edge, atmospheric lighting, no empty background, no plain backdrop"
+    },
+    {
+      "id": "art_benediction",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 116,
+      "out": "assets/art/benediction.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "golden holy light rays descending from the sky on a kneeling warrior, blessing"
+    },
+    {
+      "id": "art_grimoire",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 5171,
+      "out": "assets/art/grimoire.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "close-up of a large ancient open spellbook in the center, glowing blue runes and magic sparkles rising from its pages, resting on a wooden lectern, wizard library bookshelves and candles blurred behind, full detailed background scenery filling the whole image edge to edge, atmospheric lighting, no empty background, no plain backdrop"
+    },
+    {
+      "id": "art_boule_feu",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 118,
+      "out": "assets/art/boule_feu.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a huge blazing fireball flying through the night sky"
+    },
+    {
+      "id": "art_blizzard",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 119,
+      "out": "assets/art/blizzard.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a raging frost storm with ice shards falling on a frozen battlefield"
+    },
+    {
+      "id": "art_milicien",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 132,
+      "out": "assets/art/milicien.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a peasant militia man holding a pitchfork in front of a thatched village"
+    },
+    {
+      "id": "art_herboriste",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 133,
+      "out": "assets/art/herboriste.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "an old herbalist woman with a basket of glowing green herbs in a forest glade"
+    },
+    {
+      "id": "art_porte_bouclier",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 134,
+      "out": "assets/art/porte_bouclier.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a heavy armored soldier holding a huge tower shield in a stone gatehouse"
+    },
+    {
+      "id": "art_voleur",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 135,
+      "out": "assets/art/voleur.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a hooded rogue with twin daggers lurking in a dark medieval alley at night"
+    },
+    {
+      "id": "art_alchimiste",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 136,
+      "out": "assets/art/alchimiste.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a mad alchemist throwing bubbling green and red potions in a cluttered laboratory"
+    },
+    {
+      "id": "art_barde",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 137,
+      "out": "assets/art/barde.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a cheerful bard playing a lute in a warm tavern"
+    },
+    {
+      "id": "art_paladine",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 1381,
+      "out": "assets/art/paladine.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a female paladin in golden armor with a glowing holy shield and sword, standing in a sunlit cathedral nave with stained glass windows and stone pillars, full detailed background scenery filling the whole image edge to edge, atmospheric lighting, no empty background, no plain backdrop"
+    },
+    {
+      "id": "art_capitaine",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 2411,
+      "out": "assets/art/capitaine.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a proud guard captain in steel armor with red cape raising his sword, on castle walls with soldiers and banners behind him, cloudy sky, full detailed background scenery filling the whole image edge to edge, atmospheric lighting, no empty background, no plain backdrop"
+    },
+    {
+      "id": "art_pyromancienne",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 140,
+      "out": "assets/art/pyromancienne.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a fire sorceress with flaming hands casting fire magic in a volcanic cave"
+    },
+    {
+      "id": "art_troll",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 141,
+      "out": "assets/art/troll.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a huge green swamp troll with a club standing in a misty swamp"
+    },
+    {
+      "id": "art_liche",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 1421,
+      "out": "assets/art/liche.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "an undead lich king with a crown and glowing blue eyes holding a skull staff, inside a dark crypt with stone sarcophagi, candles and blue ghostly mist, full detailed background scenery filling the whole image edge to edge, atmospheric lighting, no empty background, no plain backdrop"
+    },
+    {
+      "id": "art_chevalier_noir",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 1431,
+      "out": "assets/art/chevalier_noir.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a black knight in dark spiked armor charging on a black warhorse across a burning battlefield under a stormy red sky, full detailed background scenery filling the whole image edge to edge, atmospheric lighting, no empty background, no plain backdrop"
+    },
+    {
+      "id": "art_archimage",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 144,
+      "out": "assets/art/archimage.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "an old archmage with long white beard and a glowing staff in a magic library tower"
+    },
+    {
+      "id": "art_hydre",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 145,
+      "out": "assets/art/hydre.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a giant multi headed sea hydra rising from stormy ocean waves"
+    },
+    {
+      "id": "art_tir_precis",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 146,
+      "out": "assets/art/tir_precis.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a single glowing arrow flying toward a red target, dramatic motion"
+    },
+    {
+      "id": "art_cri_ralliement",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 147,
+      "out": "assets/art/cri_ralliement.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a knight blowing a war horn with banners raised on a battlefield at sunrise"
+    },
+    {
+      "id": "art_pluie_fleches",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 242,
+      "out": "assets/art/pluie_fleches.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "volley of many wooden arrows with feathers flying diagonally across the sky toward an enemy army, close view of arrows"
+    },
+    {
+      "id": "art_renforts",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 149,
+      "out": "assets/art/renforts.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a group of young squires with shields marching through a castle gate"
+    },
+    {
+      "id": "art_lumiere",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 150,
+      "out": "assets/art/lumiere.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a beam of holy golden light shining down into a cathedral"
+    },
+    {
+      "id": "art_meteores",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 151,
+      "out": "assets/art/meteores.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "flaming meteors falling from the sky onto a burning medieval battlefield"
+    },
+    {
+      "id": "art_etendard",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 611,
+      "out": "assets/art/etendard.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a tall royal blue war banner with a golden lion emblem waving on a pole on a battlefield hill, glowing aura"
+    },
+    {
+      "id": "art_autel_vie",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 302,
+      "out": "assets/art/autel_vie.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a stone altar with a glowing green healing spring and flowers, magical light, sacred grove"
+    },
+    {
+      "id": "art_forge",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 3031,
+      "out": "assets/art/forge.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a magical dwarven forge with glowing blue runes on an anvil, sparks flying, hammer, inside a stone mountain workshop with lava glow and tools on the walls, full detailed background scenery filling the whole image edge to edge, atmospheric lighting, no empty background, no plain backdrop"
+    },
+    {
+      "id": "art_tour_mage",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 304,
+      "out": "assets/art/tour_mage.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a tall wizard tower with purple lightning crackling at its top on a stormy night"
+    },
+    {
+      "id": "art_cimetiere",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 305,
+      "out": "assets/art/cimetiere.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a cursed graveyard with crooked tombstones, green mist and skeleton hands rising from the ground at night"
+    },
+    {
+      "id": "art_bibliotheque",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 306,
+      "out": "assets/art/bibliotheque.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "an ancient magical library with floating glowing books and tall bookshelves, candles"
+    },
+    {
+      "id": "art_dissipation",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 811,
+      "out": "assets/art/dissipation.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a wizard hand casting a spell that shatters a glowing purple magic rune circle into many flying crystal shards and sparks, dispel magic effect, magical energy burst, dark stone dungeon hall with pillars and torches, full detailed background scenery filling the whole image edge to edge, atmospheric lighting, no empty background, no plain backdrop"
+    },
+    {
+      "id": "art_purification",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 308,
+      "out": "assets/art/purification.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a radiant pillar of white holy light burning away dark purple magic runes"
+    },
+    {
+      "id": "art_sapeur",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 309,
+      "out": "assets/art/sapeur.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a dwarf sapper with a pickaxe and a lit bomb digging under a stone castle wall"
+    },
+    {
+      "id": "art_catapulte",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 612,
+      "out": "assets/art/catapulte.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a large wooden siege catapult machine on grass, side view, launching a flaming rock, castle walls in background"
+    },
+    {
+      "id": "art_briseur_sorts",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 311,
+      "out": "assets/art/briseur_sorts.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a grim armored warrior smashing a glowing magic crystal with a huge hammer, arcane shards flying"
+    },
+    {
+      "id": "art_porte_etendard",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 741,
+      "out": "assets/art/porte_etendard.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a proud medieval standard bearer soldier raising a red and gold banner on a grassy battlefield with army tents and castle in the background, full scene, detailed environment"
+    },
+    {
+      "id": "art_guerisseuse",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 702,
+      "out": "assets/art/guerisseuse.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a gentle temple healer priestess in white robes with glowing green healing light in her hands"
+    },
+    {
+      "id": "art_gardien_cryptes",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 703,
+      "out": "assets/art/gardien_cryptes.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a hulking undead crypt guardian in rusted armor holding a lantern at the gate of a dark crypt"
+    },
+    {
+      "id": "art_tourmenteur",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 742,
+      "out": "assets/art/tourmenteur.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a small grinning red imp demon with a trident standing in a fiery hellish cave with lava and flames, full scene, detailed environment"
+    },
+    {
+      "id": "art_goule",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 705,
+      "out": "assets/art/goule.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a starving pale ghoul crawling out of an open grave at night, glowing eyes"
+    },
+    {
+      "id": "art_fossoyeur",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 706,
+      "out": "assets/art/fossoyeur.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "an old gravedigger with a shovel and a lantern digging a grave, holding a glowing spell scroll"
+    },
+    {
+      "id": "art_resurrection",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 707,
+      "out": "assets/art/resurrection.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a fallen knight rising from the ground surrounded by a column of golden holy light"
+    },
+    {
+      "id": "art_pacte_tombes",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 743,
+      "out": "assets/art/pacte_tombes.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a dark ritual in a misty graveyard at night, glowing green contract scroll floating above tombstones, soul wisps, full scene, detailed environment"
+    },
+    {
+      "id": "art_tri_archives",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 709,
+      "out": "assets/art/tri_archives.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a cluttered archive room with old scrolls flying into a fireplace, a scribe sorting papers"
+    },
+    {
+      "id": "art_sabotage",
+      "workflow": "pixel_art_image",
+      "w": 1152,
+      "h": 896,
+      "seed": 710,
+      "out": "assets/art/sabotage.png",
+      "size": [
+        144,
+        112
+      ],
+      "prompt": "a hooded saboteur cutting the ropes of a war machine at night, sparks and broken gears"
+    },
+    {
+      "id": "hero_joueur",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 201,
+      "out": "assets/art/hero_joueur.png",
+      "size": [
+        128,
+        128
+      ],
+      "prompt": "portrait bust of a noble paladin king with golden armor and crown, blue cape, heroic, facing viewer"
+    },
+    {
+      "id": "hero_ia",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 202,
+      "out": "assets/art/hero_ia.png",
+      "size": [
+        128,
+        128
+      ],
+      "prompt": "portrait bust of a sinister dark sorcerer lord with horned helmet and glowing red eyes, purple cape, facing viewer"
+    },
+    {
+      "id": "bg_menu",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 301,
+      "out": "assets/bg/menu.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "epic landscape of a fantasy castle on a cliff at sunset, mountains, river, dramatic sky, wide view"
+    },
+    {
+      "id": "bg_board",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 302,
+      "out": "assets/bg/board.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "top-down view of a large wooden tavern table with a dark green felt play mat, candles and scattered coins on the edges, empty center, game board"
+    },
+    {
+      "id": "bg_gallery",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 303,
+      "out": "assets/bg/gallery.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "interior of a cozy wizard library with tall bookshelves, candles and a fireplace, warm light"
+    },
+    {
+      "id": "ui_card_back",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 401,
+      "out": "assets/ui/card_back.png",
+      "size": [
+        96,
+        128
+      ],
+      "prompt": "back of a trading card, symmetrical ornate blue and gold pattern with a dragon emblem in the center, flat design"
+    },
+    {
+      "id": "ui_parchment",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 402,
+      "out": "assets/ui/parchment.png",
+      "size": [
+        128,
+        128
+      ],
+      "prompt": "seamless texture of old beige parchment paper, flat, uniform, no objects"
+    },
+    {
+      "id": "ui_stone",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 403,
+      "out": "assets/ui/stone.png",
+      "size": [
+        128,
+        128
+      ],
+      "prompt": "seamless texture of dark grey castle stone bricks wall, flat, uniform"
+    },
+    {
+      "id": "ui_wood",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 404,
+      "out": "assets/ui/wood.png",
+      "size": [
+        128,
+        128
+      ],
+      "prompt": "seamless texture of dark brown wooden planks, flat, uniform"
+    },
+    {
+      "id": "icon_energy",
+      "workflow": "pixel_art_sprite_nobg",
+      "w": 1024,
+      "h": 1024,
+      "seed": 501,
+      "out": "assets/ui/icon_energy.png",
+      "size": [
+        32,
+        32
+      ],
+      "prompt": "single glowing blue mana crystal gem icon, centered, isolated on plain white background, game item icon"
+    },
+    {
+      "id": "icon_attack",
+      "workflow": "pixel_art_sprite_nobg",
+      "w": 1024,
+      "h": 1024,
+      "seed": 502,
+      "out": "assets/ui/icon_attack.png",
+      "size": [
+        32,
+        32
+      ],
+      "prompt": "single steel sword with golden hilt diagonal icon, centered, isolated on plain white background, game item icon"
+    },
+    {
+      "id": "icon_health",
+      "workflow": "pixel_art_sprite_nobg",
+      "w": 1024,
+      "h": 1024,
+      "seed": 503,
+      "out": "assets/ui/icon_health.png",
+      "size": [
+        32,
+        32
+      ],
+      "prompt": "single red heart icon, centered, isolated on plain white background, game item icon"
+    },
+    {
+      "id": "icon_shield",
+      "workflow": "pixel_art_sprite_nobg",
+      "w": 1024,
+      "h": 1024,
+      "seed": 504,
+      "out": "assets/ui/icon_shield.png",
+      "size": [
+        32,
+        32
+      ],
+      "prompt": "single round iron shield with golden rim icon, centered, isolated on plain white background, game item icon"
+    },
+    {
+      "id": "icon_skull",
+      "workflow": "pixel_art_sprite_nobg",
+      "w": 1024,
+      "h": 1024,
+      "seed": 505,
+      "out": "assets/ui/icon_skull.png",
+      "size": [
+        32,
+        32
+      ],
+      "prompt": "single white skull icon, centered, isolated on plain white background, game item icon"
+    }
+  ],
+  "music": [
+    {
+      "id": "music_menu",
+      "seconds": 90,
+      "bpm": 96,
+      "key": "D minor",
+      "seed": 11,
+      "out": "assets/audio/music/menu.mp3",
+      "tags": "8-bit chiptune, medieval fantasy, NES style, calm mysterious tavern theme, square wave lute-like melody, triangle bass, soft noise percussion, instrumental, loopable retro video game music"
+    },
+    {
+      "id": "music_battle",
+      "seconds": 120,
+      "bpm": 140,
+      "key": "A minor",
+      "seed": 12,
+      "out": "assets/audio/music/battle.mp3",
+      "tags": "8-bit chiptune, epic medieval battle theme, NES style, fast energetic square wave lead, driving triangle bass, punchy noise drums, heroic, instrumental, loopable retro video game music"
+    },
+    {
+      "id": "music_victory",
+      "seconds": 12,
+      "bpm": 120,
+      "key": "C major",
+      "seed": 13,
+      "out": "assets/audio/music/victory.mp3",
+      "tags": "8-bit chiptune victory fanfare, triumphant, NES style, bright square wave trumpet melody, short jingle, instrumental"
+    },
+    {
+      "id": "music_defeat",
+      "seconds": 10,
+      "bpm": 70,
+      "key": "C minor",
+      "seed": 14,
+      "out": "assets/audio/music/defeat.mp3",
+      "tags": "8-bit chiptune game over jingle, sad slow descending melody, NES style, square wave, short, instrumental"
+    }
+  ],
+  "sfx": [
+    {
+      "id": "sfx_click",
+      "seconds": 1.0,
+      "seed": 21,
+      "out": "assets/audio/sfx/click.mp3",
+      "prompt": "8-bit retro video game menu button click blip, very short, chiptune"
+    },
+    {
+      "id": "sfx_card_draw",
+      "seconds": 1.0,
+      "seed": 22,
+      "out": "assets/audio/sfx/card_draw.mp3",
+      "prompt": "paper card sliding swoosh, quick card draw sound, short, retro game"
+    },
+    {
+      "id": "sfx_card_play",
+      "seconds": 1.5,
+      "seed": 23,
+      "out": "assets/audio/sfx/card_play.mp3",
+      "prompt": "card slapped down on a wooden table, thump, short, retro game"
+    },
+    {
+      "id": "sfx_attack",
+      "seconds": 1.5,
+      "seed": 24,
+      "out": "assets/audio/sfx/attack.mp3",
+      "prompt": "8-bit retro video game sword slash hit impact, short, chiptune"
+    },
+    {
+      "id": "sfx_fire",
+      "seconds": 2.5,
+      "seed": 25,
+      "out": "assets/audio/sfx/fire.mp3",
+      "prompt": "8-bit retro video game fireball explosion whoosh and boom, chiptune"
+    },
+    {
+      "id": "sfx_frost",
+      "seconds": 2.5,
+      "seed": 26,
+      "out": "assets/audio/sfx/frost.mp3",
+      "prompt": "icy magic spell, crystals shattering, freezing wind, retro game sound effect"
+    },
+    {
+      "id": "sfx_lightning",
+      "seconds": 2.0,
+      "seed": 27,
+      "out": "assets/audio/sfx/lightning.mp3",
+      "prompt": "8-bit retro video game electric zap lightning spell, crackle, chiptune"
+    },
+    {
+      "id": "sfx_heal",
+      "seconds": 2.0,
+      "seed": 28,
+      "out": "assets/audio/sfx/heal.mp3",
+      "prompt": "8-bit retro video game healing spell, rising sparkling chime arpeggio, chiptune"
+    },
+    {
+      "id": "sfx_buff",
+      "seconds": 2.0,
+      "seed": 29,
+      "out": "assets/audio/sfx/buff.mp3",
+      "prompt": "8-bit retro video game power up sound, ascending magical shimmer, chiptune"
+    },
+    {
+      "id": "sfx_summon",
+      "seconds": 2.0,
+      "seed": 30,
+      "out": "assets/audio/sfx/summon.mp3",
+      "prompt": "dark magic summoning portal whoosh, eerie low rumble, retro game sound effect"
+    },
+    {
+      "id": "sfx_death",
+      "seconds": 1.5,
+      "seed": 31,
+      "out": "assets/audio/sfx/death.mp3",
+      "prompt": "8-bit retro video game enemy defeated sound, descending crunch, chiptune"
+    },
+    {
+      "id": "sfx_shield",
+      "seconds": 1.5,
+      "seed": 32,
+      "out": "assets/audio/sfx/shield.mp3",
+      "prompt": "glass magic shield shatter, crystal break, short, retro game sound effect"
+    },
+    {
+      "id": "sfx_end_turn",
+      "seconds": 1.5,
+      "seed": 33,
+      "out": "assets/audio/sfx/end_turn.mp3",
+      "prompt": "medieval brass bell ding, single chime, short"
+    },
+    {
+      "id": "sfx_hero_hit",
+      "seconds": 1.5,
+      "seed": 34,
+      "out": "assets/audio/sfx/hero_hit.mp3",
+      "prompt": "heavy punch impact on metal armor, grunt thud, retro game sound effect, short"
+    },
+    {
+      "id": "avatar_9",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 501,
+      "out": "assets/avatars/avatar_9.png",
+      "size": [
+        96,
+        96
+      ],
+      "prompt": "portrait bust of a female paladin with golden hair and shining gold armor, centered, facing viewer, plain dark background, character avatar icon"
+    },
+    {
+      "id": "avatar_10",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 502,
+      "out": "assets/avatars/avatar_10.png",
+      "size": [
+        96,
+        96
+      ],
+      "prompt": "portrait bust of a hooded necromancer with pale skin and glowing green eyes, centered, facing viewer, plain dark background, character avatar icon"
+    },
+    {
+      "id": "avatar_11",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 503,
+      "out": "assets/avatars/avatar_11.png",
+      "size": [
+        96,
+        96
+      ],
+      "prompt": "portrait bust of an old archmage with a starry purple hat and long silver beard, centered, facing viewer, plain dark background, character avatar icon"
+    },
+    {
+      "id": "avatar_12",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 504,
+      "out": "assets/avatars/avatar_12.png",
+      "size": [
+        96,
+        96
+      ],
+      "prompt": "portrait bust of a black knight with a dark horned helmet and red glowing visor, centered, facing viewer, plain dark background, character avatar icon"
+    },
+    {
+      "id": "avatar_13",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 505,
+      "out": "assets/avatars/avatar_13.png",
+      "size": [
+        96,
+        96
+      ],
+      "prompt": "portrait bust of a dragon rider with a red dragon scale armor and a dragon helmet, centered, facing viewer, plain dark background, character avatar icon"
+    },
+    {
+      "id": "avatar_14",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 506,
+      "out": "assets/avatars/avatar_14.png",
+      "size": [
+        96,
+        96
+      ],
+      "prompt": "portrait bust of an elf queen with a silver crown and long white hair, centered, facing viewer, plain dark background, character avatar icon"
+    },
+    {
+      "id": "back_royal",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 521,
+      "out": "assets/cosmetics/back_royal.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate crimson red and gold with a royal crown emblem in the center pattern, flat design, card back"
+    },
+    {
+      "id": "back_arcane",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 522,
+      "out": "assets/cosmetics/back_arcane.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate deep purple and silver with a glowing magic rune circle in the center pattern, flat design, card back"
+    },
+    {
+      "id": "back_dragon",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 523,
+      "out": "assets/cosmetics/back_dragon.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate black and fiery orange with a red dragon head emblem in the center pattern, flat design, card back"
+    },
+    {
+      "id": "back_nature",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 524,
+      "out": "assets/cosmetics/back_nature.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate green and bronze with an ancient oak tree emblem in the center pattern, flat design, card back"
+    },
+    {
+      "id": "board_forest",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 577,
+      "out": "assets/cosmetics/board_forest.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "dense green grass meadow ground seen from above, filling the whole frame edge to edge, clover, small stones, fallen leaves and tiny wildflowers everywhere, dappled sunlight, seamless ground tile texture"
+    },
+    {
+      "id": "board_crypt",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 562,
+      "out": "assets/cosmetics/board_crypt.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down floor texture edge to edge, dark ancient crypt stone tiles with cracks, bones and melted candles, no border, no background, fills the entire image"
+    },
+    {
+      "id": "board_castle",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 563,
+      "out": "assets/cosmetics/board_castle.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down floor texture edge to edge, royal castle hall with polished stone tiles and a wide red carpet with gold trim, no border, no background, fills the entire image"
+    },
+    {
+      "id": "board_volcano",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 564,
+      "out": "assets/cosmetics/board_volcano.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down ground texture edge to edge, black volcanic basalt rock with glowing orange lava cracks, no border, no background, fills the entire image"
+    },
+    {
+      "id": "back_aube",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 801,
+      "out": "assets/cosmetics/back_aube.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate white and radiant gold with a rising sun emblem in the center, dawn rays pattern, flat design, card back"
+    },
+    {
+      "id": "back_nuit",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 802,
+      "out": "assets/cosmetics/back_nuit.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate midnight blue with silver stars and a crescent moon emblem in the center pattern, flat design, card back"
+    },
+    {
+      "id": "back_runes",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 803,
+      "out": "assets/cosmetics/back_runes.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate weathered grey stone with glowing cyan carved runes in the center pattern, flat design, card back"
+    },
+    {
+      "id": "back_sang",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 804,
+      "out": "assets/cosmetics/back_sang.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate dark blood red velvet and black iron with a golden lion crest in the center pattern, flat design, card back"
+    },
+    {
+      "id": "board_sanctuaire",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 811,
+      "out": "assets/cosmetics/board_sanctuaire.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down floor texture edge to edge, holy temple sanctuary white marble floor with golden inlaid sun patterns and scattered flower petals, no border, no background, fills the entire image"
+    },
+    {
+      "id": "board_port",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 822,
+      "out": "assets/cosmetics/board_port.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down floor texture edge to edge, plain weathered wooden ship deck planks, long parallel boards with nails, empty, nothing on the planks, no objects, no border, fills the entire image"
+    },
+    {
+      "id": "board_glacier",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 813,
+      "out": "assets/cosmetics/board_glacier.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down ground texture edge to edge, frozen glacier blue ice with cracks and snow patches, no border, no background, fills the entire image"
+    },
+    {
+      "id": "avatar_15",
+      "workflow": "pixel_art_image",
+      "w": 1024,
+      "h": 1024,
+      "seed": 711,
+      "out": "assets/avatars/avatar_15.png",
+      "size": [
+        96,
+        96
+      ],
+      "prompt": "close-up head and shoulders portrait bust of a handsome male hero with short brown hair and a short beard, wearing a vivid bright lemon yellow tunic and yellow mantle with golden trim, all yellow outfit, no hood, chest up only, face large in frame, centered, facing viewer, plain dark background, character avatar icon"
+    },
+    {
+      "id": "back_chevalier",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 902,
+      "out": "assets/cosmetics/back_chevalier.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate polished steel blue and silver with a knight helmet and crossed lances emblem in the center pattern, flat design, card back"
+    },
+    {
+      "id": "back_challenger",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 904,
+      "out": "assets/cosmetics/back_challenger.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornate royal violet and platinum with a golden laurel crown and a bright star emblem in the center, radiant pattern, flat design, card back"
+    },
+    {
+      "id": "board_apprenti",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 911,
+      "out": "assets/cosmetics/board_apprenti.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down ground texture edge to edge, training yard packed brown dirt with scattered straw and hay, no border, no background, fills the entire image"
+    },
+    {
+      "id": "back_apprenti",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 921,
+      "out": "assets/cosmetics/back_apprenti.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card filling the entire image edge to edge, rectangular card with an ornate border frame, symmetrical ornate moss green background and light oak wood frame with a wooden training shield and a practice sword emblem in the center pattern, flat design, card back"
+    },
+    {
+      "id": "back_seigneur",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 923,
+      "out": "assets/cosmetics/back_seigneur.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card filling the entire image edge to edge, rectangular card with an ornate border frame, symmetrical ornate deep crimson background and black iron frame with two crossed war axes and a horned skull emblem in the center pattern, flat design, card back"
+    },
+    {
+      "id": "board_chevalier",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 932,
+      "out": "assets/cosmetics/board_chevalier.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down floor texture edge to edge, flat grey cobblestone street pavement seen from directly above, rounded stones with moss between them, nothing else, no border, no background, fills the entire image"
+    },
+    {
+      "id": "board_seigneur",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 933,
+      "out": "assets/cosmetics/board_seigneur.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down ground texture edge to edge, flat scorched dark earth seen from directly above with ash, small glowing embers and scattered broken arrows, nothing else, no border, no background, fills the entire image"
+    },
+    {
+      "id": "board_challenger",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 934,
+      "out": "assets/cosmetics/board_challenger.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down ground texture edge to edge, flat golden arena sand seen from directly above with footprints and a few white marble floor tiles, nothing else, no border, no background, fills the entire image"
+    },
+    {
+      "id": "sfx_coins",
+      "seconds": 2.0,
+      "seed": 1201,
+      "out": "assets/audio/sfx/coins.mp3",
+      "prompt": "shower of gold coins clinking and jingling into a pile, bright retro video game coin pickup sounds, short",
+      "post": "crête normalisée à 0,8, fondu de sortie 0,3 s"
+    },
+    {
+      "id": "sfx_fanfare",
+      "seconds": 3.5,
+      "seed": 1301,
+      "out": "assets/audio/sfx/fanfare.mp3",
+      "prompt": "triumphant 8-bit chiptune fanfare, short victory jingle, bright square wave trumpet melody rising, sparkling arpeggio ending, retro video game rare item unlocked sound",
+      "negative": "speech, voice, background noise, hiss, long reverb",
+      "post": "crête normalisée à 0,85, fondu de sortie 0,3 s"
+    }
+  ]
+}

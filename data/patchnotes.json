@@ -1,0 +1,351 @@
+[
+	{
+		"version": "2.0.0",
+		"date": "2026-09-26",
+		"title": "Inferno, récompenses et classement",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Nouveau mode Inferno : l'IA la plus forte a des PV infinis, infligez-lui un maximum de dégâts avant de tomber. Chaque point de dégâts compte pour votre score.",
+					"Classement : nouvel onglet Inferno, score Inferno dans le classement général, et tri en cliquant sur le titre des colonnes.",
+					"Chaque niveau d'IA battu affiche une coche verte et débloque un titre, un contour d'avatar, un dos de cartes et un plateau (16 nouveaux objets).",
+					"Nouvelle case « Fin du tour automatique » sous la durée de la partie : le tour se termine seul quand vous n'avez plus rien à jouer.",
+					"Passe de combat : les récompenses se récupèrent désormais avec un bouton « Récupérer » (ou « Tout récupérer »). Ce que vous aviez déjà obtenu reste à vous.",
+					"Nouvelles animations : pluie de pièces d'or quand vous gagnez des PO, révélation épique (rayons de lumière, étincelles, fanfare) pour chaque personnalisation obtenue."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"Mises à jour du serveur sans coupure : les parties en cours se terminent normalement et le jeu se reconnecte tout seul."
+				]
+			],
+			[
+				"Correctifs",
+				[
+					"Une partie commencée avant la sortie d'une nouvelle version est désormais bien comptée."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.9.0",
+		"date": "2026-09-26",
+		"title": "Confort de jeu",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Paramètres > Affichage : nouveau curseur « Zoom de l'interface » (de 70 à 130 %).",
+					"Journal : survolez le nom d'une carte pour l'afficher.",
+					"Nouvel avatar de base : l'Aventurier, en tenue jaune.",
+					"Huit cartes qui avaient un fond uni ont désormais une illustration avec un décor complet."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"Fin du tour : s'il vous reste des actions possibles, le bouton devient « Confirmer » et un second appui est nécessaire.",
+					"Nouvelle icône « Zzz » pour les serviteurs qui viennent d'être posés.",
+					"La zone d'enchantements est ajustée à ses 2 emplacements."
+				]
+			],
+			[
+				"Correctifs",
+				[
+					"Défausse : le bouton « X » reste sur la carte survolée et ne passe plus à la carte voisine ou au serviteur situé derrière."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.8.1",
+		"date": "2026-09-26",
+		"title": "Correctifs de la 1.8",
+		"sections": [
+			[
+				"Correctifs",
+				[
+					"Le jeu démarre en français par défaut, et choisir « Français » dans Paramètres > Langue remet bien le jeu en français (il restait en anglais).",
+					"Les cadres de cartes sont retirés du jeu. Les niveaux 15 et 25 du passe de combat rapportent désormais 100 et 150 PO."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.8.0",
+		"date": "2026-09-26",
+		"title": "Saison 1, boutique et sécurité",
+		"sections": [
+			[
+				"Saison 1 : L'Éveil",
+				[
+					"Les saisons arrivent ! Une saison dure un mois ; la première se termine le 26 octobre.",
+					"Passe de combat de 30 niveaux, visible sur le menu d'accueil : chaque partie rapporte de l'XP. Récompenses : pièces d'or, dos de cartes, contours, plateau et titre « Héros de la saison 1 ».",
+					"Tous les joueurs de la saison 1 recevront le titre et le contour « Pionnier » à la fin de la saison."
+				]
+			],
+			[
+				"Pièces d'or et boutique",
+				[
+					"Nouvelle monnaie : les pièces d'or (PO). Victoire : 20 PO, défaite : 6 PO (plus si vous avez résisté longtemps), abandon : 1 PO. Première victoire du jour : +20 PO. Contre l'IA, le gain dépend du niveau.",
+					"Nouvelle Boutique : dos de cartes, plateaux (Pont de navire, Glacier) et contours.",
+					"Nouveaux titres pour les séries de défaites : Obstiné, Persévérant, Inébranlable, Increvable."
+				]
+			],
+			[
+				"Nouveautés",
+				[
+					"Nouveau niveau d'IA : Challenger. Il joue comme le Seigneur de guerre et commence avec 5 PV et 1 carte de plus.",
+					"Le jeu est disponible en français, anglais, allemand, espagnol, italien et portugais (Paramètres > Langue).",
+					"Menu d'accueil : Quitter et Paramètres sont remplacés par des icônes en bas à gauche (déconnexion et engrenage). Le bouton Quitter disparaît des paramètres."
+				]
+			],
+			[
+				"Sécurité et fair-play",
+				[
+					"Le serveur tire la donne de chaque partie et la rejoue entièrement avant d'accorder victoire, PO, XP et statistiques : les résultats truqués sont refusés.",
+					"En ligne, le serveur enregistre lui-même les actions des deux joueurs et affiche leur vrai pseudo et leur vraie personnalisation.",
+					"Quitter une partie en ligne en cours compte comme un abandon.",
+					"Au-delà de 10 parties par jour contre le même adversaire, les parties ne sont plus comptées.",
+					"Connexion chiffrée (TLS) avec le serveur, et mises à jour signées numériquement : le jeu refuse toute mise à jour qui n'a pas été publiée par le développeur."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.7.0",
+		"date": "2026-09-26",
+		"title": "Rangement de la main et revanche",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Rangement de la main (en bas à droite du plateau) : Manuel (glissez une carte pour la déplacer), par Coût (du plus petit au plus grand), par PV ou par Attaque. Votre choix est mémorisé.",
+					"Jouer une carte se fait désormais en deux clics : le 1er la sélectionne (contour doré), le 2e la joue. Fini les cartes jouées par erreur en voulant les déplacer. Clic droit ou Échap pour désélectionner.",
+					"Revanche : les deux joueurs peuvent la proposer (plus seulement l'hôte). L'adversaire l'accepte ou la refuse.",
+					"Chrono de la partie sous le bouton Fin du tour."
+				]
+			],
+			[
+				"Équilibrage",
+				[
+					"Bibliothèque ancienne : coût 4 → 6 (piocher une carte à chaque tour était trop fort pour son prix)."
+				]
+			],
+			[
+				"Corrections",
+				[
+					"Multijoueur : l'avatar de l'adversaire ne dépasse plus du cadre quand il rejoint la partie.",
+					"Menu principal : le bloc « VS » est retiré, les notes de mise à jour sont affichées en entier."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.6.0",
+		"date": "2026-09-26",
+		"title": "Statistiques, profils et replays",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Menu Statistiques : les chiffres du jeu, calculés sur toutes les parties enregistrées par le serveur. Cartes les plus jouées, présence dans les decks, % de victoires quand la carte est jouée, durée et nombre de tours moyens, avantage du joueur qui commence, résultats des joueurs contre chaque IA. Filtre : toutes les parties, en ligne ou contre l'IA.",
+					"Classement : barre de recherche par pseudo.",
+					"Profil des joueurs : cliquez sur un joueur du classement pour voir son rang, ses statistiques, ses cartes favorites et l'historique complet de ses parties. Vous pouvez aussi lui écrire ou l'ajouter en ami.",
+					"Replays : bouton « Revoir » dans l'historique. La partie est rejouée coup par coup, avec pause, vitesse ×1 / ×2 / ×4 et « Revoir » à la fin. Disponible pour les parties jouées à partir de cette version."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"Journal de combat : « Vous subissez », « X vous attaque », « Vous récupérez ».",
+					"Menu principal : nouveau bouton Statistiques."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.5.0",
+		"date": "2026-09-26",
+		"title": "Messagerie, pile ou face et IA difficile",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Messagerie privée : discutez avec vos amis connectés depuis le jeu, même en pleine partie (menu Amis > Messages ou « Écrire »). L'historique des conversations est conservé sur le serveur.",
+					"Notification à chaque message reçu, avec un bouton « Répondre ». Le nombre de messages non lus s'affiche sur le bouton Amis.",
+					"Pile ou face : au début de chaque partie, une pièce frappée de l'avatar des deux joueurs est lancée et désigne qui commence.",
+					"Nouvelle difficulté : Seigneur de guerre (difficile). Cette IA simule ses coups possibles avant de jouer.",
+					"10 nouvelles cartes. Le deck reste à 100 cartes, réparties entre 59 cartes différentes.",
+					"Serviteurs à effet continu : Porte-étendard, Guérisseuse du temple, Diablotin tourmenteur et Gardien des cryptes.",
+					"Cartes liées au cimetière : Goule affamée, Fossoyeur, Résurrection et Pacte des tombes.",
+					"Cartes qui modifient les decks : Tri des archives retire des cartes de coût 1 du vôtre, Sabotage retire des cartes chères du deck adverse.",
+					"Pas de maximum de PV : les soins peuvent dépasser les PV de départ (chiffre en vert)."
+				]
+			],
+			[
+				"Équilibrage",
+				[
+					"Enchantements : 2 au maximum par joueur (au lieu de 3). Ils n'ont plus de PV et ne peuvent plus être attaqués : seules les cartes de destruction les retirent.",
+					"Le mot-clé Sape est supprimé. Le Sapeur nain inflige 1 dégât à un ennemi au hasard. La Catapulte de siège (4/3) inflige 2 dégâts au héros adverse."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"Échap ferme la fenêtre ouverte (règles, classement, amis, messages, mise à jour...) avant d'ouvrir le menu pause.",
+					"Tab bascule entre le choix de pioche et le plateau.",
+					"La personnalisation s'ouvre depuis votre profil (cliquez sur votre badge en haut à droite, puis « Personnalisation »)."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.4.1",
+		"date": "2026-09-26",
+		"title": "Bibliothèque, cimetière et mises à jour fiables",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Bouton « Deck » sous votre héros : consultez les cartes qui restent dans votre bibliothèque, regroupées et triées par coût (l'ordre de pioche reste secret).",
+					"Bouton « Cimetière » sous chaque héros : cartes mortes, sorts joués, enchantements détruits, cartes défaussées ou brûlées, de la plus récente à la plus ancienne. Le cimetière adverse est consultable aussi."
+				]
+			],
+			[
+				"Corrections",
+				[
+					"La mise à jour automatique relance correctement le jeu : le nouveau paquet remplace l'ancien à côté de l'exe. Si votre jeu se fermait après « Mettre à jour », réinstallez-le une fois depuis la page de téléchargement."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.4.0",
+		"date": "2026-09-26",
+		"title": "Enchantements et personnalisation",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Nouveau type de carte : les Enchantements (cadre violet). Ils restent en jeu entre les héros (3 maximum) : effet permanent (ex. « Vos serviteurs ont +1 attaque ») ou à chaque début / fin de tour (soin, dégâts, invocation, pioche).",
+					"Pour détruire un enchantement : mot-clé Sape (Sapeur nain, Catapulte de siège : peuvent attaquer les enchantements, même derrière une Provocation), Dissipation, Purification et Briseur de sorts.",
+					"11 nouvelles cartes. Le deck reste à 100 cartes : les doublons sont répartis entre 49 cartes différentes (1 à 4 exemplaires).",
+					"Défausse : survolez une carte de votre main pendant votre tour et cliquez le petit X rouge (deux clics pour confirmer).",
+					"Personnalisation (bouton « Personnaliser » du menu principal, ou Paramètres > Profil) : titres affichés sous votre pseudo, 6 nouveaux avatars, contours d'avatar, dos de cartes et plateaux.",
+					"Tout se débloque en jouant : parties, victoires, séries, serviteurs à Provocation ou Charge, sorts, enchantements, dégâts au héros adverse... La progression est affichée sur chaque élément verrouillé.",
+					"Le n°1 du classement porte le contour Champion (couronne dorée), visible par tous les joueurs.",
+					"Votre titre, votre contour et votre dos de cartes sont vus par vos adversaires, dans le classement et la liste d'amis ; votre plateau n'est visible que par vous."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"L'IA joue et détruit les enchantements, et utilise la Sape.",
+					"Collection : nouveau filtre « Enchant. » et détails complets des enchantements (durabilité, effets)."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.3.0",
+		"date": "2026-09-26",
+		"title": "Deck de 100 cartes",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Le deck commun passe à 100 cartes : 38 cartes différentes, de 2 à 4 exemplaires chacune. Les deux joueurs ont toujours exactement le même deck.",
+					"20 nouvelles cartes : Milicien, Herboriste, Porte-bouclier, Voleur des ombres, Alchimiste fou, Barde, Paladine, Capitaine de la garde, Pyromancienne, Troll, Liche, Chevalier noir, Archimage, Hydre, Tir précis, Cri de ralliement, Pluie de flèches, Renforts, Lumière sacrée et Pluie de météores.",
+					"Pioche au choix : bouton « Voir le plateau » (ou touche V) pour consulter votre main et le plateau avant de choisir, puis « Revenir au choix des cartes ».",
+					"Si une nouvelle version sort pendant votre partie, elle vous est proposée à la fin de la partie (sans interrompre le match). Dans les menus, elle est proposée tout de suite."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"L'IA sait utiliser les nouveaux effets (invocations, bonus de groupe, dégâts de zone) et évite de détruire ses propres serviteurs.",
+					"Bouclier divin entièrement retravaillé : bulle sacrée lumineuse et animée autour du serviteur, qui éclate en éclats dorés quand elle se brise.",
+					"Le grand cristal d'énergie est placé à gauche du portrait : il ne recouvre plus le pseudo, et le titre du héros n'est plus coupé par la barre d'énergie."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.2.0",
+		"date": "2026-09-26",
+		"title": "Lobby multijoueur et notes de mise à jour",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Nouveau lobby multijoueur : créez une partie (avec un nom si vous le souhaitez) ou rejoignez-en une dans la liste des parties ouvertes, mise à jour en direct.",
+					"Les notes de mise à jour sont affichées dans le menu principal, et s'ouvrent automatiquement après chaque mise à jour.",
+					"Nouvelle icône du jeu (exe, raccourcis et fenêtre) à la place du logo Godot."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"Plus aucun port ni adresse IP à configurer : l'hébergement direct est supprimé, tout passe par le serveur officiel.",
+					"Paramètres > Profil : l'état de la connexion au serveur remplace les champs adresse / port.",
+					"Règles du jeu : la partie Multijoueur est à jour."
+				]
+			],
+			[
+				"Corrections",
+				[
+					"Ouvrir le jeu deux fois avec le même compte n'affiche plus d'erreurs « Identifiez-vous d'abord »."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.1.0",
+		"date": "2026-09-26",
+		"title": "Historique des parties",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Historique complet des parties : Classement > « Mon historique », ou cliquez sur un joueur pour voir le sien (date, adversaire, résultat, tours, durée).",
+					"Toutes les parties, les comptes et le classement sont conservés sur le serveur, sans limite de durée."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"Les mises à jour sont téléchargées en HTTPS.",
+					"Le jeu est signé « Arcanes & Lames » et peut s'installer en une ligne, sans avertissement Windows (voir la page de téléchargement)."
+				]
+			]
+		]
+	},
+	{
+		"version": "1.0.0",
+		"date": "2026-09-26",
+		"title": "Première version publique",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Pioche au choix : au début de votre tour, révélez 3 cartes et gardez-en une ; les 2 autres retournent au fond du deck.",
+					"Serveur officiel : jouez contre vos amis sans ouvrir de port, avec comptes, classement, amis et invitations.",
+					"Mises à jour automatiques au lancement du jeu : tout le monde joue sur la même version.",
+					"Bulles d'explication au survol des cartes : Provocation, Charge, Bouclier divin, Cri de guerre, Râle d'agonie et l'effet exact de chaque carte."
+				]
+			],
+			[
+				"Améliorations",
+				[
+					"Chiffres beaucoup plus lisibles (nouvelle police pour les nombres).",
+					"Texte des cartes sur un parchemin clair, plus facile à lire.",
+					"Cristaux d'énergie mis en avant : grand cristal à côté du héros et rangée de cristaux agrandie.",
+					"Cristal de coût des cartes plus grand, avec un halo quand la carte est jouable."
+				]
+			]
+		]
+	}
+]

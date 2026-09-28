@@ -1,0 +1,957 @@
+{
+	"_comment": "Catalogue de personnalisation, partagé par le jeu et le serveur (server/lobby_server.py le lit aussi). rule = null : débloqué d'office ; {\"stat\": X, \"min\": N} : statistique du joueur ; {\"rank\": 1} : réservé au n°1 du classement (tant qu'il l'est) ; {\"shop\": prix} : en vente dans la boutique (en PO) ; {\"pass\": niveau, \"season\": n} : passe de combat de la saison n ; {\"pioneer\": 1} : a joué pendant la saison 1 (attribué à la fin de la saison 1).",
+	"stats": {
+		"games": "parties jouées",
+		"wins": "victoires (en ligne et contre l'IA)",
+		"pvp_wins": "victoires en ligne",
+		"ai_wins": "victoires contre l'IA",
+		"best_streak": "meilleure série de victoires",
+		"minions_played": "serviteurs joués",
+		"spells_played": "sorts joués",
+		"enchants_played": "enchantements joués",
+		"taunt_played": "serviteurs avec Provocation joués",
+		"charge_played": "serviteurs avec Charge joués",
+		"shield_played": "serviteurs avec Bouclier divin joués",
+		"deathrattle_played": "serviteurs avec Râle d'agonie joués",
+		"enchants_destroyed": "enchantements adverses détruits",
+		"hero_damage": "dégâts infligés au héros adverse",
+		"worst_loss_streak": "défaites d'affilée (pire série)",
+		"ai_beaten_0": "victoires contre l'IA Apprenti",
+		"ai_beaten_1": "victoires contre l'IA Chevalier",
+		"ai_beaten_2": "victoires contre l'IA Seigneur de guerre",
+		"ai_beaten_3": "victoires contre l'IA Challenger",
+		"inferno_best": "meilleur score Inferno"
+	},
+	"titles": [
+		{
+			"id": "novice",
+			"name": "Novice",
+			"rule": null
+		},
+		{
+			"id": "ecuyer",
+			"name": "Écuyer",
+			"rule": {
+				"stat": "games",
+				"min": 5
+			}
+		},
+		{
+			"id": "veteran",
+			"name": "Vétéran",
+			"rule": {
+				"stat": "games",
+				"min": 50
+			}
+		},
+		{
+			"id": "invocateur",
+			"name": "Invocateur",
+			"rule": {
+				"stat": "minions_played",
+				"min": 150
+			}
+		},
+		{
+			"id": "arcaniste",
+			"name": "Arcaniste",
+			"rule": {
+				"stat": "spells_played",
+				"min": 100
+			}
+		},
+		{
+			"id": "enchanteur",
+			"name": "Enchanteur",
+			"rule": {
+				"stat": "enchants_played",
+				"min": 30
+			}
+		},
+		{
+			"id": "mur_vivant",
+			"name": "Mur vivant",
+			"rule": {
+				"stat": "taunt_played",
+				"min": 40
+			}
+		},
+		{
+			"id": "cavalier",
+			"name": "Cavalier fougueux",
+			"rule": {
+				"stat": "charge_played",
+				"min": 40
+			}
+		},
+		{
+			"id": "heraut",
+			"name": "Héraut sacré",
+			"rule": {
+				"stat": "shield_played",
+				"min": 25
+			}
+		},
+		{
+			"id": "necromancien",
+			"name": "Nécromancien",
+			"rule": {
+				"stat": "deathrattle_played",
+				"min": 30
+			}
+		},
+		{
+			"id": "briseur",
+			"name": "Briseur de sorts",
+			"rule": {
+				"stat": "enchants_destroyed",
+				"min": 20
+			}
+		},
+		{
+			"id": "bourreau",
+			"name": "Bourreau",
+			"rule": {
+				"stat": "hero_damage",
+				"min": 500
+			}
+		},
+		{
+			"id": "pourfendeur",
+			"name": "Pourfendeur d'IA",
+			"rule": {
+				"stat": "ai_wins",
+				"min": 25
+			}
+		},
+		{
+			"id": "duelliste",
+			"name": "Duelliste",
+			"rule": {
+				"stat": "pvp_wins",
+				"min": 10
+			}
+		},
+		{
+			"id": "seigneur",
+			"name": "Seigneur de guerre",
+			"rule": {
+				"stat": "pvp_wins",
+				"min": 50
+			}
+		},
+		{
+			"id": "invaincu",
+			"name": "Invaincu",
+			"rule": {
+				"stat": "best_streak",
+				"min": 5
+			}
+		},
+		{
+			"id": "champion",
+			"name": "Champion d'Arcanes",
+			"rule": {
+				"rank": 1
+			}
+		},
+		{
+			"id": "obstine",
+			"name": "Obstiné",
+			"rule": {
+				"stat": "worst_loss_streak",
+				"min": 3
+			}
+		},
+		{
+			"id": "perseverant",
+			"name": "Persévérant",
+			"rule": {
+				"stat": "worst_loss_streak",
+				"min": 5
+			}
+		},
+		{
+			"id": "inebranlable",
+			"name": "Inébranlable",
+			"rule": {
+				"stat": "worst_loss_streak",
+				"min": 8
+			}
+		},
+		{
+			"id": "increvable",
+			"name": "Increvable",
+			"rule": {
+				"stat": "worst_loss_streak",
+				"min": 12
+			}
+		},
+		{
+			"id": "pionnier",
+			"name": "Pionnier",
+			"rule": {
+				"pioneer": 1
+			}
+		},
+		{
+			"id": "heros_s1",
+			"name": "Héros de la saison 1",
+			"rule": {
+				"pass": 30,
+				"season": 1
+			}
+		},
+		{
+			"id": "vainqueur_apprenti",
+			"name": "Vainqueur de l'Apprenti",
+			"rule": {
+				"stat": "ai_beaten_0",
+				"min": 1
+			}
+		},
+		{
+			"id": "vainqueur_chevalier",
+			"name": "Vainqueur du Chevalier",
+			"rule": {
+				"stat": "ai_beaten_1",
+				"min": 1
+			}
+		},
+		{
+			"id": "vainqueur_seigneur",
+			"name": "Vainqueur du Seigneur de guerre",
+			"rule": {
+				"stat": "ai_beaten_2",
+				"min": 1
+			}
+		},
+		{
+			"id": "vainqueur_challenger",
+			"name": "Vainqueur du Challenger",
+			"rule": {
+				"stat": "ai_beaten_3",
+				"min": 1
+			}
+		}
+	],
+	"avatars": [
+		{
+			"id": 1,
+			"name": "Chevalier",
+			"rule": null
+		},
+		{
+			"id": 2,
+			"name": "Mage",
+			"rule": null
+		},
+		{
+			"id": 3,
+			"name": "Rôdeuse",
+			"rule": null
+		},
+		{
+			"id": 4,
+			"name": "Nain",
+			"rule": null
+		},
+		{
+			"id": 5,
+			"name": "Voleur",
+			"rule": null
+		},
+		{
+			"id": 6,
+			"name": "Prêtresse",
+			"rule": null
+		},
+		{
+			"id": 7,
+			"name": "Orc",
+			"rule": null
+		},
+		{
+			"id": 8,
+			"name": "Sorcière",
+			"rule": null
+		},
+		{
+			"id": 15,
+			"name": "Aventurier",
+			"rule": null
+		},
+		{
+			"id": 9,
+			"name": "Paladine dorée",
+			"rule": {
+				"stat": "wins",
+				"min": 10
+			}
+		},
+		{
+			"id": 10,
+			"name": "Nécromancien",
+			"rule": {
+				"stat": "deathrattle_played",
+				"min": 30
+			}
+		},
+		{
+			"id": 11,
+			"name": "Archimage",
+			"rule": {
+				"stat": "spells_played",
+				"min": 100
+			}
+		},
+		{
+			"id": 12,
+			"name": "Chevalier noir",
+			"rule": {
+				"stat": "pvp_wins",
+				"min": 25
+			}
+		},
+		{
+			"id": 13,
+			"name": "Dragonnier",
+			"rule": {
+				"stat": "games",
+				"min": 100
+			}
+		},
+		{
+			"id": 14,
+			"name": "Reine elfe",
+			"rule": {
+				"stat": "enchants_destroyed",
+				"min": 20
+			}
+		}
+	],
+	"borders": [
+		{
+			"id": "none",
+			"name": "Aucun",
+			"rule": null
+		},
+		{
+			"id": "bronze",
+			"name": "Bronze",
+			"rule": {
+				"stat": "games",
+				"min": 10
+			}
+		},
+		{
+			"id": "argent",
+			"name": "Argent",
+			"rule": {
+				"stat": "wins",
+				"min": 25
+			}
+		},
+		{
+			"id": "or",
+			"name": "Or",
+			"rule": {
+				"stat": "wins",
+				"min": 100
+			}
+		},
+		{
+			"id": "arcane",
+			"name": "Arcane",
+			"rule": {
+				"stat": "enchants_played",
+				"min": 30
+			}
+		},
+		{
+			"id": "flammes",
+			"name": "Flammes",
+			"rule": {
+				"stat": "hero_damage",
+				"min": 500
+			}
+		},
+		{
+			"id": "givre",
+			"name": "Givre",
+			"rule": {
+				"stat": "best_streak",
+				"min": 5
+			}
+		},
+		{
+			"id": "champion",
+			"name": "Champion",
+			"rule": {
+				"rank": 1
+			}
+		},
+		{
+			"id": "emeraude",
+			"name": "Émeraude",
+			"rule": {
+				"shop": 400
+			}
+		},
+		{
+			"id": "rubis",
+			"name": "Rubis",
+			"rule": {
+				"shop": 400
+			}
+		},
+		{
+			"id": "obsidienne",
+			"name": "Obsidienne",
+			"rule": {
+				"shop": 700
+			}
+		},
+		{
+			"id": "aurore",
+			"name": "Aurore (saison 1)",
+			"rule": {
+				"pass": 10,
+				"season": 1
+			}
+		},
+		{
+			"id": "eveil",
+			"name": "Éveil (saison 1)",
+			"rule": {
+				"pass": 30,
+				"season": 1
+			}
+		},
+		{
+			"id": "pionnier",
+			"name": "Pionnier",
+			"rule": {
+				"pioneer": 1
+			}
+		},
+		{
+			"id": "tenace",
+			"name": "Tenace",
+			"rule": {
+				"stat": "worst_loss_streak",
+				"min": 8
+			}
+		},
+		{
+			"id": "ia_apprenti",
+			"name": "Écuyer des lices",
+			"rule": {
+				"stat": "ai_beaten_0",
+				"min": 1
+			}
+		},
+		{
+			"id": "ia_chevalier",
+			"name": "Acier du Chevalier",
+			"rule": {
+				"stat": "ai_beaten_1",
+				"min": 1
+			}
+		},
+		{
+			"id": "ia_seigneur",
+			"name": "Sang du Seigneur",
+			"rule": {
+				"stat": "ai_beaten_2",
+				"min": 1
+			}
+		},
+		{
+			"id": "ia_challenger",
+			"name": "Couronne du Challenger",
+			"rule": {
+				"stat": "ai_beaten_3",
+				"min": 1
+			}
+		}
+	],
+	"card_backs": [
+		{
+			"id": "default",
+			"name": "Dragon d'azur",
+			"rule": null
+		},
+		{
+			"id": "royal",
+			"name": "Couronne royale",
+			"rule": {
+				"stat": "games",
+				"min": 15
+			}
+		},
+		{
+			"id": "arcane",
+			"name": "Cercle arcanique",
+			"rule": {
+				"stat": "spells_played",
+				"min": 50
+			}
+		},
+		{
+			"id": "nature",
+			"name": "Chêne ancien",
+			"rule": {
+				"stat": "minions_played",
+				"min": 100
+			}
+		},
+		{
+			"id": "dragon",
+			"name": "Dragon de feu",
+			"rule": {
+				"stat": "pvp_wins",
+				"min": 10
+			}
+		},
+		{
+			"id": "aube",
+			"name": "Aube dorée (saison 1)",
+			"rule": {
+				"pass": 5,
+				"season": 1
+			}
+		},
+		{
+			"id": "nuit",
+			"name": "Nuit étoilée",
+			"rule": {
+				"shop": 300
+			}
+		},
+		{
+			"id": "runes",
+			"name": "Runes anciennes",
+			"rule": {
+				"shop": 300
+			}
+		},
+		{
+			"id": "sang",
+			"name": "Sang royal",
+			"rule": {
+				"shop": 450
+			}
+		},
+		{
+			"id": "apprenti",
+			"name": "Bouclier d'entraînement",
+			"rule": {
+				"stat": "ai_beaten_0",
+				"min": 1
+			}
+		},
+		{
+			"id": "chevalier",
+			"name": "Heaume du Chevalier",
+			"rule": {
+				"stat": "ai_beaten_1",
+				"min": 1
+			}
+		},
+		{
+			"id": "seigneur",
+			"name": "Haches du Seigneur",
+			"rule": {
+				"stat": "ai_beaten_2",
+				"min": 1
+			}
+		},
+		{
+			"id": "challenger",
+			"name": "Laurier du Challenger",
+			"rule": {
+				"stat": "ai_beaten_3",
+				"min": 1
+			}
+		}
+	],
+	"boards": [
+		{
+			"id": "default",
+			"name": "Taverne",
+			"rule": null
+		},
+		{
+			"id": "forest",
+			"name": "Clairière",
+			"rule": {
+				"stat": "games",
+				"min": 10
+			}
+		},
+		{
+			"id": "castle",
+			"name": "Salle du trône",
+			"rule": {
+				"stat": "wins",
+				"min": 25
+			}
+		},
+		{
+			"id": "crypt",
+			"name": "Crypte",
+			"rule": {
+				"stat": "deathrattle_played",
+				"min": 30
+			}
+		},
+		{
+			"id": "volcano",
+			"name": "Volcan",
+			"rule": {
+				"stat": "hero_damage",
+				"min": 500
+			}
+		},
+		{
+			"id": "sanctuaire",
+			"name": "Sanctuaire (saison 1)",
+			"rule": {
+				"pass": 20,
+				"season": 1
+			}
+		},
+		{
+			"id": "port",
+			"name": "Pont de navire",
+			"rule": {
+				"shop": 500
+			}
+		},
+		{
+			"id": "glacier",
+			"name": "Glacier",
+			"rule": {
+				"shop": 500
+			}
+		},
+		{
+			"id": "apprenti",
+			"name": "Cour d'entraînement",
+			"rule": {
+				"stat": "ai_beaten_0",
+				"min": 1
+			}
+		},
+		{
+			"id": "chevalier",
+			"name": "Cour du château",
+			"rule": {
+				"stat": "ai_beaten_1",
+				"min": 1
+			}
+		},
+		{
+			"id": "seigneur",
+			"name": "Champ de bataille",
+			"rule": {
+				"stat": "ai_beaten_2",
+				"min": 1
+			}
+		},
+		{
+			"id": "challenger",
+			"name": "Arène du Challenger",
+			"rule": {
+				"stat": "ai_beaten_3",
+				"min": 1
+			}
+		}
+	],
+	"seasons": {
+		"epoch": "2026-09-26",
+		"levels": 30,
+		"xp_per_level": 250,
+		"names": {
+			"1": "L'Éveil"
+		},
+		"rewards": {
+			"1": [
+				{
+					"level": 1,
+					"po": 20
+				},
+				{
+					"level": 2,
+					"po": 30
+				},
+				{
+					"level": 3,
+					"po": 20
+				},
+				{
+					"level": 4,
+					"po": 30
+				},
+				{
+					"level": 5,
+					"kind": "card_back",
+					"id": "aube"
+				},
+				{
+					"level": 6,
+					"po": 30
+				},
+				{
+					"level": 7,
+					"po": 20
+				},
+				{
+					"level": 8,
+					"po": 30
+				},
+				{
+					"level": 9,
+					"po": 20
+				},
+				{
+					"level": 10,
+					"kind": "border",
+					"id": "aurore"
+				},
+				{
+					"level": 11,
+					"po": 20
+				},
+				{
+					"level": 12,
+					"po": 30
+				},
+				{
+					"level": 13,
+					"po": 20
+				},
+				{
+					"level": 14,
+					"po": 30
+				},
+				{
+					"level": 15,
+					"po": 100
+				},
+				{
+					"level": 16,
+					"po": 30
+				},
+				{
+					"level": 17,
+					"po": 20
+				},
+				{
+					"level": 18,
+					"po": 30
+				},
+				{
+					"level": 19,
+					"po": 20
+				},
+				{
+					"level": 20,
+					"kind": "board",
+					"id": "sanctuaire"
+				},
+				{
+					"level": 21,
+					"po": 20
+				},
+				{
+					"level": 22,
+					"po": 30
+				},
+				{
+					"level": 23,
+					"po": 20
+				},
+				{
+					"level": 24,
+					"po": 30
+				},
+				{
+					"level": 25,
+					"po": 150
+				},
+				{
+					"level": 26,
+					"po": 30
+				},
+				{
+					"level": 27,
+					"po": 20
+				},
+				{
+					"level": 28,
+					"po": 30
+				},
+				{
+					"level": 29,
+					"po": 20
+				},
+				{
+					"level": 30,
+					"kind": "title",
+					"id": "heros_s1",
+					"extra": {
+						"kind": "border",
+						"id": "eveil"
+					}
+				}
+			]
+		},
+		"default_rewards": [
+			{
+				"level": 1,
+				"po": 25
+			},
+			{
+				"level": 2,
+				"po": 25
+			},
+			{
+				"level": 3,
+				"po": 25
+			},
+			{
+				"level": 4,
+				"po": 25
+			},
+			{
+				"level": 5,
+				"po": 40
+			},
+			{
+				"level": 6,
+				"po": 25
+			},
+			{
+				"level": 7,
+				"po": 25
+			},
+			{
+				"level": 8,
+				"po": 25
+			},
+			{
+				"level": 9,
+				"po": 25
+			},
+			{
+				"level": 10,
+				"po": 40
+			},
+			{
+				"level": 11,
+				"po": 25
+			},
+			{
+				"level": 12,
+				"po": 25
+			},
+			{
+				"level": 13,
+				"po": 25
+			},
+			{
+				"level": 14,
+				"po": 25
+			},
+			{
+				"level": 15,
+				"po": 40
+			},
+			{
+				"level": 16,
+				"po": 25
+			},
+			{
+				"level": 17,
+				"po": 25
+			},
+			{
+				"level": 18,
+				"po": 25
+			},
+			{
+				"level": 19,
+				"po": 25
+			},
+			{
+				"level": 20,
+				"po": 40
+			},
+			{
+				"level": 21,
+				"po": 25
+			},
+			{
+				"level": 22,
+				"po": 25
+			},
+			{
+				"level": 23,
+				"po": 25
+			},
+			{
+				"level": 24,
+				"po": 25
+			},
+			{
+				"level": 25,
+				"po": 40
+			},
+			{
+				"level": 26,
+				"po": 25
+			},
+			{
+				"level": 27,
+				"po": 25
+			},
+			{
+				"level": 28,
+				"po": 25
+			},
+			{
+				"level": 29,
+				"po": 25
+			},
+			{
+				"level": 30,
+				"po": 40
+			}
+		]
+	},
+	"economy": {
+		"_comment": "Gains par partie (PO = pièces d'or, XP = passe de combat). Contre l'IA, multiplicateur par difficulté.",
+		"win_po": 20,
+		"loss_po": 6,
+		"draw_po": 12,
+		"concede_po": 1,
+		"po_per_4_turns": 1,
+		"po_turns_cap": 24,
+		"first_win_of_day_po": 20,
+		"win_xp": 100,
+		"loss_xp": 50,
+		"draw_xp": 75,
+		"concede_xp": 10,
+		"xp_per_turn": 3,
+		"xp_turns_cap": 25,
+		"min_duration": 45,
+		"ai_mult": [
+			0.5,
+			0.75,
+			1.0,
+			1.25
+		]
+	}
+}
