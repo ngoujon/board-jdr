@@ -17,6 +17,7 @@ run/main_scene="res://scenes/boot.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://assets/ui/game_icon.png"
 config/windows_native_icon="res://assets/ui/game_icon.ico"
+config/quit_on_go_back=false
 
 [autoload]
 
@@ -34,6 +35,7 @@ PauseMenu="*res://scripts/autoload/pause_menu.gd"
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
+window/handheld/orientation=4
 
 [gui]
 
@@ -48,6 +50,8 @@ locale/fallback="fr"
 3d/physics_engine="Jolt Physics"
 
 [rendering]
+
+renderer/rendering_method.android="gl_compatibility"
 
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"

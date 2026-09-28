@@ -97,8 +97,11 @@ func _show_outdated() -> void:
 	var latest: Dictionary = Updater.latest
 	var txt := Loc.t("[center][color=#f2c14e][b]Nouvelle version disponible : %s[/b][/color]\nVotre version : %s") % [
 		latest.get("version", "?"), Updater.current_version()]
-	if latest.has("size"):
-		txt += Loc.t("  ·  %.1f Mo") % (float(latest.size) / 1048576.0)
+	var size := float(latest.get("size", 0))
+	if Updater.needs_app_download():   # application complète, pas le paquet .pck
+		size = float(latest.get("downloads", {}).get(Updater.platform_key(), {}).get("size", 0))
+	if size > 0:
+		txt += Loc.t("  ·  %.1f Mo") % (size / 1048576.0)
 	txt += "[/center]"
 	if str(latest.get("notes", "")) != "":
 		txt += Loc.t("\n\n[b]Nouveautés :[/b]\n") + str(latest.notes)
@@ -126,6 +129,14 @@ func _show_outdated() -> void:
 
 
 func _start_download() -> void:
+	if Updater.needs_app_download():
+		if not Updater.latest.has("downloads"):
+			Updater.check()   # on ne connaît que le numéro (refus du serveur) : on récupère le manifeste
+			await Updater.check_finished
+		OS.shell_open(Updater.app_download_url())
+		_status.remove_theme_color_override("font_color")
+		_status.text = Loc.t("Le téléchargement de la version %s s'ouvre dans le navigateur.\nInstallez le fichier téléchargé : vos données sont conservées.") % Updater.latest.get("version", "?")
+		return
 	_clear_buttons()
 	_status.remove_theme_color_override("font_color")
 	_status.text = Loc.t("Téléchargement de la version %s...") % Updater.latest.get("version", "?")

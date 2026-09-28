@@ -1729,7 +1729,8 @@ class UpdateHttpServer:
     GET /install.ps1, /install.sh  installateurs en une ligne (Windows ; Linux et macOS)"""
 
     CHUNK = 64 * 1024
-    CTYPES = {".pck": "application/octet-stream", ".zip": "application/zip", ".gz": "application/gzip"}
+    CTYPES = {".pck": "application/octet-stream", ".zip": "application/zip", ".gz": "application/gzip",
+              ".apk": "application/vnd.android.package-archive"}
     STATIC = {
         "/install.ps1": ("install.ps1", "text/plain; charset=utf-8"),
         "/install.sh": ("install.sh", "text/plain; charset=utf-8"),
@@ -1780,7 +1781,7 @@ class UpdateHttpServer:
                 name = os.path.basename(path[len(prefix):])  # pas de sous-dossier ni de ../
                 ext = os.path.splitext(name)[1]
                 full = os.path.join(UPDATES_DIR, name)
-                if (prefix == "/files/" and ext != ".pck") or (prefix == "/download/" and not name.endswith((".zip", ".tar.gz"))) \
+                if (prefix == "/files/" and ext != ".pck") or (prefix == "/download/" and not name.endswith((".zip", ".tar.gz", ".apk"))) \
                         or not os.path.isfile(full):
                     return await self.reply(writer, 404, b"Fichier introuvable")
                 size = os.path.getsize(full)

@@ -14,7 +14,7 @@
      arcanes_<version>.pck                  paquet de mise à jour Windows (téléchargé par les jeux déjà installés)
      arcanes_<version>_linux.pck / _macos.pck   paquets Linux et macOS, seulement s'ils diffèrent de celui de Windows
      ArcanesEtLames_<version>_windows.zip   jeu complet pour les nouveaux joueurs
-     ArcanesEtLames_<version>_linux.tar.gz / _macos.zip
+     ArcanesEtLames_<version>_linux.tar.gz / _macos.zip / _android.apk (APK signé, clé dans ~/.arcanes-codesign)
      latest.json                            version, fichiers, sha256, taille, notes (+ "platforms", "downloads")
      install.ps1                            installateur en une ligne (sans avertissement SmartScreen)
      install.sh                             installateur en une ligne pour Linux et macOS (curl | sh)
@@ -165,6 +165,69 @@ def export_macos(godot):
     return zpath, pck
 
 
+ANDROID_KEYSTORE = os.path.join(CERT_DIR, "android_keystore.json")   # {"path", "user", "password"}, hors du dépôt
+
+
+def android_env():
+    """SDK Android, JDK et clé de signature pour l'export Android.
+    Godot lit le JDK dans ses réglages d'éditeur : on l'y remet à chaque publication (l'éditeur ouvert peut l'effacer)."""
+    if not os.path.isfile(ANDROID_KEYSTORE):
+        sys.exit(f"Clé de signature Android introuvable : {ANDROID_KEYSTORE}")
+    ks = json.load(open(ANDROID_KEYSTORE, encoding="utf-8"))
+    java = shutil.which("java")
+    if not java:
+        sys.exit("Java (JDK 17 ou plus) introuvable : nécessaire pour l'export Android.")
+    java_home = os.path.dirname(os.path.dirname(os.path.realpath(java)))
+    settings = os.path.join(os.environ["APPDATA"], "Godot", "editor_settings-4.7.tres")
+    if os.path.isfile(settings):
+        with open(settings, encoding="utf-8") as f:
+            text = f.read()
+        wanted = f'export/android/java_sdk_path = "{java_home.replace(os.sep, "/")}"'
+        if wanted not in text:
+            text = re.sub(r'^export/android/java_sdk_path = ".*"$', wanted, text, flags=re.M)
+            if wanted not in text:
+                text = text.rstrip("\n") + "\n" + wanted + "\n"
+            with open(settings, "w", encoding="utf-8", newline="\n") as f:
+                f.write(text)
+    env = dict(os.environ)
+    env["ANDROID_HOME"] = env["ANDROID_SDK_ROOT"] = os.path.join(os.environ["LOCALAPPDATA"], "Android", "Sdk")
+    env["JAVA_HOME"] = java_home
+    env["GODOT_ANDROID_KEYSTORE_RELEASE_PATH"] = ks["path"]
+    env["GODOT_ANDROID_KEYSTORE_RELEASE_USER"] = ks["user"]
+    env["GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD"] = ks["password"]
+    return env
+
+
+def set_android_version_code(version):
+    """version/code d'Android : entier qui doit augmenter à chaque version (2.0.2 -> 20002)."""
+    parts = (version.split(".") + ["0", "0"])[:3]
+    code = int(parts[0]) * 10000 + int(parts[1]) * 100 + int(parts[2])
+    path = os.path.join(ROOT, "export_presets.cfg")
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    text = re.sub(r"^version/code=\d+$", f"version/code={code}", text, flags=re.M)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+
+
+def export_android(godot, version):
+    """APK Android signé (arm64) : renvoie son chemin."""
+    set_android_version_code(version)
+    out_dir = os.path.join(ROOT, "build", "android")
+    if os.path.isdir(out_dir):
+        shutil.rmtree(out_dir)
+    os.makedirs(out_dir)
+    apk = os.path.join(out_dir, "ArcanesEtLames.apk")
+    env = android_env()
+    print("  > export Android (clé de signature masquée)")
+    r = subprocess.run([godot, "--headless", "--path", ROOT, "--export-release", "Android", apk], env=env,
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if r.returncode != 0 or not os.path.isfile(apk) or "Signed" not in r.stdout + r.stderr:
+        print((r.stdout + r.stderr).replace(env["GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD"], "***")[-3000:])
+        sys.exit("ÉCHEC de l'export Android.")
+    return apk
+
+
 def make_tar_gz(folder, dest):
     """Archive Linux : garde les droits d'exécution du binaire (un zip fait sous Windows les perd)."""
     import tarfile
@@ -213,7 +276,7 @@ def build_site(latest, dest):
         "INSTALL_SH": html.escape(f"curl -fsSL {CODESIGN['web_base']}/install.sh | sh", quote=False),
         "NEWS": news,
     }
-    for key in ("windows", "macos", "linux"):
+    for key in ("windows", "macos", "linux", "android"):
         d = downloads.get(key) or {}
         values[f"DL_{key.upper()}"] = html.escape(str(d.get("file", "")))
         values[f"SIZE_{key.upper()}"] = f"{int(d.get('size', 0)) / 1048576:.0f}"
@@ -321,9 +384,10 @@ def main():
     exe, pck = export_game(godot, version)
     set_exe_resources(exe, version)
     sign_exe(exe)
-    print("Export Linux et macOS...")
+    print("Export Linux, macOS et Android...")
     linux_dir, linux_pck = export_linux(godot, version)
     mac_zip, mac_pck = export_macos(godot)
+    apk = export_android(godot, version)
 
     if os.path.isdir(DIST):
         shutil.rmtree(DIST)
@@ -344,6 +408,8 @@ def main():
     print("Création des archives Linux et macOS")
     make_tar_gz(linux_dir, os.path.join(DIST, others["linux"][2]))
     shutil.copy2(mac_zip, os.path.join(DIST, others["macos"][2]))
+    apk_name = f"ArcanesEtLames_{version}_android.apk"
+    shutil.copy2(apk, os.path.join(DIST, apk_name))
     # Paquet identique à celui de Windows (cas habituel) : on réutilise ce dernier au lieu d'une copie.
     platforms, downloads, extra_pcks = {}, {}, []
     main_sha = sha256(os.path.join(DIST, pck_name))
@@ -356,7 +422,8 @@ def main():
         platforms[key] = {"file": pname, "sha256": sha256(os.path.join(DIST, pname)),
                           "size": os.path.getsize(os.path.join(DIST, pname))}
         sign_manifest(platforms[key], version)
-    for key, name in (("windows", zip_name), ("linux", others["linux"][2]), ("macos", others["macos"][2])):
+    for key, name in (("windows", zip_name), ("linux", others["linux"][2]), ("macos", others["macos"][2]),
+                      ("android", apk_name)):
         downloads[key] = {"file": name, "size": os.path.getsize(os.path.join(DIST, name)),
                           "sha256": sha256(os.path.join(DIST, name))}
 
@@ -399,7 +466,7 @@ def main():
     host, path = DEPLOY.split(":", 1)
     print("Envoi sur le serveur", DEPLOY)
     files = [pck_name, zip_name, "install.ps1", "install.sh", "arcanes_codesign.cer", "favicon.ico"] + extra_pcks
-    files += [aname for _, _, aname in others.values()]
+    files += [aname for _, _, aname in others.values()] + [apk_name]
     r = run(["scp", "-q"] + [os.path.join(DIST, n) for n in files] + [f"{DEPLOY}/"])
     if r.returncode != 0:
         sys.exit("ÉCHEC de l'envoi : " + r.stderr)

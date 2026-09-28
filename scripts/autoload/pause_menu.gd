@@ -98,6 +98,18 @@ func close_top_modal() -> bool:
 	return false
 
 
+## Android : le bouton Retour agit comme Échap (fermer la fenêtre ouverte, sinon le menu pause).
+## Le jeu ne se ferme plus sur Retour (application/config/quit_on_go_back=false).
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		for pressed in [true, false]:
+			var ev := InputEventKey.new()
+			ev.keycode = KEY_ESCAPE
+			ev.physical_keycode = KEY_ESCAPE
+			ev.pressed = pressed
+			Input.parse_input_event(ev)
+
+
 func _input(event: InputEvent) -> void:
 	if _capturing == "" or not (event is InputEventKey) or not event.pressed or event.echo:
 		return

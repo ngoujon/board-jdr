@@ -100,7 +100,25 @@ static func platform_key() -> String:
 			return "linux"
 		"macOS":
 			return "macos"
+		"Android":
+			return "android"
+		"iOS":
+			return "ios"
 	return "windows"
+
+
+## Android / iOS : le paquet de l'application ne peut pas être remplacé par le jeu lui-même.
+## La mise à jour passe par le téléchargement de la nouvelle application (navigateur).
+static func needs_app_download() -> bool:
+	return OS.get_name() in ["Android", "iOS"]
+
+
+## Adresse de l'application complète pour ce système ("downloads" de latest.json), sinon la page du site.
+func app_download_url() -> String:
+	var entry = latest.get("downloads", {}).get(platform_key(), null)
+	if entry is Dictionary and str(entry.get("file", "")) != "":
+		return update_url("download/" + str(entry.file).get_file())
+	return update_url("")
 
 
 ## Manifeste ramené à la plateforme courante : chaque système a son propre paquet signé.
