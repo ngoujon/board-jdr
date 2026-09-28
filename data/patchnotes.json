@@ -8,7 +8,8 @@
 				"Nouveautés",
 				[
 					"La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.",
-					"Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom."
+					"Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.",
+					"Le numéro du tour est affiché sous la durée de la partie."
 				]
 			]
 		]

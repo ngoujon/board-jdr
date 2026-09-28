@@ -1105,5 +1105,8 @@
  "Bibliothèque de l'adversaire": "Biblioteca del rival",
  "Bibliothèque adverse et récompenses expliquées": "Biblioteca rival y recompensas explicadas",
  "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "La biblioteca de tu rival aparece en la parte superior del tablero, con el reverso de cartas que eligió y su número de cartas.",
- "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Cuando obtienes un título o un objeto de personalización, la condición que te lo hizo ganar aparece bajo su nombre."
+ "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Cuando obtienes un título o un objeto de personalización, la condición que te lo hizo ganar aparece bajo su nombre.",
+ "Tour %d": "Turno %d",
+ "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Número de turno (se cuentan los turnos de ambos jugadores, como en el registro)",
+ "Le numéro du tour est affiché sous la durée de la partie.": "El número de turno se muestra bajo la duración de la partida."
 }

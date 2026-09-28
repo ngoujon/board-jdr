@@ -1105,5 +1105,8 @@
  "Bibliothèque de l'adversaire": "Opponent's library",
  "Bibliothèque adverse et récompenses expliquées": "Opponent's library and explained rewards",
  "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "Your opponent's library is shown at the top of the board, with the card back they chose and how many cards it holds.",
- "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "When you earn a title or a customization item, the condition that earned it is shown under its name."
+ "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "When you earn a title or a customization item, the condition that earned it is shown under its name.",
+ "Tour %d": "Turn %d",
+ "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Turn number (both players' turns are counted, as in the log)",
+ "Le numéro du tour est affiché sous la durée de la partie.": "The turn number is shown under the game duration."
 }

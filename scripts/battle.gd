@@ -75,6 +75,7 @@ var _selected_hand: CardView     # carte sélectionnée (1er clic) : un 2e clic 
 var _dragging_card: CardView     # carte déplacée à la souris (rangement manuel de la main)
 var _sort_btns := {}             # mode de rangement -> bouton
 var _clock: Label                # chrono de la partie
+var _turn_label: Label           # numéro du tour, sous la durée
 var _clock_stop_msec := 0        # figé à la fin de la partie
 var _rematch_btn: Button
 var _game_over_vb: VBoxContainer
@@ -87,7 +88,7 @@ var _stats := {}                 # statistiques de la partie (déblocage des tit
 var _discard_zone: PanelContainer   # zone « Défausser » en bas à droite, visible pendant le glisser d'une carte
 var _deck_piles := {}            # joueur -> pile de dos de cartes de sa bibliothèque
 var _deck_pile_counts := {}      # joueur -> nombre de cartes affiché sous la pile
-const DISCARD_RECT := Rect2(1040, 492, 132, 170)   # zone de défausse (coordonnées du plateau)
+const DISCARD_RECT := Rect2(1040, 500, 132, 164)   # zone de défausse (coordonnées du plateau)
 const DECK_PILE_POS := Vector2(1184, 500)      # votre bibliothèque : en bas à droite, à côté de la main
 const ENEMY_PILE_POS := Vector2(940, 14)        # bibliothèque adverse : en haut, à droite de sa main
 var _choice_return: CanvasLayer  # bouton « Revenir au choix des cartes » pendant la consultation du plateau
@@ -249,12 +250,19 @@ func _build_ui() -> void:
 	_board_root.add_child(key_hint)
 
 	_clock = UITheme.label(Loc.t("Durée %02d:%02d") % [0, 0], 16, Color("e8d6b0"), 3)
-	_clock.position = Vector2(1040, 404)
-	_clock.size = Vector2(228, 24)
+	_clock.position = Vector2(1040, 400)
+	_clock.size = Vector2(228, 22)
 	_clock.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_clock.tooltip_text = Loc.t("Durée de la partie")
 	_clock.mouse_filter = Control.MOUSE_FILTER_PASS
 	_board_root.add_child(_clock)
+	_turn_label = UITheme.label(Loc.t("Tour %d") % 1, 16, Color("e8d6b0"), 3)
+	_turn_label.position = Vector2(1040, 420)
+	_turn_label.size = Vector2(228, 22)
+	_turn_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_turn_label.tooltip_text = Loc.t("Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)")
+	_turn_label.mouse_filter = Control.MOUSE_FILTER_PASS
+	_board_root.add_child(_turn_label)
 	_auto_end_check = CheckBox.new()
 	_auto_end_check.text = Loc.t("Fin du tour automatique")
 	_auto_end_check.button_pressed = Settings.auto_end_turn
@@ -268,7 +276,7 @@ func _build_ui() -> void:
 			_maybe_auto_end_turn())
 	# Centrée sous la durée (même colonne que le bouton « Fin du tour »), loin du bord de la fenêtre.
 	var auto_box := CenterContainer.new()
-	auto_box.position = Vector2(1040, 426)
+	auto_box.position = Vector2(1040, 442)
 	auto_box.size = Vector2(228, 28)
 	auto_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	auto_box.visible = mode != "replay"
@@ -289,7 +297,7 @@ func _build_ui() -> void:
 			_end_confirm = false
 			_style_end_turn_btn(true))
 	var confirm_box := CenterContainer.new()
-	confirm_box.position = Vector2(1040, 454)
+	confirm_box.position = Vector2(1040, 468)
 	confirm_box.size = Vector2(228, 28)
 	confirm_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	confirm_box.visible = mode != "replay"
@@ -981,6 +989,8 @@ func _update_clock() -> void:
 		return
 	var end := _clock_stop_msec if _clock_stop_msec > 0 else Time.get_ticks_msec()
 	var t := int((end - _start_msec) / 1000.0)
+	if gs != null and _turn_label != null:
+		_turn_label.text = Loc.t("Tour %d") % maxi(1, int(gs.turn_number))
 	_clock.text = (Loc.t("Durée %d:%02d:%02d") % [t / 3600, (t / 60) % 60, t % 60]) if t >= 3600 else (Loc.t("Durée %02d:%02d") % [t / 60, t % 60])
 
 

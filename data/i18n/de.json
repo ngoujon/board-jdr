@@ -1105,5 +1105,8 @@
  "Bibliothèque de l'adversaire": "Bibliothek des Gegners",
  "Bibliothèque adverse et récompenses expliquées": "Gegnerische Bibliothek und erklärte Belohnungen",
  "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "Die Bibliothek deines Gegners wird oben auf dem Spielfeld angezeigt, mit dem von ihm gewählten Kartenrücken und der Anzahl ihrer Karten.",
- "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Wenn du einen Titel oder ein Anpassungsobjekt erhältst, wird unter seinem Namen die Bedingung angezeigt, mit der du es verdient hast."
+ "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Wenn du einen Titel oder ein Anpassungsobjekt erhältst, wird unter seinem Namen die Bedingung angezeigt, mit der du es verdient hast.",
+ "Tour %d": "Zug %d",
+ "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Zugnummer (die Züge beider Spieler werden gezählt, wie im Protokoll)",
+ "Le numéro du tour est affiché sous la durée de la partie.": "Die Zugnummer wird unter der Spieldauer angezeigt."
 }
