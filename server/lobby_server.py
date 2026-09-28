@@ -1652,30 +1652,71 @@ LANDING_PAGE = """<!doctype html>
 <title>Arcanes &amp; Lames</title><link rel="icon" href="/favicon.ico">
 <style>
 body{{margin:0;background:#1a1220;color:#f5e9d0;font-family:system-ui,sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center}}
-main{{max-width:640px;padding:32px;border:3px solid #f2c14e;background:#2b1d14;border-radius:6px;margin:16px}}
-h1{{color:#f2c14e;margin-top:0}} h3{{color:#f2c14e}} small{{color:#c9b79a}} li{{margin:6px 0}}
+main{{max-width:680px;padding:32px;border:3px solid #f2c14e;background:#2b1d14;border-radius:6px;margin:16px}}
+h1{{color:#f2c14e;margin-top:0}} h3{{color:#f2c14e;margin-bottom:6px}} small{{color:#c9b79a}} li{{margin:6px 0}}
 a.btn,button{{display:inline-block;background:#c98a2b;color:#1a1220;padding:10px 18px;font-weight:bold;
 text-decoration:none;border-radius:4px;border:0;cursor:pointer;font-size:15px}}
 .cmd{{display:flex;gap:8px;align-items:stretch;margin:10px 0}}
 code{{flex:1;background:#120c16;border:1px solid #6b5a3c;padding:10px;border-radius:4px;color:#9fd8ff;
 font-size:13px;overflow-wrap:anywhere}}
+.tabs{{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 0}}
+.tabs button{{background:#3d2a1c;color:#f5e9d0;border:2px solid #6b5a3c;border-bottom:0;border-radius:4px 4px 0 0}}
+.tabs button.on{{background:#c98a2b;color:#1a1220;border-color:#c98a2b}}
+.os{{display:none;border:2px solid #6b5a3c;padding:4px 18px 14px;border-radius:0 4px 4px 4px}} .os.on{{display:block}}
 </style></head><body><main>
 <h1>Arcanes &amp; Lames</h1>
 <p>Jeu de cartes médiéval-fantastique en pixel art. Version actuelle : <b>{version}</b></p>
+<div class="tabs"><button data-os="windows">Windows</button><button data-os="macos">macOS</button><button data-os="linux">Linux</button></div>
+
+<section class="os" id="windows">
 <h3>Installation recommandée (Windows 10/11)</h3>
 <ol><li>Appuyez sur <b>Windows + R</b>, collez la commande ci-dessous puis <b>Entrée</b> :</li></ol>
-<div class="cmd"><code id="c">{install_cmd}</code>
-<button onclick="navigator.clipboard.writeText(document.getElementById('c').innerText);this.innerText='Copié !'">Copier</button></div>
+<div class="cmd"><code>{install_cmd}</code><button class="copy">Copier</button></div>
 <p><small>Le jeu est téléchargé en HTTPS, son empreinte et sa signature « Arcanes &amp; Lames » sont vérifiées,
 puis il est installé (sans droits administrateur) avec un raccourci sur le Bureau. Aucun avertissement Windows.</small></p>
 <h3>Ou téléchargement manuel</h3>
-{download}
+{download_windows}
 <p><small>Windows peut alors afficher « Windows a protégé votre ordinateur » : <i>Informations complémentaires</i>
 puis <i>Exécuter quand même</i>. Empreinte du certificat de signature : <code style="font-size:11px">{thumbprint}</code>
 (<a href="/arcanes_codesign.cer" style="color:#9fd8ff">certificat</a>).</small></p>
+</section>
+
+<section class="os" id="macos">
+<h3>Installation recommandée (macOS 11 ou plus récent, Intel et Apple Silicon)</h3>
+<ol><li>Ouvrez le <b>Terminal</b> (Launchpad &gt; Autres &gt; Terminal), collez la commande ci-dessous puis <b>Entrée</b> :</li></ol>
+<div class="cmd"><code>{install_sh}</code><button class="copy">Copier</button></div>
+<p><small>Le jeu est téléchargé en HTTPS, son empreinte est vérifiée, puis il est installé dans
+<i>~/Applications</i> (sans mot de passe administrateur) et lancé. Aucun avertissement de macOS.</small></p>
+<h3>Ou téléchargement manuel</h3>
+{download_macos}
+<p><small>Décompressez le zip et glissez « Arcanes &amp; Lames » dans Applications. Le jeu n'étant pas enregistré
+auprès d'Apple, macOS bloque la première ouverture : ouvrez <i>Réglages Système &gt; Confidentialité et sécurité</i>
+puis cliquez sur <i>Ouvrir quand même</i>.</small></p>
+</section>
+
+<section class="os" id="linux">
+<h3>Installation recommandée (Linux x86_64)</h3>
+<ol><li>Ouvrez un terminal, collez la commande ci-dessous puis <b>Entrée</b> :</li></ol>
+<div class="cmd"><code>{install_sh}</code><button class="copy">Copier</button></div>
+<p><small>Le jeu est téléchargé en HTTPS, son empreinte est vérifiée, puis il est installé dans
+<i>~/.local/share/ArcanesEtLames</i> (sans sudo) avec un raccourci dans le menu des applications.</small></p>
+<h3>Ou téléchargement manuel</h3>
+{download_linux}
+<p><small>Décompressez l'archive puis lancez <i>ArcanesEtLames.x86_64</i>. Nécessite une carte graphique compatible Vulkan.</small></p>
+</section>
+
 <p>Ensuite, choisissez votre pseudo dans <b>Paramètres &gt; Profil</b> : vous êtes connecté au serveur.
 Les mises à jour s'installent automatiquement au lancement du jeu.</p>
 <p><small>Nouveautés : {notes}</small></p>
+<script>
+function show(os){{document.querySelectorAll('.os,.tabs button').forEach(function(e){{
+e.classList.toggle('on',e.id===os||e.dataset.os===os)}})}}
+document.querySelectorAll('.tabs button').forEach(function(b){{b.onclick=function(){{show(b.dataset.os)}}}});
+document.querySelectorAll('button.copy').forEach(function(b){{b.onclick=function(){{
+navigator.clipboard.writeText(b.previousElementSibling.innerText);b.innerText='Copié !'}}}});
+var p=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||'';
+show(/mac/i.test(p)?'macos':/linux|x11/i.test(p)&&!/android/i.test(navigator.userAgent)?'linux':'windows');
+</script>
 </main></body></html>"""
 
 
@@ -1684,15 +1725,19 @@ class UpdateHttpServer:
     GET /                 page de téléchargement du jeu
     GET /version.json     dernière version publiée
     GET /files/<x>.pck    paquet de mise à jour
-    GET /download/<x>.zip jeu complet (première installation)"""
+    GET /download/<x>.zip jeu complet (première installation ; .tar.gz pour Linux)
+    GET /install.ps1, /install.sh  installateurs en une ligne (Windows ; Linux et macOS)"""
 
     CHUNK = 64 * 1024
-    CTYPES = {".pck": "application/octet-stream", ".zip": "application/zip"}
+    CTYPES = {".pck": "application/octet-stream", ".zip": "application/zip", ".gz": "application/gzip"}
     STATIC = {
         "/install.ps1": ("install.ps1", "text/plain; charset=utf-8"),
+        "/install.sh": ("install.sh", "text/plain; charset=utf-8"),
         "/arcanes_codesign.cer": ("arcanes_codesign.cer", "application/pkix-cert"),
         "/favicon.ico": ("favicon.ico", "image/x-icon"),
     }
+    SITE_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ttf": "font/ttf",
+                  ".woff2": "font/woff2", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8"}
     WEB_BASE = "https://arcanes.example.com"
 
     async def handle(self, reader, writer):
@@ -1715,6 +1760,14 @@ class UpdateHttpServer:
                 return await self.reply(writer, 200, body, "application/json; charset=utf-8", head)
             if path in ("/", "/index.html"):
                 return await self.reply(writer, 200, self.landing(), "text/html; charset=utf-8", head)
+            if path.startswith("/site/"):
+                name = os.path.basename(path[len("/site/"):])   # pas de sous-dossier ni de ../
+                ctype = self.SITE_TYPES.get(os.path.splitext(name)[1].lower())
+                full = os.path.join(UPDATES_DIR, "site", name)
+                if not ctype or name == "index.html" or not os.path.isfile(full):
+                    return await self.reply(writer, 404, b"Fichier introuvable")
+                with open(full, "rb") as f:
+                    return await self.reply(writer, 200, f.read(), ctype, head, cache=86400)
             if path in self.STATIC:
                 name, ctype = self.STATIC[path]
                 full = os.path.join(UPDATES_DIR, name)
@@ -1727,7 +1780,7 @@ class UpdateHttpServer:
                 name = os.path.basename(path[len(prefix):])  # pas de sous-dossier ni de ../
                 ext = os.path.splitext(name)[1]
                 full = os.path.join(UPDATES_DIR, name)
-                if (prefix == "/files/" and ext != ".pck") or (prefix == "/download/" and ext != ".zip") \
+                if (prefix == "/files/" and ext != ".pck") or (prefix == "/download/" and not name.endswith((".zip", ".tar.gz"))) \
                         or not os.path.isfile(full):
                     return await self.reply(writer, 404, b"Fichier introuvable")
                 size = os.path.getsize(full)
@@ -1748,29 +1801,44 @@ class UpdateHttpServer:
 
     @staticmethod
     def landing():
+        # Page d'accueil générée à la publication (tools/site, voir publish_update.py) ; sinon page simple ci-dessous.
+        try:
+            with open(os.path.join(UPDATES_DIR, "site", "index.html"), "rb") as f:
+                return f.read()
+        except OSError:
+            pass
         import html
         latest = latest_release() or {}
-        dl = latest.get("download", "")
-        if dl and os.path.isfile(os.path.join(UPDATES_DIR, os.path.basename(dl))):
-            size = os.path.getsize(os.path.join(UPDATES_DIR, os.path.basename(dl))) / 1048576
-            download = (f'<p><a class="btn" href="/download/{html.escape(os.path.basename(dl))}">'
-                        f'Télécharger le zip ({size:.0f} Mo)</a></p>')
-        else:
-            download = "<p><i>Le téléchargement sera bientôt disponible.</i></p>"
+        downloads = dict(latest.get("downloads") or {})
+        if "windows" not in downloads and latest.get("download"):   # latest.json d'avant les versions Linux/macOS
+            downloads["windows"] = {"file": latest["download"]}
+        labels = {"windows": "le zip Windows", "macos": "le zip macOS", "linux": "l'archive Linux"}
+        blocks = {}
+        for key, label in labels.items():
+            name = os.path.basename(str((downloads.get(key) or {}).get("file", "")))
+            full = os.path.join(UPDATES_DIR, name)
+            if name and os.path.isfile(full):
+                blocks["download_" + key] = (f'<p><a class="btn" href="/download/{html.escape(name)}">'
+                                             f'Télécharger {label} ({os.path.getsize(full) / 1048576:.0f} Mo)</a></p>')
+            else:
+                blocks["download_" + key] = "<p><i>Le téléchargement sera bientôt disponible.</i></p>"
         install_cmd = f'powershell -c "irm {UpdateHttpServer.WEB_BASE}/install.ps1 | iex"'
-        return LANDING_PAGE.format(version=html.escape(str(latest.get("version", "—"))), download=download,
+        install_sh = f"curl -fsSL {UpdateHttpServer.WEB_BASE}/install.sh | sh"
+        return LANDING_PAGE.format(version=html.escape(str(latest.get("version", "—"))),
                                    install_cmd=html.escape(install_cmd, quote=False),
+                                   install_sh=html.escape(install_sh, quote=False),
                                    thumbprint=html.escape(str(latest.get("codesign_thumbprint", "—"))),
-                                   notes=html.escape(str(latest.get("notes", "")) or "—")).encode("utf-8")
+                                   notes=html.escape(str(latest.get("notes", "")) or "—"), **blocks).encode("utf-8")
 
     @staticmethod
-    def headers(code, length, ctype):
+    def headers(code, length, ctype, cache=0):
         reason = {200: "OK", 404: "Not Found", 405: "Method Not Allowed"}.get(code, "OK")
+        cc = f"public, max-age={cache}" if cache else "no-cache"
         return (f"HTTP/1.1 {code} {reason}\r\nContent-Type: {ctype}\r\nContent-Length: {length}\r\n"
-                f"Cache-Control: no-cache\r\nConnection: close\r\n\r\n").encode("latin-1")
+                f"Cache-Control: {cc}\r\nConnection: close\r\n\r\n").encode("latin-1")
 
-    async def reply(self, writer, code, body, ctype="text/plain; charset=utf-8", head=False):
-        writer.write(self.headers(code, len(body), ctype))
+    async def reply(self, writer, code, body, ctype="text/plain; charset=utf-8", head=False, cache=0):
+        writer.write(self.headers(code, len(body), ctype, cache))
         if not head:
             writer.write(body)
         await writer.drain()
