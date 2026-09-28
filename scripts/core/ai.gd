@@ -129,7 +129,8 @@ func _best_play(gs: GameState) -> Dictionary:
 			elif bc.get("kind", "") == "destroy":
 				score += _enchant_threat(opp) * 0.8 if not opp.enchants.is_empty() else -4.0
 			elif bc.get("kind", "") == "grave_buff":
-				score += mini(int(bc.max), p.graveyard.size() / int(bc.per)) * 3
+				var k: int = p.graveyard.size() / int(bc.per)
+				score += (mini(int(bc.max), k) if int(bc.get("max", 0)) > 0 else k) * 3
 			elif bc.get("kind", "") == "recall_spell":
 				score += 4 if _grave_has(p, "spell", 99) else 0
 			if CardDB.card_keywords(hc.card_id).has("ongoing"):

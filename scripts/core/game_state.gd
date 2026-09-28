@@ -589,9 +589,11 @@ func _resolve_effect(p: int, eff: Dictionary, source_uid: int, chosen_uid: int) 
 			for i in n:
 				_draw(players[p])
 		"grave_buff":
-			# +1/+1 par tranche de `per` cartes dans le cimetière (au plus `max`).
+			# +1/+1 par tranche de `per` cartes dans le cimetière (au plus `max` si indiqué, sinon sans limite).
 			var src := get_entity(source_uid)
-			var k := mini(int(eff.max), players[p].graveyard.size() / int(eff.per))
+			var k: int = players[p].graveyard.size() / int(eff.per)
+			if int(eff.get("max", 0)) > 0:
+				k = mini(int(eff.max), k)
 			if src and k > 0:
 				src.attack += k
 				src.health += k

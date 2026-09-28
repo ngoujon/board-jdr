@@ -357,7 +357,7 @@ const CARDS := {
 	"goule": {
 		"name": "Goule affamée", "type": "minion", "cost": 3, "attack": 2, "health": 2,
 		"keywords": ["battlecry"],
-		"battlecry": {"kind": "grave_buff", "per": 4, "max": 3, "fx": "buff"},
+		"battlecry": {"kind": "grave_buff", "per": 4, "fx": "buff"},
 		"text": "Cri de guerre : +1/+1 par 4 cartes au cimetière.",
 		"flavor": "Plus le cimetière est rempli, plus elle a d'appétit.",
 	},
@@ -520,7 +520,9 @@ func effect_text(eff: Dictionary) -> String:
 				txt += Loc.t(", +%d si votre cimetière contient au moins %d cartes") % [int(bonus.amount), int(bonus.min)]
 			return txt + "."
 		"grave_buff":
-			return Loc.t("ce serviteur gagne +1/+1 par tranche de %d cartes dans votre cimetière (au plus +%d/+%d).") % [int(eff.per), int(eff.max), int(eff.max)]
+			if int(eff.get("max", 0)) > 0:
+				return Loc.t("ce serviteur gagne +1/+1 par tranche de %d cartes dans votre cimetière (au plus +%d/+%d).") % [int(eff.per), int(eff.max), int(eff.max)]
+			return Loc.t("ce serviteur gagne +1/+1 par tranche de %d cartes dans votre cimetière, sans limite.") % int(eff.per)
 		"resurrect":
 			return Loc.t("invoque au hasard un serviteur de votre cimetière coûtant %d ou moins (il quitte le cimetière).") % int(eff.max_cost)
 		"recall_spell":

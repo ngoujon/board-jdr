@@ -115,8 +115,11 @@ func _ready() -> void:
 	_build_season_widget()
 	_build_patch_notes()
 	Lobby.set_status("online" if Lobby.room.is_empty() else "lobby")
-	if Settings.player_name == "":
-		# Premier lancement : on invite le joueur à choisir un pseudo et un avatar.
+	if Settings.player_name == "" and not Settings.welcome_done and not Settings.autoplay:
+		# Premier lancement : accueil (présentation du jeu, puis pseudo et avatar).
+		add_child(WelcomePanel.new())
+	elif Settings.player_name == "":
+		# Accueil déjà passé : simple rappel pour choisir un pseudo et un avatar.
 		get_tree().create_timer(0.6).timeout.connect(func():
 			Lobby.toast(Loc.t("Bienvenue ! Choisissez votre pseudo et votre avatar dans Paramètres > Profil."), UITheme.GOLD, 6.0))
 

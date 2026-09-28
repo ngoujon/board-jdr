@@ -40,6 +40,7 @@ var language_chosen := false  # vrai quand le joueur a choisi sa langue dans les
 var language := ""            # fr | en | de | es | it | pt ("" : langue du système au premier lancement)
 var hand_sort := "manual"   # rangement de la main : manual | cost | health | attack
 var auto_end_turn := false   # termine le tour tout seul quand il n'y a plus rien à jouer
+var welcome_done := false   # accueil des nouveaux joueurs déjà vu (ou passé)
 var confirm_end_turn := true   # « Fin du tour » alors qu'il reste des actions : demande une confirmation
 var anim_speed := 1.0
 var ui_zoom := 1.0           # zoom de l'interface (Paramètres > Affichage), de 0,7 à 1,3
@@ -314,6 +315,7 @@ func save_settings() -> void:
 	cfg.set_value("game", "hand_sort", hand_sort)
 	cfg.set_value("game", "auto_end_turn", auto_end_turn)
 	cfg.set_value("game", "confirm_end_turn", confirm_end_turn)
+	cfg.set_value("game", "welcome_done", welcome_done)
 	cfg.set_value("game", "language", language)
 	cfg.set_value("game", "language_chosen", language_chosen)
 	cfg.set_value("game", "anim_speed", anim_speed)
@@ -366,6 +368,7 @@ func load_settings() -> void:
 	hand_sort = str(cfg.get_value("game", "hand_sort", hand_sort))
 	auto_end_turn = bool(cfg.get_value("game", "auto_end_turn", auto_end_turn))
 	confirm_end_turn = bool(cfg.get_value("game", "confirm_end_turn", confirm_end_turn))
+	welcome_done = bool(cfg.get_value("game", "welcome_done", welcome_done))
 	language_chosen = bool(cfg.get_value("game", "language_chosen", false))
 	# Langue choisie par le joueur uniquement ; sinon le français (la 1.8.0 prenait la langue du système).
 	language = str(cfg.get_value("game", "language", language)) if language_chosen else "fr"
