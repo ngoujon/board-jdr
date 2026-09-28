@@ -4,8 +4,9 @@ extends Node
 ##    ({"version", "file", "sha256", "size", "notes"}) et le paquet .pck correspondant.
 ##  - Au lancement (scène boot), le client compare sa version ; s'il est en retard, il télécharge
 ##    le .pck dans user://updates/ et vérifie son SHA-256.
-##  - Pour l'appliquer, le jeu se ferme et un petit script PowerShell remplace le .pck situé à côté
-##    de l'exe, puis relance le jeu. (Les modèles d'export de Godot 4.7 refusent --main-pack.)
+##  - Pour l'appliquer, le jeu se ferme et un petit script (PowerShell sous Windows, /bin/sh sous Linux
+##    et macOS) remplace le .pck principal, puis relance le jeu. (Les modèles d'export de Godot 4.7 refusent --main-pack.)
+##  - Chaque système a son paquet : champs principaux de latest.json pour Windows, "platforms" pour les autres.
 ##  - Si ce remplacement a échoué, _ready() le retente au lancement suivant.
 ##  - Le serveur refuse les clients obsolètes : tout le monde joue sur la même version.
 
@@ -78,9 +79,42 @@ func update_url(path: String) -> String:
 ## Un jeu exporté (ou lancé sur un paquet) peut se relancer sur le nouveau .pck.
 ## Depuis l'éditeur, le téléchargement fonctionne mais le redémarrage est impossible.
 func can_self_update() -> bool:
-	# Jeu exporté pour Windows, avec son .pck à côté de l'exe (pas l'éditeur).
-	return OS.get_name() == "Windows" and OS.has_feature("template") \
-		and FileAccess.file_exists(OS.get_executable_path().get_basename() + ".pck")
+	# Jeu exporté (pas l'éditeur) avec son paquet principal .pck à part.
+	return OS.get_name() in ["Windows", "Linux", "macOS"] and OS.has_feature("template") \
+		and FileAccess.file_exists(main_pack_path())
+
+
+## Paquet principal du jeu exporté : à côté de l'exe (Windows, Linux),
+## dans Contents/Resources de l'application (macOS).
+static func main_pack_path() -> String:
+	var exe := OS.get_executable_path()
+	if OS.get_name() == "macOS":
+		return exe.get_base_dir().get_base_dir().path_join("Resources").path_join(exe.get_file().get_basename() + ".pck")
+	return exe.get_basename() + ".pck"
+
+
+## Clé de la plateforme dans latest.json ("platforms") ; Windows utilise les champs principaux.
+static func platform_key() -> String:
+	match OS.get_name():
+		"Linux":
+			return "linux"
+		"macOS":
+			return "macos"
+	return "windows"
+
+
+## Manifeste ramené à la plateforme courante : chaque système a son propre paquet signé.
+static func for_platform(data: Dictionary) -> Dictionary:
+	var entry = data.get("platforms", {}).get(platform_key(), null)
+	if not (entry is Dictionary):
+		return data
+	var out := data.duplicate()
+	for k in ["file", "sha256", "size", "signature"]:
+		if entry.has(k):
+			out[k] = entry[k]
+		else:
+			out.erase(k)
+	return out
 
 
 # ------------------------------------------------------------------ vérification
@@ -105,6 +139,7 @@ func _on_check_completed(result: int, code: int, _headers: PackedStringArray, bo
 	if not (data is Dictionary) or not data.has("version"):
 		_finish_check("error", Loc.t("Réponse du serveur invalide."))
 		return
+	data = for_platform(data)
 	if not _signature_ok(data):
 		push_warning("[Updater] signature du manifeste invalide : mise à jour ignorée")
 		_finish_check("error", Loc.t("Mise à jour refusée : signature invalide."))
@@ -239,7 +274,7 @@ func restart_on_update() -> bool:
 
 func _relaunch(pck_path: String) -> void:
 	var exe := OS.get_executable_path()
-	var target := exe.get_basename() + ".pck"   # paquet principal du jeu exporté, à côté de l'exe
+	var target := main_pack_path()
 	var args := PackedStringArray()
 	if DisplayServer.get_name() == "headless":
 		args.append("--headless")
@@ -248,6 +283,12 @@ func _relaunch(pck_path: String) -> void:
 		if a != "--from-update" and a != "--auto-update" and not a.begins_with("--fake-version="):
 			args.append(a)
 	args.append("--from-update")
+	restarting = true
+	print("[Updater] application de %s puis redémarrage" % pck_path)
+	if OS.get_name() != "Windows":
+		_relaunch_unix(exe, pck_path, target, args)
+		get_tree().quit()
+		return
 	var quoted := PackedStringArray()
 	for a in args:
 		quoted.append(_ps_quote("\"%s\"" % a if " " in a else a))
@@ -255,15 +296,31 @@ func _relaunch(pck_path: String) -> void:
 	var script := "$ErrorActionPreference = 'SilentlyContinue'; Wait-Process -Id %d -Timeout 60; " % OS.get_process_id() \
 		+ "for ($i = 0; $i -lt 40; $i++) { try { Copy-Item -LiteralPath %s -Destination %s -Force -ErrorAction Stop; break } catch { Start-Sleep -Milliseconds 500 } }; " % [_ps_quote(pck_path), _ps_quote(target)] \
 		+ "Start-Process -FilePath %s -WorkingDirectory %s -ArgumentList @(%s)" % [_ps_quote(exe), _ps_quote(exe.get_base_dir()), ", ".join(quoted)]
-	restarting = true
-	print("[Updater] application de %s puis redémarrage" % pck_path)
 	OS.create_process("powershell.exe", ["-NoProfile", "-ExecutionPolicy", "Bypass", "-WindowStyle", "Hidden", "-Command", script])
 	get_tree().quit()
+
+
+## Linux / macOS : même principe avec /bin/sh. Sur macOS, l'application est ensuite re-signée
+## (signature ad hoc, codesign est fourni avec le système) car le paquet fait partie du bundle signé.
+func _relaunch_unix(exe: String, pck_path: String, target: String, args: PackedStringArray) -> void:
+	var quoted := PackedStringArray()
+	for a in args:
+		quoted.append(_sh_quote(a))
+	var script := "i=0; while kill -0 %d 2>/dev/null && [ $i -lt 300 ]; do sleep 0.2; i=$((i+1)); done; " % OS.get_process_id() \
+		+ "i=0; until cp -f %s %s; do i=$((i+1)); [ $i -ge 40 ] && break; sleep 0.5; done; " % [_sh_quote(pck_path), _sh_quote(target)]
+	if OS.get_name() == "macOS":
+		var app := exe.get_base_dir().get_base_dir().get_base_dir()   # .../Arcanes & Lames.app
+		script += "codesign --force --deep --sign - %s >/dev/null 2>&1; " % _sh_quote(app)
+	script += "cd %s && exec %s %s >/dev/null 2>&1" % [_sh_quote(exe.get_base_dir()), _sh_quote(exe), " ".join(quoted)]
+	OS.create_process("/bin/sh", ["-c", script])
 
 
 static func _ps_quote(t: String) -> String:
 	return "'" + t.replace("'", "''") + "'"
 
+
+static func _sh_quote(t: String) -> String:
+	return "'" + t.replace("'", "'\\''") + "'"
 
 
 ## Au démarrage d'un jeu exporté : si un paquet plus récent est installé, on se relance dessus.
