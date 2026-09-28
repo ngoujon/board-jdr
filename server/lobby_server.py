@@ -1738,16 +1738,20 @@ class UpdateHttpServer:
         "/favicon.ico": ("favicon.ico", "image/x-icon"),
     }
     SITE_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ttf": "font/ttf",
-                  ".woff2": "font/woff2", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8"}
+                  ".woff2": "font/woff2", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8",
+                  ".mp4": "video/mp4", ".vtt": "text/vtt; charset=utf-8"}
     WEB_BASE = "https://arcanes.example.com"
 
     async def handle(self, reader, writer):
         try:
             request = await asyncio.wait_for(reader.readline(), 10)
-            for _ in range(100):  # ignore les en-têtes (100 lignes au plus)
+            byte_range = ""
+            for _ in range(100):  # en-têtes (100 lignes au plus) : seul Range sert (avance dans la vidéo)
                 line = await asyncio.wait_for(reader.readline(), 10)
                 if line in (b"\r\n", b"\n", b""):
                     break
+                if line[:6].lower() == b"range:":
+                    byte_range = line[6:].decode("latin-1").strip()
             parts = request.decode("latin-1").split()
             if len(parts) < 2 or parts[0] not in ("GET", "HEAD"):
                 return await self.reply(writer, 405, b"Methode non autorisee")
@@ -1767,8 +1771,7 @@ class UpdateHttpServer:
                 full = os.path.join(UPDATES_DIR, "site", name)
                 if not ctype or name == "index.html" or not os.path.isfile(full):
                     return await self.reply(writer, 404, b"Fichier introuvable")
-                with open(full, "rb") as f:
-                    return await self.reply(writer, 200, f.read(), ctype, head, cache=86400)
+                return await self.send_file(writer, full, ctype, head, byte_range, cache=86400)
             if path in self.STATIC:
                 name, ctype = self.STATIC[path]
                 full = os.path.join(UPDATES_DIR, name)
@@ -1831,11 +1834,38 @@ class UpdateHttpServer:
                                    thumbprint=html.escape(str(latest.get("codesign_thumbprint", "—"))),
                                    notes=html.escape(str(latest.get("notes", "")) or "—"), **blocks).encode("utf-8")
 
+    async def send_file(self, writer, full, ctype, head, byte_range="", cache=0):
+        """Envoie un fichier par morceaux ; « Range: bytes=a-b » donne une réponse 206 (avance dans la vidéo)."""
+        size = os.path.getsize(full)
+        start, end, code, extra = 0, size - 1, 200, "Accept-Ranges: bytes\r\n"
+        m = re.fullmatch(r"bytes=(\d*)-(\d*)", byte_range.replace(" ", ""))
+        if m and (m.group(1) or m.group(2)):
+            if m.group(1):
+                start = int(m.group(1))
+                end = min(int(m.group(2)), size - 1) if m.group(2) else size - 1
+            else:   # « bytes=-n » : les n derniers octets
+                start = max(0, size - int(m.group(2)))
+            if start > end:
+                writer.write(self.headers(416, 0, ctype, extra=f"Content-Range: bytes */{size}\r\n"))
+                return await writer.drain()
+            code, extra = 206, extra + f"Content-Range: bytes {start}-{end}/{size}\r\n"
+        writer.write(self.headers(code, end - start + 1, ctype, cache, extra))
+        if not head:
+            with open(full, "rb") as f:
+                f.seek(start)
+                left = end - start + 1
+                while left > 0 and (chunk := f.read(min(self.CHUNK, left))):
+                    writer.write(chunk)
+                    left -= len(chunk)
+                    await writer.drain()
+        await writer.drain()
+
     @staticmethod
-    def headers(code, length, ctype, cache=0):
-        reason = {200: "OK", 404: "Not Found", 405: "Method Not Allowed"}.get(code, "OK")
+    def headers(code, length, ctype, cache=0, extra=""):
+        reason = {200: "OK", 206: "Partial Content", 404: "Not Found", 405: "Method Not Allowed",
+                  416: "Range Not Satisfiable"}.get(code, "OK")
         cc = f"public, max-age={cache}" if cache else "no-cache"
-        return (f"HTTP/1.1 {code} {reason}\r\nContent-Type: {ctype}\r\nContent-Length: {length}\r\n"
+        return (f"HTTP/1.1 {code} {reason}\r\nContent-Type: {ctype}\r\nContent-Length: {length}\r\n{extra}"
                 f"Cache-Control: {cc}\r\nConnection: close\r\n\r\n").encode("latin-1")
 
     async def reply(self, writer, code, body, ctype="text/plain; charset=utf-8", head=False, cache=0):

@@ -248,40 +248,79 @@ SITE_ASSETS = ["assets/bg/menu.png", "assets/ui/game_icon.png", "assets/fonts/Ar
                                     "forge", "archer", "pretresse", "hydre", "meteores", "golem")]
 
 
+TRAILER_DIR = os.path.join(ROOT, "build", "trailer")   # rendu par tools/trailer/build_trailer.py
+SITE_LANGS = ["fr", "en", "de", "es", "it", "pt"]
+
+
+def site_news(entry, lang):
+    """Notes de la version publiée, traduites avec les fichiers de langue du jeu (data/i18n)."""
+    import html
+    if not entry:
+        return ""
+    tr = {}
+    path = os.path.join(ROOT, "data", "i18n", f"{lang}.json")
+    if lang != "fr" and os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            tr = json.load(f)
+    t = lambda text: html.escape(tr.get(text) or text)
+    word = {"es": "Versión", "pt": "Versão", "it": "Versione"}.get(lang, "Version")
+    news = (f'<div class="scroll reveal seen"><h3>{word} {html.escape(entry["version"])} : {t(entry.get("title", ""))}</h3>'
+            f'<p class="date">{html.escape(entry.get("date", ""))}</p>')
+    for title, items in entry.get("sections", []):
+        news += f"<h4>{t(title)}</h4><ul>" + "".join(f"<li>{t(i)}</li>" for i in items) + "</ul>"
+    return news + "</div>"
+
+
+def script_json(data):
+    """JSON inclus dans une balise <script> (sans fermeture de balise possible)."""
+    return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+
+
 def build_site(latest, dest):
-    """Page d'accueil (tools/site/index.html + captures + illustrations du jeu) remplie avec la version publiée."""
+    """Page d'accueil multilingue (tools/site : index.html en français + i18n.json) avec captures, illustrations
+    du jeu et bande-annonce, remplie avec la version publiée."""
     import html
     if os.path.isdir(dest):
         shutil.rmtree(dest)
     os.makedirs(dest)
     for name in os.listdir(SITE_SRC):
-        if name != "index.html":
+        if name not in ("index.html", "i18n.json"):
             shutil.copy2(os.path.join(SITE_SRC, name), dest)
     for rel in SITE_ASSETS:
         shutil.copy2(os.path.join(ROOT, rel), dest)
     with open(os.path.join(ROOT, "data", "patchnotes.json"), encoding="utf-8") as f:
         entry = next((e for e in json.load(f) if e.get("version") == latest["version"]), None)
-    news = ""
-    if entry:
-        news = (f'<div class="scroll reveal"><h3>Version {html.escape(entry["version"])} : {html.escape(entry.get("title", ""))}</h3>'
-                f'<p class="date">{html.escape(entry.get("date", ""))}</p>')
-        for title, items in entry.get("sections", []):
-            news += f"<h4>{html.escape(title)}</h4><ul>" + "".join(f"<li>{html.escape(i)}</li>" for i in items) + "</ul>"
-        news += "</div>"
     downloads = latest.get("downloads") or {"windows": {"file": latest.get("download", ""), "size": latest.get("download_size", 0)}}
     values = {
         "VERSION": html.escape(latest["version"]),
         "THUMBPRINT": html.escape(str(latest.get("codesign_thumbprint", ""))),
         "INSTALL_PS": html.escape(f'powershell -c "irm {CODESIGN["web_base"]}/install.ps1 | iex"', quote=False),
         "INSTALL_SH": html.escape(f"curl -fsSL {CODESIGN['web_base']}/install.sh | sh", quote=False),
-        "NEWS": news,
     }
     for key in ("windows", "macos", "linux", "android"):
         d = downloads.get(key) or {}
         values[f"DL_{key.upper()}"] = html.escape(str(d.get("file", "")))
         values[f"SIZE_{key.upper()}"] = f"{int(d.get('size', 0)) / 1048576:.0f}"
+    fill = lambda text: re.sub(r"\{\{([A-Z_]+)\}\}", lambda m: values.get(m.group(1), m.group(0)), text)
+    with open(os.path.join(SITE_SRC, "i18n.json"), encoding="utf-8") as f:
+        texts = {lang: {k: fill(v) for k, v in d.items()} for lang, d in json.load(f).items() if lang in SITE_LANGS}
+    news = {lang: site_news(entry, lang) for lang in SITE_LANGS}
+    values["NEWS"] = news["fr"]
+    values["I18N_JSON"] = script_json(texts)
+    values["NEWS_JSON"] = script_json(news)
     with open(os.path.join(SITE_SRC, "index.html"), encoding="utf-8") as f:
         page = f.read()
+    # Bande-annonce : vidéo, affiche et sous-titres par langue ; section retirée si elle n'a pas été rendue.
+    trailer = os.path.join(TRAILER_DIR, "arcanes_trailer.mp4")
+    if os.path.exists(trailer):
+        shutil.copy2(trailer, dest)
+        shutil.copy2(os.path.join(TRAILER_DIR, "poster.jpg"), os.path.join(dest, "trailer_poster.jpg"))
+        for lang in SITE_LANGS:
+            shutil.copy2(os.path.join(TRAILER_DIR, f"arcanes_trailer_{lang}.vtt"), os.path.join(dest, f"trailer_{lang}.vtt"))
+    else:
+        print("  (pas de bande-annonce dans build/trailer : section retirée)")
+        page = re.sub(r"<!--TRAILER-->.*?<!--/TRAILER-->", "", page, flags=re.S)
+        page = re.sub(r'<a (class="btn ghost" )?href="#bande-annonce"[^>]*>.*?</a>', "", page)
     for k, v in values.items():
         page = page.replace("{{" + k + "}}", v)
     left = re.findall(r"\{\{[A-Z_]+\}\}", page)
