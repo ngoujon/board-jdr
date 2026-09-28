@@ -1,5 +1,20 @@
 [
 	{
+		"version": "2.0.1",
+		"date": "2026-09-28",
+		"title": "Arcanes & Lames arrive sur macOS et Linux",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Le jeu est désormais disponible sur macOS (Mac Intel et Apple Silicon) et sur Linux, en plus de Windows. Tout le monde joue ensemble sur le même serveur.",
+					"Installation en une commande sur macOS et Linux, et mises à jour automatiques comme sous Windows.",
+					"Nouvelle page d'accueil pour télécharger le jeu, avec des captures et une présentation du jeu."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.0",
 		"date": "2026-09-26",
 		"title": "Inferno, récompenses et classement",

@@ -1052,5 +1052,16 @@
  "Récupérer": "Reclamar",
  "Tout récupérer (%d)": "Reclamar todo (%d)",
  "Passe de combat : les récompenses se récupèrent désormais avec un bouton « Récupérer » (ou « Tout récupérer »). Ce que vous aviez déjà obtenu reste à vous.": "Pase de batalla: las recompensas ahora se reclaman con un botón «Reclamar» (o «Reclamar todo»). Lo que ya tenías sigue siendo tuyo.",
- "Nouvelles animations : pluie de pièces d'or quand vous gagnez des PO, révélation épique (rayons de lumière, étincelles, fanfare) pour chaque personnalisation obtenue.": "Nuevas animaciones: lluvia de monedas de oro al ganar O y revelación épica (rayos de luz, chispas, fanfarria) para cada personalización obtenida."
+ "Nouvelles animations : pluie de pièces d'or quand vous gagnez des PO, révélation épique (rayons de lumière, étincelles, fanfare) pour chaque personnalisation obtenue.": "Nuevas animaciones: lluvia de monedas de oro al ganar O y revelación épica (rayos de luz, chispas, fanfarria) para cada personalización obtenida.",
+ "Linux": "Linux",
+ "macOS": "macOS",
+ "Resources": "Resources",
+ "cd %s && exec %s %s >/dev/null 2>&1": "cd %s && exec %s %s >/dev/null 2>&1",
+ "codesign --force --deep --sign - %s >/dev/null 2>&1; ": "codesign --force --deep --sign - %s >/dev/null 2>&1; ",
+ "i=0; until cp -f %s %s; do i=$((i+1)); [ $i -ge 40 ] && break; sleep 0.5; done; ": "i=0; until cp -f %s %s; do i=$((i+1)); [ $i -ge 40 ] && break; sleep 0.5; done; ",
+ "i=0; while kill -0 %d 2>/dev/null && [ $i -lt 300 ]; do sleep 0.2; i=$((i+1)); done; ": "i=0; while kill -0 %d 2>/dev/null && [ $i -lt 300 ]; do sleep 0.2; i=$((i+1)); done; ",
+ "Arcanes & Lames arrive sur macOS et Linux": "Arcanes & Lames llega a macOS y Linux",
+ "Le jeu est désormais disponible sur macOS (Mac Intel et Apple Silicon) et sur Linux, en plus de Windows. Tout le monde joue ensemble sur le même serveur.": "El juego ya está disponible en macOS (Mac Intel y Apple Silicon) y en Linux, además de Windows. Todos juegan juntos en el mismo servidor.",
+ "Installation en une commande sur macOS et Linux, et mises à jour automatiques comme sous Windows.": "Instalación con un solo comando en macOS y Linux, y actualizaciones automáticas como en Windows.",
+ "Nouvelle page d'accueil pour télécharger le jeu, avec des captures et une présentation du jeu.": "Nueva página de inicio para descargar el juego, con capturas y una presentación del juego."
 }
