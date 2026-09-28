@@ -1107,7 +1107,6 @@
  "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "A biblioteca do seu adversário aparece no alto do tabuleiro, com o verso de cartas que ele escolheu e o número de cartas.",
  "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Quando você ganha um título ou um item de personalização, a condição que o fez ganhá-lo aparece abaixo do nome.",
  "Tour %d": "Turno %d",
- "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Número do turno (os turnos dos dois jogadores são contados, como no registro)",
  "Le numéro du tour est affiché sous la durée de la partie.": "O número do turno aparece abaixo da duração da partida.",
  "%s a commencé la partie (la pièce l'a désigné).": "%s começou a partida (escolhido pela moeda).",
  "Vous avez commencé la partie (la pièce vous a désigné).": "Você começou a partida (escolhido pela moeda).",
@@ -1119,5 +1118,9 @@
  "Quand vous glissez une carte jouable, la zone où la déposer est en surbrillance (votre rangée pour un serviteur, vos enchantements, tout le plateau pour un sort).": "Ao arrastar uma carta jogável, a zona onde soltá-la fica destacada (sua fileira para um lacaio, seus encantamentos, todo o tabuleiro para um feitiço).",
  "Un nouveau message dans la discussion s'affiche en haut du journal ; un clic ouvre la discussion.": "Uma nova mensagem do chat aparece no alto do registro; um clique abre o chat.",
  "Un jeton doré « 1 » à côté du portrait indique le joueur qui a commencé la partie.": "Uma ficha dourada “1” ao lado do retrato indica qual jogador começou a partida.",
- "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "A animação de compra mostra tantas cartas quanto você compra (uma carta “compre 2 cartas” mostrava 4)."
+ "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "A animação de compra mostra tantas cartas quanto você compra (uma carta “compre 2 cartas” mostrava 4).",
+ "Numéro du tour : un tour comprend le jeu des deux joueurs (celui qui commence, puis l'autre).": "Número do turno: um turno inclui a jogada dos dois jogadores (quem começou e depois o outro).",
+ "Les récompenses de la saison 2 ne sont plus visibles dans la personnalisation avant le début de la saison.": "As recompensas da temporada 2 não aparecem mais na personalização antes do início da temporada.",
+ "Le numéro de tour (sous la durée et dans le journal) compte un tour quand les deux joueurs ont joué.": "O número do turno (abaixo da duração e no registro) conta um turno quando os dois jogadores jogaram.",
+ "Saison 2 cachée et tours complets": "Temporada 2 oculta e turnos completos"
 }

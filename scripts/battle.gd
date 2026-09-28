@@ -264,7 +264,7 @@ func _build_ui() -> void:
 	_turn_label.position = Vector2(1040, 420)
 	_turn_label.size = Vector2(228, 22)
 	_turn_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_turn_label.tooltip_text = Loc.t("Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)")
+	_turn_label.tooltip_text = Loc.t("Numéro du tour : un tour comprend le jeu des deux joueurs (celui qui commence, puis l'autre).")
 	_turn_label.mouse_filter = Control.MOUSE_FILTER_PASS
 	_board_root.add_child(_turn_label)
 	_auto_end_check = CheckBox.new()
@@ -759,7 +759,7 @@ func _process_events(events: Array[Dictionary], quick := false) -> void:
 				if not quick or ev.turn > 1:
 					Audio.play_sfx("end_turn", 0.02)
 				var mine: bool = ev.player == me
-				_log_line(Loc.t("[color=#f2c14e]— Tour %d : %s —[/color]") % [ev.turn, Loc.t("vous") if mine else _pname(opp)])
+				_log_line(Loc.t("[color=#f2c14e]— Tour %d : %s —[/color]") % [_round(int(ev.turn)), Loc.t("vous") if mine else _pname(opp)])
 				await _show_banner(Loc.t("Votre tour") if mine else Loc.t("Tour de %s") % _pname(opp), 0.8)
 			"draw_choice":
 				if ev.player == me:
@@ -1052,13 +1052,18 @@ func _select_hand(cv: CardView) -> void:
 	_layout_hand()
 
 
+## Tour affiché : un tour comprend le jeu des deux joueurs (tours de jeu 1 et 2 -> tour 1, 3 et 4 -> tour 2...).
+func _round(turn_number: int) -> int:
+	return maxi(1, (turn_number + 1) / 2)
+
+
 func _update_clock() -> void:
 	if _clock == null or _start_msec == 0:
 		return
 	var end := _clock_stop_msec if _clock_stop_msec > 0 else Time.get_ticks_msec()
 	var t := int((end - _start_msec) / 1000.0)
 	if gs != null and _turn_label != null:
-		_turn_label.text = Loc.t("Tour %d") % maxi(1, int(gs.turn_number))
+		_turn_label.text = Loc.t("Tour %d") % _round(int(gs.turn_number))
 	_clock.text = (Loc.t("Durée %d:%02d:%02d") % [t / 3600, (t / 60) % 60, t % 60]) if t >= 3600 else (Loc.t("Durée %02d:%02d") % [t / 60, t % 60])
 
 

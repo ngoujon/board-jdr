@@ -1,5 +1,19 @@
 [
 	{
+		"version": "2.0.7",
+		"date": "2026-09-28",
+		"title": "Saison 2 cachée et tours complets",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Les récompenses de la saison 2 ne sont plus visibles dans la personnalisation avant le début de la saison.",
+					"Le numéro de tour (sous la durée et dans le journal) compte un tour quand les deux joueurs ont joué."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.6",
 		"date": "2026-09-28",
 		"title": "Main lisible et glisser-déposer plus clair",

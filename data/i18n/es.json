@@ -1107,7 +1107,6 @@
  "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "La biblioteca de tu rival aparece en la parte superior del tablero, con el reverso de cartas que eligió y su número de cartas.",
  "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Cuando obtienes un título o un objeto de personalización, la condición que te lo hizo ganar aparece bajo su nombre.",
  "Tour %d": "Turno %d",
- "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Número de turno (se cuentan los turnos de ambos jugadores, como en el registro)",
  "Le numéro du tour est affiché sous la durée de la partie.": "El número de turno se muestra bajo la duración de la partida.",
  "%s a commencé la partie (la pièce l'a désigné).": "%s empezó la partida (lo eligió la moneda).",
  "Vous avez commencé la partie (la pièce vous a désigné).": "Empezaste la partida (te eligió la moneda).",
@@ -1119,5 +1118,9 @@
  "Quand vous glissez une carte jouable, la zone où la déposer est en surbrillance (votre rangée pour un serviteur, vos enchantements, tout le plateau pour un sort).": "Al arrastrar una carta jugable, la zona donde soltarla se resalta (tu fila para un esbirro, tus encantamientos, todo el tablero para un hechizo).",
  "Un nouveau message dans la discussion s'affiche en haut du journal ; un clic ouvre la discussion.": "Un nuevo mensaje del chat aparece arriba del registro; un clic abre el chat.",
  "Un jeton doré « 1 » à côté du portrait indique le joueur qui a commencé la partie.": "Una ficha dorada «1» junto al retrato indica qué jugador empezó la partida.",
- "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "La animación de robo muestra tantas cartas como robas (una carta «roba 2 cartas» mostraba 4)."
+ "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "La animación de robo muestra tantas cartas como robas (una carta «roba 2 cartas» mostraba 4).",
+ "Numéro du tour : un tour comprend le jeu des deux joueurs (celui qui commence, puis l'autre).": "Número de turno: un turno incluye el juego de ambos jugadores (el que empezó y luego el otro).",
+ "Les récompenses de la saison 2 ne sont plus visibles dans la personnalisation avant le début de la saison.": "Las recompensas de la temporada 2 ya no se ven en la personalización antes de que empiece la temporada.",
+ "Le numéro de tour (sous la durée et dans le journal) compte un tour quand les deux joueurs ont joué.": "El número de turno (bajo la duración y en el registro) cuenta un turno cuando ambos jugadores han jugado.",
+ "Saison 2 cachée et tours complets": "Temporada 2 oculta y turnos completos"
 }

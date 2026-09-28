@@ -77,6 +77,21 @@ func _ready() -> void:
 	_check(_visible_cards(col) == 0 and col._no_result.visible, "collection : aucun résultat affiché")
 	col.queue_free()
 
+	# 3b) Personnalisation : les récompenses de la saison 2 restent cachées pendant la saison 1.
+	var cp := CustomizePanel.new()
+	get_tree().root.add_child(cp)
+	await _wait(0.5)
+	var hidden := true
+	var season1 := false
+	for node in cp.find_children("*", "", true, false):
+		if node is Control and node.tooltip_text != "":
+			if node.tooltip_text.contains("saison 2"):
+				hidden = false
+			if node.tooltip_text.contains("saison 1"):
+				season1 = true
+	_check(season1 and hidden, "personnalisation : saison 1 visible, saison 2 masquée")
+	cp.queue_free()
+
 	# 4) Récompense de titre : la condition d'obtention est affichée.
 	Lobby.fx.reveal([{"kind": "title", "id": "vainqueur_challenger"}])
 	await _wait(1.6)

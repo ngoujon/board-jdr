@@ -1107,7 +1107,6 @@
  "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "Die Bibliothek deines Gegners wird oben auf dem Spielfeld angezeigt, mit dem von ihm gewählten Kartenrücken und der Anzahl ihrer Karten.",
  "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Wenn du einen Titel oder ein Anpassungsobjekt erhältst, wird unter seinem Namen die Bedingung angezeigt, mit der du es verdient hast.",
  "Tour %d": "Zug %d",
- "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Zugnummer (die Züge beider Spieler werden gezählt, wie im Protokoll)",
  "Le numéro du tour est affiché sous la durée de la partie.": "Die Zugnummer wird unter der Spieldauer angezeigt.",
  "%s a commencé la partie (la pièce l'a désigné).": "%s hat die Partie begonnen (vom Münzwurf bestimmt).",
  "Vous avez commencé la partie (la pièce vous a désigné).": "Du hast die Partie begonnen (vom Münzwurf bestimmt).",
@@ -1119,5 +1118,9 @@
  "Quand vous glissez une carte jouable, la zone où la déposer est en surbrillance (votre rangée pour un serviteur, vos enchantements, tout le plateau pour un sort).": "Wenn du eine spielbare Karte ziehst, wird die Zone zum Ablegen hervorgehoben (deine Reihe für einen Diener, deine Verzauberungen, das ganze Spielfeld für einen Zauber).",
  "Un nouveau message dans la discussion s'affiche en haut du journal ; un clic ouvre la discussion.": "Eine neue Chatnachricht wird oben im Protokoll angezeigt; ein Klick öffnet den Chat.",
  "Un jeton doré « 1 » à côté du portrait indique le joueur qui a commencé la partie.": "Ein goldener „1“-Marker neben dem Porträt zeigt, wer die Partie begonnen hat.",
- "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "Die Ziehanimation zeigt so viele Karten, wie du ziehst (eine Karte „Ziehe 2 Karten“ zeigte 4)."
+ "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "Die Ziehanimation zeigt so viele Karten, wie du ziehst (eine Karte „Ziehe 2 Karten“ zeigte 4).",
+ "Numéro du tour : un tour comprend le jeu des deux joueurs (celui qui commence, puis l'autre).": "Zugnummer: Ein Zug umfasst das Spiel beider Spieler (zuerst der Startspieler, dann der andere).",
+ "Les récompenses de la saison 2 ne sont plus visibles dans la personnalisation avant le début de la saison.": "Die Belohnungen der Saison 2 sind vor Saisonbeginn nicht mehr in der Anpassung sichtbar.",
+ "Le numéro de tour (sous la durée et dans le journal) compte un tour quand les deux joueurs ont joué.": "Die Zugnummer (unter der Spieldauer und im Protokoll) zählt einen Zug, sobald beide Spieler gespielt haben.",
+ "Saison 2 cachée et tours complets": "Verborgene Saison 2 und volle Züge"
 }

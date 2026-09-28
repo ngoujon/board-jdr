@@ -96,12 +96,16 @@ func _rebuild() -> void:
 		for c in grid.get_children():
 			c.queue_free()
 		var count := 0
+		var shown := 0
 		for it in Cosmetics.items(kind):
 			var unlocked := Lobby.is_unlocked(kind, it.id)
+			if Cosmetics.is_future_season(it) and not unlocked:
+				continue   # récompense d'une saison pas encore commencée : gardée secrète
+			shown += 1
 			if unlocked:
 				count += 1
 			grid.add_child(_tile(kind, it, unlocked, _is_equipped(kind, it.id, look), stats))
-		_tabs.set_tab_title(scroll.get_index(), "%s (%d/%d)" % [Loc.t(Cosmetics.KIND_NAMES[kind]), count, Cosmetics.items(kind).size()])
+		_tabs.set_tab_title(scroll.get_index(), "%s (%d/%d)" % [Loc.t(Cosmetics.KIND_NAMES[kind]), count, shown])
 
 
 func _is_equipped(kind: String, id, look: Dictionary) -> bool:

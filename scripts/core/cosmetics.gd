@@ -91,6 +91,14 @@ static func border_style(id) -> Array:
 
 ## Saison en cours calculée localement (même règle que le serveur : une saison par mois depuis « epoch », en UTC).
 ## Sert hors ligne : progression à zéro, récompenses lues dans cosmetics.json.
+## Récompense du passe d'une saison qui n'a pas encore commencé (masquée dans la personnalisation).
+static func is_future_season(it: Dictionary) -> bool:
+	var rule = it.get("rule")
+	if not rule is Dictionary or not rule.has("pass"):
+		return false
+	return int(rule.get("season", 1)) > int(local_season().get("n", 1))
+
+
 static func local_season(now := -1) -> Dictionary:
 	var conf: Dictionary = data().get("seasons", {})
 	if conf.is_empty():
