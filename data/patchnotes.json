@@ -1,5 +1,20 @@
 [
 	{
+		"version": "2.0.2",
+		"date": "2026-09-28",
+		"title": "Arcanes & Lames arrive sur Android",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Le jeu est disponible sur Android (téléphones et tablettes) : téléchargez l'APK depuis la page du jeu. Tout le monde joue ensemble sur le même serveur.",
+					"Sur Android, le bouton Retour ferme la fenêtre ouverte ou affiche le menu pause, sans quitter le jeu.",
+					"Quand une nouvelle version sort, le jeu Android propose de la télécharger : elle s'installe par-dessus l'ancienne en gardant vos réglages."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.1",
 		"date": "2026-09-28",
 		"title": "Arcanes & Lames arrive sur macOS et Linux",

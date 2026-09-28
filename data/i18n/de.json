@@ -1063,5 +1063,12 @@
  "Arcanes & Lames arrive sur macOS et Linux": "Arcanes & Lames erscheint für macOS und Linux",
  "Le jeu est désormais disponible sur macOS (Mac Intel et Apple Silicon) et sur Linux, en plus de Windows. Tout le monde joue ensemble sur le même serveur.": "Das Spiel ist jetzt neben Windows auch für macOS (Intel- und Apple-Silicon-Macs) und Linux verfügbar. Alle spielen zusammen auf demselben Server.",
  "Installation en une commande sur macOS et Linux, et mises à jour automatiques comme sous Windows.": "Installation mit einem einzigen Befehl unter macOS und Linux, mit automatischen Updates wie unter Windows.",
- "Nouvelle page d'accueil pour télécharger le jeu, avec des captures et une présentation du jeu.": "Neue Startseite zum Herunterladen des Spiels, mit Screenshots und einer Vorstellung des Spiels."
+ "Nouvelle page d'accueil pour télécharger le jeu, avec des captures et une présentation du jeu.": "Neue Startseite zum Herunterladen des Spiels, mit Screenshots und einer Vorstellung des Spiels.",
+ "Arcanes & Lames arrive sur Android": "Arcanes & Lames erscheint für Android",
+ "Le jeu est disponible sur Android (téléphones et tablettes) : téléchargez l'APK depuis la page du jeu. Tout le monde joue ensemble sur le même serveur.": "Das Spiel ist für Android (Smartphones und Tablets) verfügbar: Lade die APK von der Spielseite herunter. Alle spielen zusammen auf demselben Server.",
+ "Sur Android, le bouton Retour ferme la fenêtre ouverte ou affiche le menu pause, sans quitter le jeu.": "Unter Android schließt die Zurück-Taste das geöffnete Fenster oder zeigt das Pausenmenü an, ohne das Spiel zu beenden.",
+ "Quand une nouvelle version sort, le jeu Android propose de la télécharger : elle s'installe par-dessus l'ancienne en gardant vos réglages.": "Wenn eine neue Version erscheint, bietet das Android-Spiel an, sie herunterzuladen: Sie wird über die alte installiert, deine Einstellungen bleiben erhalten.",
+ "Le téléchargement de la version %s s'ouvre dans le navigateur.\nInstallez le fichier téléchargé : vos données sont conservées.": "Der Download von Version %s wird im Browser geöffnet.\nInstalliere die heruntergeladene Datei: Deine Daten bleiben erhalten.",
+ "Android": "Android",
+ "iOS": "iOS"
 }

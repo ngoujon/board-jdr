@@ -1063,5 +1063,12 @@
  "Arcanes & Lames arrive sur macOS et Linux": "Arcanes & Lames llega a macOS y Linux",
  "Le jeu est désormais disponible sur macOS (Mac Intel et Apple Silicon) et sur Linux, en plus de Windows. Tout le monde joue ensemble sur le même serveur.": "El juego ya está disponible en macOS (Mac Intel y Apple Silicon) y en Linux, además de Windows. Todos juegan juntos en el mismo servidor.",
  "Installation en une commande sur macOS et Linux, et mises à jour automatiques comme sous Windows.": "Instalación con un solo comando en macOS y Linux, y actualizaciones automáticas como en Windows.",
- "Nouvelle page d'accueil pour télécharger le jeu, avec des captures et une présentation du jeu.": "Nueva página de inicio para descargar el juego, con capturas y una presentación del juego."
+ "Nouvelle page d'accueil pour télécharger le jeu, avec des captures et une présentation du jeu.": "Nueva página de inicio para descargar el juego, con capturas y una presentación del juego.",
+ "Arcanes & Lames arrive sur Android": "Arcanes & Lames llega a Android",
+ "Le jeu est disponible sur Android (téléphones et tablettes) : téléchargez l'APK depuis la page du jeu. Tout le monde joue ensemble sur le même serveur.": "El juego está disponible en Android (teléfonos y tabletas): descarga el APK desde la página del juego. Todos juegan juntos en el mismo servidor.",
+ "Sur Android, le bouton Retour ferme la fenêtre ouverte ou affiche le menu pause, sans quitter le jeu.": "En Android, el botón Atrás cierra la ventana abierta o muestra el menú de pausa, sin salir del juego.",
+ "Quand une nouvelle version sort, le jeu Android propose de la télécharger : elle s'installe par-dessus l'ancienne en gardant vos réglages.": "Cuando sale una nueva versión, el juego de Android propone descargarla: se instala sobre la anterior y conserva tus ajustes.",
+ "Le téléchargement de la version %s s'ouvre dans le navigateur.\nInstallez le fichier téléchargé : vos données sont conservées.": "La descarga de la versión %s se abre en el navegador.\nInstala el archivo descargado: tus datos se conservan.",
+ "Android": "Android",
+ "iOS": "iOS"
 }

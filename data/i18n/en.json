@@ -1063,5 +1063,12 @@
  "Arcanes & Lames arrive sur macOS et Linux": "Arcanes & Lames comes to macOS and Linux",
  "Le jeu est désormais disponible sur macOS (Mac Intel et Apple Silicon) et sur Linux, en plus de Windows. Tout le monde joue ensemble sur le même serveur.": "The game is now available on macOS (Intel and Apple Silicon Macs) and Linux, in addition to Windows. Everyone plays together on the same server.",
  "Installation en une commande sur macOS et Linux, et mises à jour automatiques comme sous Windows.": "One-command installation on macOS and Linux, with automatic updates just like on Windows.",
- "Nouvelle page d'accueil pour télécharger le jeu, avec des captures et une présentation du jeu.": "New home page to download the game, with screenshots and an overview of the game."
+ "Nouvelle page d'accueil pour télécharger le jeu, avec des captures et une présentation du jeu.": "New home page to download the game, with screenshots and an overview of the game.",
+ "Arcanes & Lames arrive sur Android": "Arcanes & Lames comes to Android",
+ "Le jeu est disponible sur Android (téléphones et tablettes) : téléchargez l'APK depuis la page du jeu. Tout le monde joue ensemble sur le même serveur.": "The game is available on Android (phones and tablets): download the APK from the game's page. Everyone plays together on the same server.",
+ "Sur Android, le bouton Retour ferme la fenêtre ouverte ou affiche le menu pause, sans quitter le jeu.": "On Android, the Back button closes the open window or shows the pause menu, without quitting the game.",
+ "Quand une nouvelle version sort, le jeu Android propose de la télécharger : elle s'installe par-dessus l'ancienne en gardant vos réglages.": "When a new version is released, the Android game offers to download it: it installs over the old one and keeps your settings.",
+ "Le téléchargement de la version %s s'ouvre dans le navigateur.\nInstallez le fichier téléchargé : vos données sont conservées.": "The download of version %s opens in your browser.\nInstall the downloaded file: your data is kept.",
+ "Android": "Android",
+ "iOS": "iOS"
 }
