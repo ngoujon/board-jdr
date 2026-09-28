@@ -1,5 +1,19 @@
 [
 	{
+		"version": "2.0.5",
+		"date": "2026-09-28",
+		"title": "Bibliothèque adverse et récompenses expliquées",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.",
+					"Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.4",
 		"date": "2026-09-28",
 		"title": "Saison 2 : Le Crépuscule",

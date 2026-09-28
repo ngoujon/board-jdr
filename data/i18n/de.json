@@ -1100,5 +1100,10 @@
  "Bois d'automne (saison 2)": "Herbstwald (Saison 2)",
  "Saison 2 : Le Crépuscule": "Saison 2: Die Dämmerung",
  "La saison 2, « Le Crépuscule », commence le 26 octobre : un nouveau passe de combat avec le dos de cartes Lune de moisson (niveau 5), le contour Braises (niveau 10), le plateau Bois d'automne (niveau 20), et le titre Héros de la saison 2 avec le contour Crépuscule (niveau 30).": "Saison 2, „Die Dämmerung“, beginnt am 26. Oktober: ein neuer Kampfpass mit dem Kartenrücken Erntemond (Stufe 5), dem Rahmen Glut (Stufe 10), dem Spielbrett Herbstwald (Stufe 20) sowie dem Titel Held der Saison 2 mit dem Rahmen Dämmerung (Stufe 30).",
- "Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic.": "Kampfpass: Bereits abgeholte Belohnungen sind jetzt ausgegraut und mit einem grünen Haken markiert, und jede erreichte Belohnung lässt sich per Klick abholen."
+ "Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic.": "Kampfpass: Bereits abgeholte Belohnungen sind jetzt ausgegraut und mit einem grünen Haken markiert, und jede erreichte Belohnung lässt sich per Klick abholen.",
+ "Obtenu : %s": "Erhalten: %s",
+ "Bibliothèque de l'adversaire": "Bibliothek des Gegners",
+ "Bibliothèque adverse et récompenses expliquées": "Gegnerische Bibliothek und erklärte Belohnungen",
+ "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "Die Bibliothek deines Gegners wird oben auf dem Spielfeld angezeigt, mit dem von ihm gewählten Kartenrücken und der Anzahl ihrer Karten.",
+ "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Wenn du einen Titel oder ein Anpassungsobjekt erhältst, wird unter seinem Namen die Bedingung angezeigt, mit der du es verdient hast."
 }

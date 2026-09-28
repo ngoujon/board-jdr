@@ -1100,5 +1100,10 @@
  "Bois d'automne (saison 2)": "Bosco d'autunno (stagione 2)",
  "Saison 2 : Le Crépuscule": "Stagione 2: Il Crepuscolo",
  "La saison 2, « Le Crépuscule », commence le 26 octobre : un nouveau passe de combat avec le dos de cartes Lune de moisson (niveau 5), le contour Braises (niveau 10), le plateau Bois d'automne (niveau 20), et le titre Héros de la saison 2 avec le contour Crépuscule (niveau 30).": "La stagione 2, «Il Crepuscolo», inizia il 26 ottobre: un nuovo pass battaglia con il dorso Luna del raccolto (livello 5), la cornice Braci (livello 10), la plancia Bosco d'autunno (livello 20) e il titolo Eroe della stagione 2 con la cornice Crepuscolo (livello 30).",
- "Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic.": "Pass battaglia: le ricompense già riscattate sono ora in grigio con un segno di spunta verde, e ogni ricompensa raggiunta si riscatta con un clic."
+ "Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic.": "Pass battaglia: le ricompense già riscattate sono ora in grigio con un segno di spunta verde, e ogni ricompensa raggiunta si riscatta con un clic.",
+ "Obtenu : %s": "Ottenuto: %s",
+ "Bibliothèque de l'adversaire": "Biblioteca dell'avversario",
+ "Bibliothèque adverse et récompenses expliquées": "Biblioteca avversaria e ricompense spiegate",
+ "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "La biblioteca del tuo avversario è mostrata in alto sul tabellone, con il dorso delle carte che ha scelto e il numero di carte.",
+ "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Quando ottieni un titolo o un oggetto di personalizzazione, la condizione che te lo ha fatto guadagnare è mostrata sotto il suo nome."
 }

@@ -41,7 +41,10 @@ func _ready() -> void:
 	battle.busy = false
 	battle._refresh()
 	await _wait(0.6)
-	_check(battle._deck_pile.visible and battle._deck_pile_count.text != "", "pile de la bibliothèque affichée (%s)" % battle._deck_pile_count.text)
+	_check(battle._deck_piles[me].visible and battle._deck_pile_counts[me].text != "", "pile de la bibliothèque affichée (%s)" % battle._deck_pile_counts[me].text)
+	var opp_pile: Control = battle._deck_piles[battle.opp]
+	var opp_back: TextureRect = opp_pile.get_node("pile_back_2")
+	_check(opp_pile.visible and opp_back.texture == battle._back_tex(battle.opp), "pile adverse affichée avec son dos de cartes (%s)" % battle._deck_pile_counts[battle.opp].text)
 	_shot("d0_plateau")
 
 	# 1) Glisser dans la main : range sans jouer.

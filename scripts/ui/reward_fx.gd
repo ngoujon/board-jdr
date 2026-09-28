@@ -137,6 +137,14 @@ func _reveal_next() -> void:
 	name_l.position = Vector2(0, 552)
 	name_l.modulate.a = 0.0
 	root.add_child(name_l)
+	# Pourquoi cet objet est obtenu : sa condition de déblocage (ex. « Battre l'IA Challenger. »).
+	var why := UITheme.label(Loc.t("Obtenu : %s") % Cosmetics.rule_text(Cosmetics.item(kind, it.get("id")).get("rule")), 19, Color("e8d6b0"), 4)
+	why.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	why.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	why.size = Vector2(1080, 50)
+	why.position = Vector2(100, 610)
+	why.modulate.a = 0.0
+	root.add_child(why)
 	var hint := UITheme.label(Loc.t("Cliquez pour continuer") + (Loc.t("  (%d de plus)") % _queue.size() if not _queue.is_empty() else ""), 16, Color("e8d6b0"), 3)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.size = Vector2(1280, 24)
@@ -165,6 +173,7 @@ func _reveal_next() -> void:
 	tw.tween_property(head, "modulate:a", 1.0, 0.2)
 	tw.tween_property(kind_l, "modulate:a", 1.0, 0.3)
 	tw.tween_property(name_l, "modulate:a", 1.0, 0.4)
+	tw.tween_property(why, "modulate:a", 1.0, 0.5)
 	tw.chain().tween_property(hint, "modulate:a", 1.0, 0.3)
 	# L'objet flotte doucement, les étincelles continuent.
 	var bob := holder.create_tween().set_loops()

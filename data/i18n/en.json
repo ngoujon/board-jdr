@@ -1100,5 +1100,10 @@
  "Bois d'automne (saison 2)": "Autumn Woods (season 2)",
  "Saison 2 : Le Crépuscule": "Season 2: The Twilight",
  "La saison 2, « Le Crépuscule », commence le 26 octobre : un nouveau passe de combat avec le dos de cartes Lune de moisson (niveau 5), le contour Braises (niveau 10), le plateau Bois d'automne (niveau 20), et le titre Héros de la saison 2 avec le contour Crépuscule (niveau 30).": "Season 2, “The Twilight”, starts on October 26: a new battle pass with the Harvest Moon card back (level 5), the Embers border (level 10), the Autumn Woods board (level 20), and the Season 2 Hero title with the Twilight border (level 30).",
- "Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic.": "Battle pass: rewards already claimed are now grayed out with a green check mark, and each reached reward can be claimed with a click."
+ "Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic.": "Battle pass: rewards already claimed are now grayed out with a green check mark, and each reached reward can be claimed with a click.",
+ "Obtenu : %s": "Earned: %s",
+ "Bibliothèque de l'adversaire": "Opponent's library",
+ "Bibliothèque adverse et récompenses expliquées": "Opponent's library and explained rewards",
+ "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "Your opponent's library is shown at the top of the board, with the card back they chose and how many cards it holds.",
+ "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "When you earn a title or a customization item, the condition that earned it is shown under its name."
 }

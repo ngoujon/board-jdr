@@ -75,6 +75,17 @@ func _ready() -> void:
 	col._search.text_changed.emit("zzzz")
 	await _wait(0.3)
 	_check(_visible_cards(col) == 0 and col._no_result.visible, "collection : aucun résultat affiché")
+	col.queue_free()
+
+	# 4) Récompense de titre : la condition d'obtention est affichée.
+	Lobby.fx.reveal([{"kind": "title", "id": "vainqueur_challenger"}])
+	await _wait(1.6)
+	var shown := false
+	for l in Lobby.fx.find_children("*", "Label", true, false):
+		if l.text.contains("Challenger") and l.text.contains(":"):
+			shown = true
+	_check(shown, "récompense de titre : condition d'obtention affichée")
+	_shot("u4_recompense_titre")
 	get_tree().quit(1 if _fails > 0 else 0)
 
 

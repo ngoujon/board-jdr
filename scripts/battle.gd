@@ -85,10 +85,11 @@ var _enchant_views := {}         # uid -> EnchantView
 var _enchant_zone_labels: Array[Label] = []   # libellé « Enchantements » des zones vides (index = joueur)
 var _stats := {}                 # statistiques de la partie (déblocage des titres, avatars...)
 var _discard_zone: PanelContainer   # zone « Défausser » en bas à droite, visible pendant le glisser d'une carte
-var _deck_pile: Control          # dos de votre bibliothèque (pile de cartes), en bas à droite
-var _deck_pile_count: Label
+var _deck_piles := {}            # joueur -> pile de dos de cartes de sa bibliothèque
+var _deck_pile_counts := {}      # joueur -> nombre de cartes affiché sous la pile
 const DISCARD_RECT := Rect2(1040, 492, 132, 170)   # zone de défausse (coordonnées du plateau)
-const DECK_PILE_POS := Vector2(1184, 500)
+const DECK_PILE_POS := Vector2(1184, 500)      # votre bibliothèque : en bas à droite, à côté de la main
+const ENEMY_PILE_POS := Vector2(940, 14)        # bibliothèque adverse : en haut, à droite de sa main
 var _choice_return: CanvasLayer  # bouton « Revenir au choix des cartes » pendant la consultation du plateau
 
 # Chat : canal « Journal » (actions) et canal « Discussion » (messages).
@@ -294,7 +295,8 @@ func _build_ui() -> void:
 	confirm_box.visible = mode != "replay"
 	confirm_box.add_child(confirm_check)
 	_board_root.add_child(confirm_box)
-	_build_deck_pile()
+	_build_deck_pile(me, DECK_PILE_POS)
+	_build_deck_pile(opp, ENEMY_PILE_POS)
 	_build_discard_zone()
 	_inferno_label = UITheme.label("", 22, Color("ff8a3a"), 4)
 	_inferno_label.position = Vector2(206, 40)
@@ -1337,24 +1339,26 @@ func _refresh_heroes() -> void:
 	_update_deck_pile()
 
 
-## Dos de votre bibliothèque en bas à droite : une pile de cartes (plus fine quand le deck s'épuise).
-## Un clic montre sa composition, comme le bouton « Deck » sous votre héros.
-func _build_deck_pile() -> void:
-	_deck_pile = Control.new()
-	_deck_pile.position = DECK_PILE_POS
-	_deck_pile.size = Vector2(84, 150)
-	_deck_pile.mouse_filter = Control.MOUSE_FILTER_STOP
-	_deck_pile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	_deck_pile.tooltip_text = Loc.t("Votre bibliothèque : cliquez pour voir les cartes qui restent (sans l'ordre de pioche)")
-	_deck_pile.visible = mode != "replay"
-	_deck_pile.gui_input.connect(func(e: InputEvent):
+## Dos des bibliothèques : une pile de cartes (plus fine quand le deck s'épuise), avec le dos de cartes
+## choisi par son propriétaire. Votre pile (en bas à droite) montre sa composition au clic, comme le
+## bouton « Deck » ; celle de l'adversaire (en haut) seulement son nombre de cartes.
+func _build_deck_pile(player: int, pos: Vector2) -> void:
+	var pile := Control.new()
+	pile.position = pos
+	pile.size = Vector2(84, 150)
+	pile.mouse_filter = Control.MOUSE_FILTER_STOP
+	pile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	pile.tooltip_text = Loc.t("Votre bibliothèque : cliquez pour voir les cartes qui restent (sans l'ordre de pioche)") if player == me \
+		else Loc.t("Bibliothèque de l'adversaire")
+	pile.visible = mode != "replay"
+	pile.gui_input.connect(func(e: InputEvent):
 		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and gs != null:
-			_on_deck_pressed(_hero_views[me]))
-	_board_root.add_child(_deck_pile)
+			_on_deck_pressed(_hero_views[player]))
+	_board_root.add_child(pile)
 	for i in 3:
 		var back := TextureRect.new()
 		back.name = "pile_back_%d" % i
-		back.texture = _back_tex(me)
+		back.texture = _back_tex(player)
 		back.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		back.stretch_mode = TextureRect.STRETCH_SCALE
 		back.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -1362,25 +1366,28 @@ func _build_deck_pile() -> void:
 		back.position = Vector2(8 - i * 4, 8 - i * 4)
 		back.modulate = Color(0.55, 0.5, 0.5) if i < 2 else Color.WHITE
 		back.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_deck_pile.add_child(back)
-	_deck_pile_count = UITheme.label("", 14, Color("e8d6b0"), 3)
-	_deck_pile_count.position = Vector2(-10, 118)
-	_deck_pile_count.size = Vector2(104, 20)
-	_deck_pile_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_deck_pile.add_child(_deck_pile_count)
+		pile.add_child(back)
+	var count := UITheme.label("", 14, Color("e8d6b0"), 3)
+	count.position = Vector2(-10, 118)
+	count.size = Vector2(104, 20)
+	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pile.add_child(count)
+	_deck_piles[player] = pile
+	_deck_pile_counts[player] = count
 
 
 func _update_deck_pile() -> void:
-	if _deck_pile == null or gs == null:
+	if gs == null:
 		return
-	var n: int = gs.players[me].deck.size()
-	_deck_pile_count.text = _cards_text(n, false)
-	# 3 épaisseurs de carte au-delà de 20 cartes, 2 au-delà de 5, 1 ensuite, aucune si le deck est vide.
-	var layers := 3 if n > 20 else 2 if n > 5 else 1 if n > 0 else 0
-	for i in 3:
-		var back: TextureRect = _deck_pile.get_node("pile_back_%d" % i)
-		back.texture = _back_tex(me)
-		back.visible = i >= 3 - layers
+	for player in _deck_piles:
+		var n: int = gs.players[player].deck.size()
+		_deck_pile_counts[player].text = _cards_text(n, false)
+		# 3 épaisseurs de carte au-delà de 20 cartes, 2 au-delà de 5, 1 ensuite, aucune si le deck est vide.
+		var layers := 3 if n > 20 else 2 if n > 5 else 1 if n > 0 else 0
+		for i in 3:
+			var back: TextureRect = _deck_piles[player].get_node("pile_back_%d" % i)
+			back.texture = _back_tex(player)   # le dos de l'adversaire arrive avec son profil (en ligne)
+			back.visible = i >= 3 - layers
 
 
 ## Zone « Défausser » (en bas à droite) : n'apparaît que pendant le glisser d'une carte de votre main.

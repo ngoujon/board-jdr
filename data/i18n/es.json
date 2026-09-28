@@ -1100,5 +1100,10 @@
  "Bois d'automne (saison 2)": "Bosque otoñal (temporada 2)",
  "Saison 2 : Le Crépuscule": "Temporada 2: El Crepúsculo",
  "La saison 2, « Le Crépuscule », commence le 26 octobre : un nouveau passe de combat avec le dos de cartes Lune de moisson (niveau 5), le contour Braises (niveau 10), le plateau Bois d'automne (niveau 20), et le titre Héros de la saison 2 avec le contour Crépuscule (niveau 30).": "La temporada 2, «El Crepúsculo», empieza el 26 de octubre: un nuevo pase de batalla con el reverso Luna de cosecha (nivel 5), el marco Brasas (nivel 10), el tablero Bosque otoñal (nivel 20) y el título Héroe de la temporada 2 con el marco Crepúsculo (nivel 30).",
- "Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic.": "Pase de batalla: las recompensas ya reclamadas aparecen en gris con una marca verde, y cada recompensa alcanzada se reclama con un clic."
+ "Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic.": "Pase de batalla: las recompensas ya reclamadas aparecen en gris con una marca verde, y cada recompensa alcanzada se reclama con un clic.",
+ "Obtenu : %s": "Obtenido: %s",
+ "Bibliothèque de l'adversaire": "Biblioteca del rival",
+ "Bibliothèque adverse et récompenses expliquées": "Biblioteca rival y recompensas explicadas",
+ "La bibliothèque de votre adversaire est affichée en haut du plateau, avec le dos de cartes qu'il a choisi et son nombre de cartes.": "La biblioteca de tu rival aparece en la parte superior del tablero, con el reverso de cartas que eligió y su número de cartas.",
+ "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Cuando obtienes un título o un objeto de personalización, la condición que te lo hizo ganar aparece bajo su nombre."
 }
