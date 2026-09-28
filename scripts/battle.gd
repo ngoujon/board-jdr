@@ -84,7 +84,11 @@ var _choice_layer: CanvasLayer   # overlay « choisissez une carte » (pioche au
 var _enchant_views := {}         # uid -> EnchantView
 var _enchant_zone_labels: Array[Label] = []   # libellé « Enchantements » des zones vides (index = joueur)
 var _stats := {}                 # statistiques de la partie (déblocage des titres, avatars...)
-var _discard_btn: Button         # petit bouton « défausser » posé sur la carte survolée
+var _discard_zone: PanelContainer   # zone « Défausser » en bas à droite, visible pendant le glisser d'une carte
+var _deck_pile: Control          # dos de votre bibliothèque (pile de cartes), en bas à droite
+var _deck_pile_count: Label
+const DISCARD_RECT := Rect2(1040, 492, 132, 170)   # zone de défausse (coordonnées du plateau)
+const DECK_PILE_POS := Vector2(1184, 500)
 var _choice_return: CanvasLayer  # bouton « Revenir au choix des cartes » pendant la consultation du plateau
 
 # Chat : canal « Journal » (actions) et canal « Discussion » (messages).
@@ -269,6 +273,29 @@ func _build_ui() -> void:
 	auto_box.visible = mode != "replay"
 	auto_box.add_child(_auto_end_check)
 	_board_root.add_child(auto_box)
+	# « Confirmer la fin du tour » : cochée, un appui sur « Fin du tour » alors qu'il reste des actions
+	# demande une confirmation ; décochée, le tour se termine tout de suite.
+	var confirm_check := CheckBox.new()
+	confirm_check.text = Loc.t("Confirmer la fin du tour")
+	confirm_check.button_pressed = Settings.confirm_end_turn
+	confirm_check.focus_mode = Control.FOCUS_NONE
+	confirm_check.add_theme_font_size_override("font_size", 14)
+	confirm_check.add_theme_color_override("font_color", Color("e8d6b0"))
+	confirm_check.tooltip_text = Loc.t("Demande une confirmation si vous terminez votre tour alors qu'il vous reste des cartes jouables ou des attaques.")
+	confirm_check.toggled.connect(func(on: bool):
+		Settings.set_confirm_end_turn(on)
+		if not on and _end_confirm:
+			_end_confirm = false
+			_style_end_turn_btn(true))
+	var confirm_box := CenterContainer.new()
+	confirm_box.position = Vector2(1040, 454)
+	confirm_box.size = Vector2(228, 28)
+	confirm_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	confirm_box.visible = mode != "replay"
+	confirm_box.add_child(confirm_check)
+	_board_root.add_child(confirm_box)
+	_build_deck_pile()
+	_build_discard_zone()
 	_inferno_label = UITheme.label("", 22, Color("ff8a3a"), 4)
 	_inferno_label.position = Vector2(206, 40)
 	_inferno_label.visible = false
@@ -875,32 +902,66 @@ func _hand_x(i: int, n: int) -> float:
 	return 640.0 - (n - 1) * spacing / 2.0 + i * spacing - CardView.SIZE.x / 2
 
 
-## Glisser-déposer : la carte suit la souris et prend la place la plus proche.
+## Glisser-déposer d'une carte de la main : elle suit la souris.
+## Relâchée sur le plateau, elle est jouée ; sur la zone « Défausser » (en bas à droite), défaussée ;
+## dans la main, elle prend la place la plus proche (rangement manuel).
+const HAND_ZONE_Y := 520.0   # au-dessus (coordonnées du plateau) : la carte est sur le plateau
+var _drag_pos := Vector2.ZERO   # dernière position de la carte glissée (coordonnées du plateau)
+
+
 func _on_hand_drag(cv: CardView, gpos: Vector2) -> void:
-	if Settings.hand_sort != "manual":
-		_set_hand_sort("manual")   # déplacer une carte passe en rangement manuel (ordre actuel conservé)
 	if _dragging_card != cv:
 		_dragging_card = cv
-		_detach_discard_btn()
 		_tips.hide_tips()
 		_select_hand(null)
+		_cancel_targeting()
+		if cv.has_meta("tw"):
+			var old: Tween = cv.get_meta("tw")
+			if old and old.is_valid():
+				old.kill()
+		cv.scale = Vector2.ONE * HAND_SCALE
+		_discard_zone.visible = _can_act()
 	var local := gpos - _hand_root.global_position
+	_drag_pos = local
 	cv.z_index = 60
-	cv.position = Vector2(local.x - CardView.SIZE.x / 2, HAND_Y - 30)
+	# Au-dessus de la zone « Défausser », la carte rapetisse pour laisser voir la zone.
+	var over_discard := _discard_zone.visible and DISCARD_RECT.has_point(local)
+	var s := 0.4 if over_discard else HAND_SCALE
+	cv.scale = Vector2.ONE * s
+	cv.modulate.a = 0.8 if over_discard else 1.0
+	# Pivot en bas au centre : la carte est centrée sur la souris.
+	cv.position = Vector2(local.x - CardView.SIZE.x / 2, local.y - CardView.SIZE.y + CardView.SIZE.y * s / 2)
+	_style_discard_zone(over_discard)
+	if local.y < HAND_ZONE_Y or DISCARD_RECT.has_point(local):
+		return   # hors de la main : l'ordre des autres cartes ne change pas
 	var n := _hand_views.size()
 	var spacing: float = min(120.0, 720.0 / n)
 	var first := 640.0 - (n - 1) * spacing / 2.0
 	var idx := clampi(roundi((local.x - first) / spacing), 0, n - 1)
 	if _hand_views.find(cv) != idx:
+		if Settings.hand_sort != "manual":
+			_set_hand_sort("manual")   # déplacer une carte passe en rangement manuel (ordre actuel conservé)
 		_hand_views.erase(cv)
 		_hand_views.insert(idx, cv)
-	_layout_hand()
+		_layout_hand()
 
 
 func _on_hand_drag_released(cv: CardView) -> void:
-	if _dragging_card == cv:
-		_dragging_card = null
-		Audio.play_sfx("card_draw", 0.1, -8.0)
+	if _dragging_card != cv:
+		_layout_hand()
+		return
+	_dragging_card = null
+	_discard_zone.visible = false
+	cv.modulate.a = 1.0
+	var local := _drag_pos
+	if DISCARD_RECT.has_point(local) and _can_act():
+		_submit({"type": "discard", "hand_uid": cv.hand_uid})
+		return
+	if local.y < HAND_ZONE_Y and local.x < 1036.0 and _can_act():
+		_layout_hand()   # la carte revient dans la main (le jeu l'en retire s'il la joue)
+		_play_from_hand(cv, cv.global_position + Vector2(64, 40))
+		return
+	Audio.play_sfx("card_draw", 0.1, -8.0)
 	_layout_hand()
 
 
@@ -1085,7 +1146,6 @@ func _on_discard(ev: Dictionary) -> void:
 			if _hovered_hand == cv:
 				_hovered_hand = null
 				_tips.hide_tips()
-			_detach_discard_btn()
 			cv.z_index = 20
 			var tw := cv.create_tween().set_parallel(true)
 			tw.tween_property(cv, "position", cv.position + Vector2(0, 140), 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
@@ -1274,6 +1334,76 @@ func _layout_enemy_hand() -> void:
 func _refresh_heroes() -> void:
 	for i in 2:
 		_hero_views[i].sync(gs.players[i])
+	_update_deck_pile()
+
+
+## Dos de votre bibliothèque en bas à droite : une pile de cartes (plus fine quand le deck s'épuise).
+## Un clic montre sa composition, comme le bouton « Deck » sous votre héros.
+func _build_deck_pile() -> void:
+	_deck_pile = Control.new()
+	_deck_pile.position = DECK_PILE_POS
+	_deck_pile.size = Vector2(84, 150)
+	_deck_pile.mouse_filter = Control.MOUSE_FILTER_STOP
+	_deck_pile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_deck_pile.tooltip_text = Loc.t("Votre bibliothèque : cliquez pour voir les cartes qui restent (sans l'ordre de pioche)")
+	_deck_pile.visible = mode != "replay"
+	_deck_pile.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and gs != null:
+			_on_deck_pressed(_hero_views[me]))
+	_board_root.add_child(_deck_pile)
+	for i in 3:
+		var back := TextureRect.new()
+		back.name = "pile_back_%d" % i
+		back.texture = _back_tex(me)
+		back.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		back.stretch_mode = TextureRect.STRETCH_SCALE
+		back.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		back.size = Vector2(76, 106)
+		back.position = Vector2(8 - i * 4, 8 - i * 4)
+		back.modulate = Color(0.55, 0.5, 0.5) if i < 2 else Color.WHITE
+		back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_deck_pile.add_child(back)
+	_deck_pile_count = UITheme.label("", 14, Color("e8d6b0"), 3)
+	_deck_pile_count.position = Vector2(-10, 118)
+	_deck_pile_count.size = Vector2(104, 20)
+	_deck_pile_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_deck_pile.add_child(_deck_pile_count)
+
+
+func _update_deck_pile() -> void:
+	if _deck_pile == null or gs == null:
+		return
+	var n: int = gs.players[me].deck.size()
+	_deck_pile_count.text = _cards_text(n, false)
+	# 3 épaisseurs de carte au-delà de 20 cartes, 2 au-delà de 5, 1 ensuite, aucune si le deck est vide.
+	var layers := 3 if n > 20 else 2 if n > 5 else 1 if n > 0 else 0
+	for i in 3:
+		var back: TextureRect = _deck_pile.get_node("pile_back_%d" % i)
+		back.texture = _back_tex(me)
+		back.visible = i >= 3 - layers
+
+
+## Zone « Défausser » (en bas à droite) : n'apparaît que pendant le glisser d'une carte de votre main.
+func _build_discard_zone() -> void:
+	_discard_zone = PanelContainer.new()
+	_discard_zone.position = DISCARD_RECT.position
+	_discard_zone.size = DISCARD_RECT.size
+	_discard_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_discard_zone.visible = false
+	_discard_zone.z_index = 40
+	# Libellé en haut : la carte déposée (centrée sur la souris) ne le cache pas.
+	var l := UITheme.label(Loc.t("Défausser"), 16, Color("ffd9c9"), 3)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	_discard_zone.add_child(l)
+	_board_root.add_child(_discard_zone)
+	_style_discard_zone(false)
+
+
+func _style_discard_zone(hot: bool) -> void:
+	_discard_zone.add_theme_stylebox_override("panel", UITheme.flat_style(
+		Color(0.55, 0.12, 0.08, 0.85) if hot else Color(0.25, 0.07, 0.05, 0.7),
+		Color("ff7a5a") if hot else Color("a0483a"), 3, 6))
 
 
 ## Resynchronise tout l'affichage avec l'état de la partie.
@@ -1289,8 +1419,6 @@ func _refresh() -> void:
 		var ench := gs.get_entity(uid)
 		if ench:
 			_enchant_views[uid].sync(ench)
-	if _discard_btn and not can:
-		_detach_discard_btn()
 	if _selected_hand and not can:
 		_select_hand(null)
 	var any_action := false
@@ -1494,75 +1622,11 @@ func _on_hand_card_hovered(cv: CardView, on: bool) -> void:
 		cv.get_parent().move_child(cv, -1)
 		_hovered_hand = cv
 		Audio.play_sfx("click", 0.2, -18.0)
-		if _can_act() and _targeting.is_empty():
-			_attach_discard_btn(cv)
 	elif _hovered_hand == cv:
-		if _mouse_on_discard_btn(cv):
-			return   # la souris est passée sur le bouton « X » de cette carte : elle reste survolée
 		_hovered_hand = null
 		_tips.hide_tips()
-		_detach_discard_btn()
-	_layout_hand()
-
-
-func _mouse_on_discard_btn(cv: CardView) -> bool:
-	return _discard_btn != null and _discard_btn.get_parent() == cv and _discard_btn.get_global_rect().has_point(_discard_btn.get_global_mouse_position())
-
-
-## En quittant le bouton « X » hors de la carte, la carte n'est plus survolée.
-func _on_discard_btn_mouse_exited() -> void:
-	var cv := _discard_btn.get_parent() as CardView
-	if cv == null or cv != _hovered_hand:
-		return
-	var inside := (cv.get_global_transform() * Rect2(Vector2.ZERO, cv.size)).has_point(cv.get_global_mouse_position())
-	if not inside:
-		_on_hand_card_hovered(cv, false)
-
-
-## Petit bouton « X » en haut à droite de la carte survolée : un 1er clic demande confirmation,
-## le 2e défausse la carte (gratuit, pendant votre tour).
-func _attach_discard_btn(cv: CardView) -> void:
-	if _discard_btn == null:
-		_discard_btn = Button.new()
-		_discard_btn.focus_mode = Control.FOCUS_NONE
-		_discard_btn.add_theme_font_override("font", UITheme.font_bold)
-		_discard_btn.add_theme_font_size_override("font_size", 13)
-		_discard_btn.add_theme_color_override("font_color", Color.WHITE)
-		_discard_btn.add_theme_color_override("font_hover_color", Color("ffe0a0"))
-		for st in ["normal", "hover", "pressed"]:
-			var sb := UITheme.flat_style(Color("8a1f1f") if st != "hover" else Color("b02a2a"), Color("f2c14e"), 2, 12)
-			sb.set_content_margin_all(2)
-			_discard_btn.add_theme_stylebox_override(st, sb)
-		_discard_btn.pressed.connect(_on_discard_btn_pressed)
-		_discard_btn.mouse_exited.connect(_on_discard_btn_mouse_exited)
-	_detach_discard_btn()
-	_discard_btn.set_meta("confirm", false)
-	_discard_btn.text = "X"
-	_discard_btn.tooltip_text = Loc.t("Défausser cette carte")
-	# Entièrement à l'intérieur de la carte (coin haut droit), pour ne jamais déborder sur une voisine.
-	_discard_btn.size = Vector2(30, 28)
-	_discard_btn.position = Vector2(CardView.SIZE.x - 36, 6)
-	cv.add_child(_discard_btn)
-
-
-func _detach_discard_btn() -> void:
-	if _discard_btn and _discard_btn.get_parent():
-		_discard_btn.get_parent().remove_child(_discard_btn)
-
-
-func _on_discard_btn_pressed() -> void:
-	var cv := _discard_btn.get_parent() as CardView
-	if cv == null or not _can_act():
-		return
-	if not _discard_btn.get_meta("confirm", false):
-		_discard_btn.set_meta("confirm", true)
-		_discard_btn.text = Loc.t("Défausser ?")
-		_discard_btn.size = Vector2(100, 28)
-		_discard_btn.position = Vector2(CardView.SIZE.x - 106, 6)
-		Audio.play_sfx("click", 0.1)
-		return
-	_detach_discard_btn()
-	_submit({"type": "discard", "hand_uid": cv.hand_uid})
+	if _dragging_card == null:
+		_layout_hand()
 
 
 func _on_hand_card_pressed(cv: CardView) -> void:
@@ -1571,22 +1635,36 @@ func _on_hand_card_pressed(cv: CardView) -> void:
 	if not _targeting.is_empty():
 		_cancel_targeting()
 		return
-	var c := CardDB.get_card(cv.card_id)
-	if not gs.can_play(me, cv.hand_uid):
-		var msg := Loc.t("Pas assez d'énergie !")
-		if c.cost <= gs.players[me].energy:
-			msg = Loc.t("Plateau plein !") if c.type == "minion" else Loc.t("Aucune cible valide !")
-			if c.type == "enchantment":
-				msg = Loc.t("Zone d'enchantements pleine (%d max) !") % CardDB.MAX_ENCHANTS
-		_float_text(cv.global_position + Vector2(64, 40), msg, UITheme.RED, 22)
+	if not _check_playable(cv, cv.global_position + Vector2(64, 40)):
 		return
 	# Premier clic : la carte est seulement sélectionnée (évite de jouer une carte par erreur).
 	if _selected_hand != cv:
 		Audio.play_sfx("click", 0.1)
 		_select_hand(cv)
-		_float_text(cv.global_position + Vector2(64, -30), Loc.t("Cliquez à nouveau pour jouer"), UITheme.GOLD, 18)
+		_float_text(cv.global_position + Vector2(64, -30), Loc.t("Cliquez à nouveau pour jouer (ou glissez-la sur le plateau)"), UITheme.GOLD, 18)
 		return
 	_select_hand(null)
+	_play_from_hand(cv, cv.global_position + Vector2(64, 40))
+
+
+## Carte jouable ? Sinon, la raison s'affiche à msg_pos.
+func _check_playable(cv: CardView, msg_pos: Vector2) -> bool:
+	if gs.can_play(me, cv.hand_uid):
+		return true
+	var c := CardDB.get_card(cv.card_id)
+	var msg := Loc.t("Pas assez d'énergie !")
+	if c.cost <= gs.players[me].energy:
+		msg = Loc.t("Plateau plein !") if c.type == "minion" else Loc.t("Aucune cible valide !")
+		if c.type == "enchantment":
+			msg = Loc.t("Zone d'enchantements pleine (%d max) !") % CardDB.MAX_ENCHANTS
+	_float_text(msg_pos, msg, UITheme.RED, 22)
+	return false
+
+
+## Joue la carte (2e clic ou dépôt sur le plateau) ; une carte à cible passe en mode ciblage.
+func _play_from_hand(cv: CardView, msg_pos: Vector2) -> void:
+	if not _check_playable(cv, msg_pos):
+		return
 	if gs.needs_target(cv.card_id):
 		_start_targeting({"kind": "spell", "hand_uid": cv.hand_uid, "card": cv,
 			"valid": gs.valid_spell_targets(me, cv.card_id)})
@@ -1738,8 +1816,9 @@ func _on_end_turn_pressed() -> void:
 	if not _can_act():
 		return
 	_cancel_targeting()
-	# Il reste des actions : le 1er appui transforme le bouton en « Confirmer », le 2e termine le tour.
-	if _any_action and not _end_confirm:
+	# Il reste des actions : le 1er appui transforme le bouton en « Confirmer », le 2e termine le tour
+	# (sauf si la case « Confirmer la fin du tour » est décochée).
+	if Settings.confirm_end_turn and _any_action and not _end_confirm:
 		_end_confirm = true
 		_style_end_turn_btn(true)
 		Audio.play_sfx("click", 0.1)

@@ -15,7 +15,7 @@ Chaque carte coûte le nombre d'énergie indiqué en haut à gauche. L'énergie 
 
 [center][b][color=#f2c14e]DÉROULEMENT D'UN TOUR[/color][/b][/center]
 1. [b]Pioche au choix[/b] : vous révélez les 3 cartes du dessus de votre deck, en gardez [b]une[/b] (clic ou touches 1 à 3) ; les 2 autres retournent au fond du deck. Tant que vous n'avez pas choisi, vous ne pouvez pas jouer. (S'il ne reste qu'une carte, vous la piochez directement.) Bouton [b]Voir le plateau[/b] (ou touche [b]Tab[/b] / [b]V[/b], qui bascule entre le choix et le plateau) pour regarder votre main et le plateau avant de choisir.
-2. Vous jouez des cartes tant que vous avez de l'énergie. Vous pouvez aussi [b]défausser[/b] gratuitement une carte : survolez-la puis cliquez le petit [b]X[/b] rouge (deux clics pour confirmer).
+2. Vous jouez des cartes tant que vous avez de l'énergie. Vous pouvez aussi [b]défausser[/b] gratuitement une carte : glissez-la sur la zone [b]Défausser[/b] en bas à droite.
 3. Vos serviteurs attaquent (une fois chacun).
 4. Vous terminez votre tour (bouton [b]Fin du tour[/b] ou touche [b]Espace[/b]).
 
@@ -45,7 +45,7 @@ D'autres modifient les decks : [b]Tri des archives[/b] retire des cartes de coû
 Quatre niveaux : [b]Apprenti[/b], [b]Chevalier[/b], [b]Seigneur de guerre[/b] (anticipe vos réponses) et [b]Challenger[/b] : il joue comme le Seigneur de guerre et commence avec [b]5 PV[/b] et [b]1 carte[/b] de plus. Plus le niveau est élevé, plus les récompenses sont importantes.
 Chaque niveau battu est marqué d'une [b]coche verte[/b] dans le menu et débloque un titre, un contour d'avatar, un dos de cartes et un plateau.
 [b]Inferno[/b] : l'IA la plus forte, avec des [b]PV infinis[/b]. Infligez-lui un maximum de dégâts avant de tomber : votre meilleur score entre dans l'onglet [b]Inferno[/b] du classement.
-En partie, la case [b]Fin du tour automatique[/b] (sous la durée) termine votre tour dès que vous n'avez plus rien à jouer.
+En partie, la case [b]Fin du tour automatique[/b] (sous la durée) termine votre tour dès que vous n'avez plus rien à jouer. La case [b]Confirmer la fin du tour[/b] demande une confirmation s'il vous reste des actions ; décochée, [b]Fin du tour[/b] termine le tour immédiatement.
 
 [center][b][color=#f2c14e]MULTIJOUEUR[/color][/b][/center]
 Menu principal > [b]Multijoueur[/b] : [b]créez une partie[/b] (elle apparaît dans la liste pour tous les joueurs connectés) ou [b]rejoignez[/b] une partie ouverte de la liste. Vous pouvez aussi inviter un ami connecté. Tout passe par le serveur officiel : aucun port ni adresse IP à configurer.
@@ -62,8 +62,8 @@ Le serveur tire la donne de chaque partie puis la rejoue entièrement pour la va
 [center][b][color=#f2c14e]MOTS-CLÉS[/color][/b][/center]
 %s
 [center][b][color=#f2c14e]CONTRÔLES[/color][/b][/center]
-• [b]Jouer une carte[/b] : un 1er clic la sélectionne (contour doré), un 2e clic la joue (si elle demande une cible, cliquez ensuite sur la cible). Clic droit ou Échap : désélectionner.
-• [b]Ranger sa main[/b] (en bas à droite) : Manuel (glissez une carte pour la déplacer, sans la jouer), Coût, PV ou Attaque.
+• [b]Jouer une carte[/b] : un 1er clic la sélectionne (contour doré), un 2e clic la joue (si elle demande une cible, cliquez ensuite sur la cible). Vous pouvez aussi la [b]glisser sur le plateau[/b]. Clic droit ou Échap : désélectionner.
+• [b]Ranger sa main[/b] (en bas à droite) : Manuel (glissez une carte dans la main pour la déplacer), Coût, PV ou Attaque.
 • [b]Durée[/b] de la partie : chrono sous le bouton Fin du tour.
 • [b]Revanche[/b] en ligne : chacun des deux joueurs peut la proposer, l'autre l'accepte ou la refuse.
 • [b]Clic sur un de vos serviteurs[/b] (bordure verte) puis sur un ennemi : attaquer.
