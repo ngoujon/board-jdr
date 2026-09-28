@@ -99,7 +99,7 @@
   "after": "Then choose your nickname in <b>Settings &gt; Profile</b>: you are connected to the server. Updates install automatically when the game starts.",
   "news_title": "What's new",
   "news_sub": "The details of every version are also in the game (main menu).",
-  "footer": "Version {{VERSION}} · Windows, macOS, Linux and Android · Made with Godot Engine"
+  "footer": "Version {{VERSION}} · Windows, macOS, Linux and Android"
  },
  "de": {
   "meta_desc": "Arcanes & Lames: kostenloses Mittelalter-Fantasy-Kartenspiel in Pixel-Art, gegen die KI oder online. Windows, macOS, Linux und Android.",
@@ -187,7 +187,7 @@
   "after": "Wähle anschließend deinen Spielernamen unter <b>Einstellungen &gt; Profil</b>: Du bist mit dem Server verbunden. Updates werden beim Spielstart automatisch installiert.",
   "news_title": "Neuigkeiten",
   "news_sub": "Alle Versionen im Detail findest du auch im Spiel (Hauptmenü).",
-  "footer": "Version {{VERSION}} · Windows, macOS, Linux und Android · Erstellt mit der Godot Engine"
+  "footer": "Version {{VERSION}} · Windows, macOS, Linux und Android"
  },
  "es": {
   "meta_desc": "Arcanes & Lames: juego de cartas gratuito de fantasía medieval en pixel art, contra la IA o en línea. Windows, macOS, Linux y Android.",
@@ -275,7 +275,7 @@
   "after": "Después, elige tu apodo en <b>Ajustes &gt; Perfil</b>: estarás conectado al servidor. Las actualizaciones se instalan automáticamente al iniciar el juego.",
   "news_title": "Novedades",
   "news_sub": "El detalle de todas las versiones también está en el juego (menú principal).",
-  "footer": "Versión {{VERSION}} · Windows, macOS, Linux y Android · Hecho con Godot Engine"
+  "footer": "Versión {{VERSION}} · Windows, macOS, Linux y Android"
  },
  "it": {
   "meta_desc": "Arcanes & Lames: gioco di carte gratuito fantasy medievale in pixel art, contro l'IA o online. Windows, macOS, Linux e Android.",
@@ -363,7 +363,7 @@
   "after": "Poi scegli il tuo nickname in <b>Impostazioni &gt; Profilo</b>: sei connesso al server. Gli aggiornamenti si installano automaticamente all'avvio del gioco.",
   "news_title": "Novità",
   "news_sub": "Il dettaglio di tutte le versioni è anche nel gioco (menu principale).",
-  "footer": "Versione {{VERSION}} · Windows, macOS, Linux e Android · Realizzato con Godot Engine"
+  "footer": "Versione {{VERSION}} · Windows, macOS, Linux e Android"
  },
  "pt": {
   "meta_desc": "Arcanes & Lames: jogo de cartas gratuito de fantasia medieval em pixel art, contra a IA ou online. Windows, macOS, Linux e Android.",
@@ -451,6 +451,6 @@
   "after": "Depois, escolha seu apelido em <b>Configurações &gt; Perfil</b>: você estará conectado ao servidor. As atualizações são instaladas automaticamente ao iniciar o jogo.",
   "news_title": "Novidades",
   "news_sub": "O detalhe de todas as versões também está no jogo (menu principal).",
-  "footer": "Versão {{VERSION}} · Windows, macOS, Linux e Android · Feito com Godot Engine"
+  "footer": "Versão {{VERSION}} · Windows, macOS, Linux e Android"
  }
 }

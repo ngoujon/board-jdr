@@ -13,6 +13,8 @@ var _info_copies: Label
 var _details: RichTextLabel
 var _fx_btn: Button
 var _fx: Fx3D
+var _search: LineEdit
+var _no_result: Label
 
 
 func _ready() -> void:
@@ -49,9 +51,30 @@ func _ready() -> void:
 			_fill_grid())
 		filters.add_child(b)
 
+	# Recherche : nom, effet ou mot-clé (sans tenir compte des majuscules ni des accents).
+	_search = LineEdit.new()
+	_search.position = Vector2(30, 124)
+	_search.size = Vector2(730, 38)
+	_search.placeholder_text = Loc.t("Rechercher une carte (nom, effet, mot-clé)…")
+	_search.clear_button_enabled = true
+	_search.add_theme_font_size_override("font_size", 17)
+	for sn in ["normal", "focus"]:
+		var sb := UITheme.flat_style(Color(0.08, 0.06, 0.08, 0.92), UITheme.GOLD if sn == "focus" else Color("6b5a3c"), 2, 4)
+		sb.content_margin_left = 12
+		sb.content_margin_right = 8
+		_search.add_theme_stylebox_override(sn, sb)
+	_search.text_changed.connect(func(_t): _fill_grid())
+	add_child(_search)
+	_no_result = UITheme.label(Loc.t("Aucune carte ne correspond à votre recherche."), 18, Color("c9b79a"), 3)
+	_no_result.position = Vector2(30, 200)
+	_no_result.size = Vector2(730, 30)
+	_no_result.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_no_result.visible = false
+	add_child(_no_result)
+
 	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(30, 124)
-	scroll.size = Vector2(730, 586)
+	scroll.position = Vector2(30, 172)
+	scroll.size = Vector2(730, 538)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(scroll)
 	_grid = GridContainer.new()
@@ -124,10 +147,15 @@ func _ready() -> void:
 func _fill_grid() -> void:
 	for c in _grid.get_children():
 		c.queue_free()
+	var query := _fold(_search.text.strip_edges()) if _search else ""
+	var shown := 0
 	for id in CardDB.COLLECTION_ORDER:
 		var card := CardDB.get_card(id)
 		if _filter != "all" and card.type != _filter:
 			continue
+		if query != "" and not _matches(id, query):
+			continue
+		shown += 1
 		var holder := Control.new()
 		holder.custom_minimum_size = CardView.SIZE * GRID_SCALE
 		var cv := CardView.new().setup(id)
@@ -138,6 +166,36 @@ func _fill_grid() -> void:
 			cv.modulate = Color(1.25, 1.2, 1.05) if on else Color.WHITE)
 		holder.add_child(cv)
 		_grid.add_child(holder)
+	if _no_result:
+		_no_result.visible = shown == 0
+
+
+## La carte correspond-elle à la recherche ? Chaque mot doit apparaître dans son nom, son type,
+## son effet ou ses mots-clés (texte traduit).
+func _matches(id: String, query: String) -> bool:
+	var c := CardDB.get_card(id)
+	var hay := "%s %s %s" % [c.get("name", ""), c.get("text", ""),
+		Loc.t({"minion": "Serviteur", "spell": "Sort", "enchantment": "Enchantement"}.get(c.type, ""))]
+	for tip in CardDB.tips(id):
+		hay += " " + str(tip[0])
+	hay = _fold(hay)
+	for word in query.split(" ", false):
+		if not hay.contains(word):
+			return false
+	return true
+
+
+const _ACCENTS := {"à": "a", "â": "a", "ä": "a", "á": "a", "ã": "a", "ç": "c", "é": "e", "è": "e", "ê": "e", "ë": "e",
+	"î": "i", "ï": "i", "í": "i", "ì": "i", "ô": "o", "ö": "o", "ó": "o", "ò": "o", "õ": "o", "ù": "u", "û": "u", "ü": "u",
+	"ú": "u", "ñ": "n", "ß": "ss", "œ": "oe", "æ": "ae", "’": "'"}
+
+
+## Minuscules sans accents (« Élémentaire » -> « elementaire »).
+static func _fold(t: String) -> String:
+	var out := ""
+	for ch in t.to_lower():
+		out += _ACCENTS.get(ch, ch)
+	return out
 
 
 func _select(id: String) -> void:

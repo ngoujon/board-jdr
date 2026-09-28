@@ -1,5 +1,25 @@
 [
 	{
+		"version": "2.0.3",
+		"date": "2026-09-28",
+		"title": "Glisser pour jouer, passe de combat et classement IA",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Glissez une carte de votre main sur le plateau pour la jouer, ou sur la zone « Défausser » en bas à droite pour la défausser. Le petit X de défausse sur les cartes disparaît.",
+					"Nouvelle case « Confirmer la fin du tour » sous « Fin du tour automatique » : décochée, le bouton Fin du tour termine le tour sans confirmation.",
+					"Le dos de votre bibliothèque est affiché en pile en bas à droite du plateau ; un clic montre les cartes qui restent.",
+					"Passe de combat : cliquez directement sur une récompense pour la récupérer ; les récompenses déjà récupérées sont grisées.",
+					"Collection : barre de recherche (nom, effet ou mot-clé).",
+					"Statistiques : en survolant une carte, elle s'affiche avec l'explication de ses effets.",
+					"Classement : nouvel onglet « Contre l'IA » avec le bilan contre chaque niveau d'IA et un score pondéré par la difficulté : les victoires contre l'Apprenti ne comptent plus autant que celles contre le Challenger.",
+					"Nouvel écran de démarrage aux couleurs du jeu."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.2",
 		"date": "2026-09-28",
 		"title": "Arcanes & Lames arrive sur Android",

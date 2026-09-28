@@ -182,10 +182,20 @@ func _tier(r: Dictionary, state: String, next: bool) -> Control:
 			sb.set_content_margin_all(1)
 			b.add_theme_stylebox_override(sn, sb)
 		var lv := int(r.level)
-		b.pressed.connect(func():
+		var claim := func():
+			if b.disabled:
+				return
 			b.disabled = true
-			Lobby.claim_pass(lv, b.get_global_rect().get_center(), _gold_target()))
+			Audio.play_sfx("click", 0.1)
+			Lobby.claim_pass(lv, tile.get_global_rect().get_center(), _gold_target())
+		b.pressed.connect(claim)
 		vb.add_child(b)
+		# Toute la case est cliquable : un clic sur la récompense la récupère.
+		tile.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		tile.tooltip_text = Loc.t("Cliquez pour récupérer : %s") % reward_text(r)
+		tile.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
+				claim.call())
 		var glow := tile.create_tween().set_loops()
 		glow.tween_property(tile, "modulate", Color(1.25, 1.15, 0.85), 0.7).set_trans(Tween.TRANS_SINE)
 		glow.tween_property(tile, "modulate", Color.WHITE, 0.7).set_trans(Tween.TRANS_SINE)
@@ -196,6 +206,25 @@ func _tier(r: Dictionary, state: String, next: bool) -> Control:
 	name_l.clip_text = true
 	name_l.custom_minimum_size.x = 100
 	vb.add_child(name_l)
-	if not done:
+	if done:
+		_grey_out(tile)   # déjà récupérée : case grisée
+	else:
 		tile.modulate = Color(0.85, 0.85, 0.9)
 	return tile
+
+
+static var _grey_mat: ShaderMaterial
+
+
+## Case et tout son contenu en niveaux de gris (le contenu utilise le matériau de la case).
+static func _grey_out(tile: Control) -> void:
+	if _grey_mat == null:
+		_grey_mat = ShaderMaterial.new()
+		_grey_mat.shader = load("res://assets/shaders/grayscale.gdshader")
+	tile.material = _grey_mat
+	var stack: Array[Node] = tile.get_children()
+	while not stack.is_empty():
+		var n: Node = stack.pop_back()
+		if n is CanvasItem:
+			n.use_parent_material = true
+		stack.append_array(n.get_children())

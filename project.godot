@@ -18,6 +18,10 @@ config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://assets/ui/game_icon.png"
 config/windows_native_icon="res://assets/ui/game_icon.ico"
 config/quit_on_go_back=false
+boot_splash/bg_color=Color(0.101961, 0.0705882, 0.12549, 1)
+boot_splash/image="res://assets/bg/menu.png"
+boot_splash/stretch_mode=4
+boot_splash/use_filter=false
 
 [autoload]
 

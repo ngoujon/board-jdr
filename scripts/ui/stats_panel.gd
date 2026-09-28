@@ -17,6 +17,8 @@ var _list: VBoxContainer
 var _status: Label
 var _mode_btns: Array[Button] = []
 var _sort_btns: Array[Button] = []
+var _preview: CardView
+var _tips: KeywordTips
 
 
 func _init() -> void:
@@ -92,10 +94,40 @@ func _init() -> void:
 	close_btn.pressed.connect(queue_free)
 	vb.add_child(close_btn)
 
+	# Survol d'une ligne : la carte et ses infobulles (comme en partie), au-dessus du panneau.
+	_preview = CardView.new()
+	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_preview.visible = false
+	_preview.z_index = 10
+	add_child(_preview)
+	_tips = KeywordTips.new()
+	_tips.z_index = 10
+	add_child(_tips)
+
 
 func _ready() -> void:
 	Lobby.global_stats_received.connect(_on_stats)
 	_set_mode("all")
+
+
+## Ligne survolée : surlignée, avec la carte à droite du panneau et ses infobulles.
+func _show_card(row: Control, id: String) -> void:
+	row.modulate = Color(1.3, 1.25, 1.0)
+	_preview.setup(id)
+	var r := row.get_global_rect()
+	# À droite du nom de la carte, centrée sur la ligne, sans sortir de l'écran.
+	var pos := Vector2(r.position.x + 290, clampf(r.get_center().y - CardView.SIZE.y / 2, 6, 720 - CardView.SIZE.y - 6))
+	_preview.position = pos
+	_preview.visible = true
+	_tips.show_card(id)
+	_tips.place_beside(Rect2(pos, CardView.SIZE))
+
+
+func _hide_card(row: Control) -> void:
+	if is_instance_valid(row):
+		row.modulate = Color.WHITE
+	_preview.visible = false
+	_tips.hide_tips()
 
 
 func _tab_btn(text: String, width: int) -> Button:
@@ -188,8 +220,10 @@ func _fill_cards() -> void:
 			l.custom_minimum_size.x = COLS[i][1]
 			l.clip_text = true
 			row.add_child(l)
-		row.tooltip_text = str(card.get("text", ""))
 		row.mouse_filter = Control.MOUSE_FILTER_PASS
+		var id: String = c.card
+		row.mouse_entered.connect(_show_card.bind(row, id))
+		row.mouse_exited.connect(_hide_card.bind(row))
 		_list.add_child(row)
 	if rank == 0:
 		_list.add_child(UITheme.label(Loc.t("Aucune carte enregistrée pour ce mode pour le moment."), 15, Color("c9b79a")))

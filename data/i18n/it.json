@@ -1075,5 +1075,21 @@
  "Demande une confirmation si vous terminez votre tour alors qu'il vous reste des cartes jouables ou des attaques.": "Chiede una conferma se termini il turno quando ti restano carte giocabili o attacchi.",
  "Votre bibliothèque : cliquez pour voir les cartes qui restent (sans l'ordre de pioche)": "La tua biblioteca: clicca per vedere le carte rimanenti (senza l'ordine di pescata)",
  "Défausser": "Scarta",
- "Cliquez à nouveau pour jouer (ou glissez-la sur le plateau)": "Clicca di nuovo per giocare (o trascinala sul tabellone)"
+ "Cliquez à nouveau pour jouer (ou glissez-la sur le plateau)": "Clicca di nuovo per giocare (o trascinala sul tabellone)",
+ "%s : %d victoires, %d défaites (%.0f %%)": "%s: %d vittorie, %d sconfitte (%.0f %%)",
+ "Aucune carte ne correspond à votre recherche.": "Nessuna carta corrisponde alla ricerca.",
+ "Cliquez pour récupérer : %s": "Clicca per riscattare: %s",
+ "Rechercher une carte (nom, effet, mot-clé)…": "Cerca una carta (nome, effetto, parola chiave)…",
+ "Score IA": "Punteggio IA",
+ "Score IA : % de victoires pondéré par la difficulté (Apprenti ×0,25, Chevalier ×0,5, Seigneur de guerre ×0,8, Challenger ×1). Ne gagner qu'en Apprenti plafonne à 25 ; tout gagner contre le Challenger donne 100. Classé à partir de 5 parties.": "Punteggio IA: % di vittorie ponderato per difficoltà (Apprendista ×0,25, Cavaliere ×0,5, Signore della guerra ×0,8, Challenger ×1). Vincere solo contro l'Apprendista limita a 25; vincere tutto contro il Challenger dà 100. In classifica da 5 partite.",
+ "Seigneur": "Signore",
+ "Glisser pour jouer, passe de combat et classement IA": "Trascina per giocare, pass battaglia e classifica IA",
+ "Glissez une carte de votre main sur le plateau pour la jouer, ou sur la zone « Défausser » en bas à droite pour la défausser. Le petit X de défausse sur les cartes disparaît.": "Trascina una carta dalla mano sul tabellone per giocarla, o sulla zona «Scarta» in basso a destra per scartarla. La piccola X per scartare sulle carte scompare.",
+ "Nouvelle case « Confirmer la fin du tour » sous « Fin du tour automatique » : décochée, le bouton Fin du tour termine le tour sans confirmation.": "Nuova casella «Conferma fine turno» sotto «Fine turno automatica»: se disattivata, il pulsante Fine turno termina il turno senza conferma.",
+ "Le dos de votre bibliothèque est affiché en pile en bas à droite du plateau ; un clic montre les cartes qui restent.": "Il dorso della tua biblioteca è mostrato come una pila in basso a destra del tabellone; un clic mostra le carte rimanenti.",
+ "Passe de combat : cliquez directement sur une récompense pour la récupérer ; les récompenses déjà récupérées sont grisées.": "Pass battaglia: clicca direttamente su una ricompensa per riscattarla; quelle già riscattate sono in grigio.",
+ "Collection : barre de recherche (nom, effet ou mot-clé).": "Collezione: barra di ricerca (nome, effetto o parola chiave).",
+ "Statistiques : en survolant une carte, elle s'affiche avec l'explication de ses effets.": "Statistiche: passando sopra una carta, viene mostrata con la spiegazione dei suoi effetti.",
+ "Classement : nouvel onglet « Contre l'IA » avec le bilan contre chaque niveau d'IA et un score pondéré par la difficulté : les victoires contre l'Apprenti ne comptent plus autant que celles contre le Challenger.": "Classifica: nuova scheda «Contro l'IA» con il bilancio contro ogni livello di IA e un punteggio ponderato per difficoltà: le vittorie contro l'Apprendista non valgono più quanto quelle contro il Challenger.",
+ "Nouvel écran de démarrage aux couleurs du jeu.": "Nuova schermata di avvio con i colori del gioco."
 }

@@ -247,6 +247,15 @@ class History:
         self._stats_cache[mode] = (now, out)
         return out
 
+    def ai_records(self):
+        """{jeton: [[victoires, parties] par niveau 0 Apprenti … 3 Challenger]} (parties contre l'IA, hors Inferno)."""
+        out = {}
+        for tok, diff, won, n in self.db.execute("SELECT p1_token, difficulty, SUM(winner = 1), COUNT(*) FROM matches "
+                                                 "WHERE mode='ai' GROUP BY p1_token, difficulty"):
+            if tok and diff is not None and 0 <= diff <= 3:
+                out.setdefault(tok, [[0, 0] for _ in range(4)])[diff] = [won or 0, n]
+        return out
+
     def ai_wins_by_level(self):
         """{jeton: {niveau: victoires}} d'après l'historique (reprise des comptes d'avant la 2.0)."""
         out = {}
@@ -338,6 +347,22 @@ def pass_level(acc, n):
     levels, per = season_conf()
     xp = acc.get("seasons", {}).get(str(n), {}).get("xp", 0)
     return min(levels, xp // per)
+
+
+AI_WEIGHTS = (0.25, 0.5, 0.8, 1.0)   # Apprenti, Chevalier, Seigneur de guerre, Challenger
+AI_MIN_GAMES = 5
+
+
+def ai_score(records):
+    """Score contre l'IA (0 à 100) : % de victoires pondéré par la difficulté de chaque partie.
+    Ne gagner qu'en Apprenti plafonne à 25 ; tout gagner contre le Challenger donne 100.
+    -1 : moins de AI_MIN_GAMES parties (non classé)."""
+    if not records:
+        return -1
+    games = sum(n for _, n in records)
+    if games < AI_MIN_GAMES:
+        return -1
+    return round(100.0 * sum(AI_WEIGHTS[d] * records[d][0] for d in range(4)) / games, 1)
 
 
 def claimed_levels(acc, n):
@@ -595,6 +620,7 @@ class LobbyServer:
         # Parties contre l'IA en cours, par compte : elles survivent à une reconnexion et à un redémarrage du serveur.
         self.tickets_path = os.path.join(os.path.dirname(os.path.abspath(data_path)), "ai_tickets.json")
         self.ai_tickets = self.load_tickets()
+        self._ai_levels, self._ai_levels_at = {}, 0.0   # cache de History.ai_records (classement)
         self.tasks = set()           # validations de parties en cours (attendues avant un redémarrage)
         self.draining = False        # redémarrage demandé : on attend la fin des parties en ligne
         levels = self.history.ai_wins_by_level()
@@ -959,9 +985,18 @@ class LobbyServer:
         c.send({"t": "dm_history", "with": names[target], "messages": rows})
 
     # ------------------------------------------------------------ classement
+    def ai_levels(self):
+        """Bilans par niveau d'IA (historique), recalculés au plus toutes les 30 s."""
+        now = time.time()
+        if now - self._ai_levels_at > 30:
+            self._ai_levels = self.history.ai_records()
+            self._ai_levels_at = now
+        return self._ai_levels
+
     def ranking(self):
         """Classement : [(token, ligne)], du premier au dernier."""
         rows = []
+        levels = self.ai_levels()
         for tok, a in self.store.accounts.items():
             played = a["wins"] + a["losses"]
             ai_played = a["ai_wins"] + a["ai_losses"]
@@ -971,6 +1006,8 @@ class LobbyServer:
                 "winrate": round(100.0 * a["wins"] / played, 1) if played else 0.0,
                 "ai_wins": a["ai_wins"], "ai_losses": a["ai_losses"],
                 "ai_winrate": round(100.0 * a["ai_wins"] / ai_played, 1) if ai_played else 0.0,
+                "ai_levels": [[w, n - w] for w, n in levels.get(tok, [[0, 0]] * 4)],
+                "ai_score": ai_score(levels.get(tok)),
                 "inferno": a.get("inferno_best", 0), "inferno_games": a.get("inferno_games", 0),
                 "inferno_ts": a.get("inferno_best_ts", 0),
             }))

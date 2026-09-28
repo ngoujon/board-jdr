@@ -1075,5 +1075,21 @@
  "Demande une confirmation si vous terminez votre tour alors qu'il vous reste des cartes jouables ou des attaques.": "Verlangt eine Bestätigung, wenn du deinen Zug beendest, obwohl du noch spielbare Karten oder Angriffe hast.",
  "Votre bibliothèque : cliquez pour voir les cartes qui restent (sans l'ordre de pioche)": "Deine Bibliothek: Klicke, um die verbleibenden Karten zu sehen (ohne Ziehreihenfolge)",
  "Défausser": "Abwerfen",
- "Cliquez à nouveau pour jouer (ou glissez-la sur le plateau)": "Klicke erneut zum Spielen (oder ziehe sie auf das Spielfeld)"
+ "Cliquez à nouveau pour jouer (ou glissez-la sur le plateau)": "Klicke erneut zum Spielen (oder ziehe sie auf das Spielfeld)",
+ "%s : %d victoires, %d défaites (%.0f %%)": "%s: %d Siege, %d Niederlagen (%.0f %%)",
+ "Aucune carte ne correspond à votre recherche.": "Keine Karte passt zu deiner Suche.",
+ "Cliquez pour récupérer : %s": "Klicke zum Abholen: %s",
+ "Rechercher une carte (nom, effet, mot-clé)…": "Karte suchen (Name, Effekt, Schlüsselwort)…",
+ "Score IA": "KI-Wertung",
+ "Score IA : % de victoires pondéré par la difficulté (Apprenti ×0,25, Chevalier ×0,5, Seigneur de guerre ×0,8, Challenger ×1). Ne gagner qu'en Apprenti plafonne à 25 ; tout gagner contre le Challenger donne 100. Classé à partir de 5 parties.": "KI-Wertung: Siegquote gewichtet nach Schwierigkeit (Lehrling ×0,25, Ritter ×0,5, Kriegsherr ×0,8, Challenger ×1). Nur Siege gegen den Lehrling ergeben höchstens 25; alle Siege gegen den Challenger ergeben 100. Gewertet ab 5 Partien.",
+ "Seigneur": "Kriegsherr",
+ "Glisser pour jouer, passe de combat et classement IA": "Ziehen zum Spielen, Kampfpass und KI-Rangliste",
+ "Glissez une carte de votre main sur le plateau pour la jouer, ou sur la zone « Défausser » en bas à droite pour la défausser. Le petit X de défausse sur les cartes disparaît.": "Ziehe eine Karte aus deiner Hand auf das Spielfeld, um sie zu spielen, oder auf die Zone „Abwerfen“ unten rechts, um sie abzuwerfen. Das kleine Abwurf-X auf den Karten entfällt.",
+ "Nouvelle case « Confirmer la fin du tour » sous « Fin du tour automatique » : décochée, le bouton Fin du tour termine le tour sans confirmation.": "Neues Kästchen „Zugende bestätigen“ unter „Zug automatisch beenden“: Ist es deaktiviert, beendet die Schaltfläche den Zug ohne Bestätigung.",
+ "Le dos de votre bibliothèque est affiché en pile en bas à droite du plateau ; un clic montre les cartes qui restent.": "Die Rückseite deiner Bibliothek wird als Stapel unten rechts auf dem Spielfeld angezeigt; ein Klick zeigt die verbleibenden Karten.",
+ "Passe de combat : cliquez directement sur une récompense pour la récupérer ; les récompenses déjà récupérées sont grisées.": "Kampfpass: Klicke direkt auf eine Belohnung, um sie abzuholen; bereits abgeholte Belohnungen sind ausgegraut.",
+ "Collection : barre de recherche (nom, effet ou mot-clé).": "Sammlung: Suchleiste (Name, Effekt oder Schlüsselwort).",
+ "Statistiques : en survolant une carte, elle s'affiche avec l'explication de ses effets.": "Statistiken: Beim Überfahren einer Karte wird sie mit der Erklärung ihrer Effekte angezeigt.",
+ "Classement : nouvel onglet « Contre l'IA » avec le bilan contre chaque niveau d'IA et un score pondéré par la difficulté : les victoires contre l'Apprenti ne comptent plus autant que celles contre le Challenger.": "Rangliste: neuer Reiter „Gegen die KI“ mit der Bilanz gegen jede KI-Stufe und einer nach Schwierigkeit gewichteten Wertung: Siege gegen den Lehrling zählen nicht mehr so viel wie Siege gegen den Challenger.",
+ "Nouvel écran de démarrage aux couleurs du jeu.": "Neuer Startbildschirm in den Farben des Spiels."
 }

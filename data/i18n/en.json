@@ -1075,5 +1075,21 @@
  "Demande une confirmation si vous terminez votre tour alors qu'il vous reste des cartes jouables ou des attaques.": "Asks for confirmation if you end your turn while you still have playable cards or attacks.",
  "Votre bibliothèque : cliquez pour voir les cartes qui restent (sans l'ordre de pioche)": "Your library: click to see the remaining cards (without the draw order)",
  "Défausser": "Discard",
- "Cliquez à nouveau pour jouer (ou glissez-la sur le plateau)": "Click again to play (or drag it onto the board)"
+ "Cliquez à nouveau pour jouer (ou glissez-la sur le plateau)": "Click again to play (or drag it onto the board)",
+ "%s : %d victoires, %d défaites (%.0f %%)": "%s: %d wins, %d losses (%.0f %%)",
+ "Aucune carte ne correspond à votre recherche.": "No card matches your search.",
+ "Cliquez pour récupérer : %s": "Click to claim: %s",
+ "Rechercher une carte (nom, effet, mot-clé)…": "Search for a card (name, effect, keyword)…",
+ "Score IA": "AI score",
+ "Score IA : % de victoires pondéré par la difficulté (Apprenti ×0,25, Chevalier ×0,5, Seigneur de guerre ×0,8, Challenger ×1). Ne gagner qu'en Apprenti plafonne à 25 ; tout gagner contre le Challenger donne 100. Classé à partir de 5 parties.": "AI score: win % weighted by difficulty (Apprentice ×0.25, Knight ×0.5, Warlord ×0.8, Challenger ×1). Winning only against the Apprentice caps at 25; winning every game against the Challenger gives 100. Ranked from 5 games.",
+ "Seigneur": "Warlord",
+ "Glisser pour jouer, passe de combat et classement IA": "Drag to play, battle pass and AI leaderboard",
+ "Glissez une carte de votre main sur le plateau pour la jouer, ou sur la zone « Défausser » en bas à droite pour la défausser. Le petit X de défausse sur les cartes disparaît.": "Drag a card from your hand onto the board to play it, or onto the “Discard” zone at the bottom right to discard it. The small discard X on cards is gone.",
+ "Nouvelle case « Confirmer la fin du tour » sous « Fin du tour automatique » : décochée, le bouton Fin du tour termine le tour sans confirmation.": "New “Confirm end of turn” box under “Auto end turn”: unchecked, the End Turn button ends the turn without confirmation.",
+ "Le dos de votre bibliothèque est affiché en pile en bas à droite du plateau ; un clic montre les cartes qui restent.": "The back of your library is shown as a pile at the bottom right of the board; click it to see the remaining cards.",
+ "Passe de combat : cliquez directement sur une récompense pour la récupérer ; les récompenses déjà récupérées sont grisées.": "Battle pass: click a reward directly to claim it; rewards already claimed are grayed out.",
+ "Collection : barre de recherche (nom, effet ou mot-clé).": "Collection: search bar (name, effect or keyword).",
+ "Statistiques : en survolant une carte, elle s'affiche avec l'explication de ses effets.": "Statistics: hovering a card shows it with an explanation of its effects.",
+ "Classement : nouvel onglet « Contre l'IA » avec le bilan contre chaque niveau d'IA et un score pondéré par la difficulté : les victoires contre l'Apprenti ne comptent plus autant que celles contre le Challenger.": "Leaderboard: new “Vs AI” tab with your record against each AI level and a difficulty-weighted score: wins against the Apprentice no longer count as much as wins against the Challenger.",
+ "Nouvel écran de démarrage aux couleurs du jeu.": "New startup screen in the game's colors."
 }

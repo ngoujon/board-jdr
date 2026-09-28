@@ -1,14 +1,18 @@
 class_name LeaderboardPanel
 extends Control
 ## Classement des joueurs (serveur communautaire) : onglet « Général » (victoires, défaites, % de victoires,
-## contre l'IA, meilleur score Inferno) et onglet « Inferno » (meilleurs scores du mode Inferno).
+## score contre l'IA, meilleur score Inferno), onglet « Contre l'IA » (bilan par difficulté et score pondéré,
+## pour ne pas comparer des victoires en Apprenti et contre le Challenger) et onglet « Inferno ».
 ## Un clic sur le titre d'une colonne trie le tableau (un 2e clic inverse l'ordre).
 ## Barre de recherche par pseudo ; un clic sur un joueur ouvre son profil (statistiques,
 ## cartes favorites, historique complet et replays des parties).
 
 # [clé de tri, titre, largeur]
 const GENERAL_COLS := [["rank", "#", 44], ["", "", 44], ["name", "Joueur", 178], ["wins", "V", 46], ["losses", "D", 46],
-	["winrate", "% victoires", 104], ["ai_wins", "vs IA (V/D)", 104], ["ai_winrate", "% vs IA", 84], ["inferno", "Inferno", 90]]
+	["winrate", "% victoires", 104], ["ai_wins", "vs IA (V/D)", 104], ["ai_score", "Score IA", 84], ["inferno", "Inferno", 90]]
+const AI_COLS := [["rank", "#", 44], ["", "", 44], ["name", "Joueur", 170], ["lvl0", "Apprenti", 100], ["lvl1", "Chevalier", 100],
+	["lvl2", "Seigneur", 100], ["lvl3", "Challenger", 100], ["ai_score", "Score IA", 100]]
+const AI_LEVEL_NAMES := ["Apprenti", "Chevalier", "Seigneur de guerre", "Challenger"]
 const INFERNO_COLS := [["rank", "#", 44], ["", "", 44], ["name", "Joueur", 230], ["inferno", "Meilleur score", 150],
 	["inferno_games", "Parties Inferno", 150], ["inferno_ts", "Date du record", 150]]
 
@@ -17,7 +21,7 @@ var _header: HBoxContainer
 var _status: Label
 var _search: LineEdit
 var _query := ""
-var _tab := "general"            # general | inferno
+var _tab := "general"            # general | ai | inferno
 var _tab_btns := {}
 var _rows: Array = []            # lignes reçues (ordre du serveur)
 var _sort_key := "rank"
@@ -47,7 +51,7 @@ func _init() -> void:
 	tabs.alignment = BoxContainer.ALIGNMENT_CENTER
 	tabs.add_theme_constant_override("separation", 10)
 	vb.add_child(tabs)
-	for t in [["general", "Général"], ["inferno", "Inferno"]]:
+	for t in [["general", "Général"], ["ai", "Contre l'IA"], ["inferno", "Inferno"]]:
 		var b := UITheme.button(Loc.t(t[1]), 180)
 		b.toggle_mode = true
 		b.custom_minimum_size.y = 36
@@ -124,18 +128,29 @@ func _ready() -> void:
 
 
 func _cols() -> Array:
-	return INFERNO_COLS if _tab == "inferno" else GENERAL_COLS
+	return INFERNO_COLS if _tab == "inferno" else (AI_COLS if _tab == "ai" else GENERAL_COLS)
 
 
 func _set_tab(tab: String, refill := true) -> void:
 	_tab = tab
 	for k in _tab_btns:
 		_tab_btns[k].set_pressed_no_signal(k == tab)
-	# Onglet Inferno : meilleurs scores d'abord ; Général : ordre du classement du serveur.
+	# Onglet Inferno : meilleurs scores d'abord ; Contre l'IA : meilleur score IA ; Général : ordre du serveur.
 	_sort_key = "inferno" if tab == "inferno" else "rank"
 	_sort_desc = tab == "inferno"
 	if refill:
 		_fill()
+		_explain()
+
+
+## Explication sous les onglets (le score IA doit être compris pour être juste).
+func _explain() -> void:
+	if _query != "":
+		return
+	if _tab == "ai":
+		_status.text = Loc.t("Score IA : % de victoires pondéré par la difficulté (Apprenti ×0,25, Chevalier ×0,5, Seigneur de guerre ×0,8, Challenger ×1). Ne gagner qu'en Apprenti plafonne à 25 ; tout gagner contre le Challenger donne 100. Classé à partir de 5 parties.")
+	elif Lobby.online:
+		_status.text = Loc.t("Classement du serveur (parties en ligne). Cliquez sur un joueur pour voir son profil et ses parties.")
 
 
 func _build_header() -> void:
@@ -186,6 +201,7 @@ func _request() -> void:
 	_query = ""
 	if Lobby.online:
 		_status.text = Loc.t("Classement du serveur (parties en ligne). Cliquez sur un joueur pour voir son profil et ses parties.")
+		_explain()
 		Lobby.request_leaderboard()
 	else:
 		_status.text = Loc.t("Serveur hors ligne : seules vos statistiques locales sont affichées. (Options > Profil pour vous connecter)")
@@ -253,7 +269,17 @@ func _name_cell(r: Dictionary, text: String, col: Color, width: int) -> Control:
 func _sort_value(r: Dictionary, key: String):
 	if key == "name":
 		return str(r.get("name", "")).to_lower()
+	if key.begins_with("lvl"):
+		# Niveau d'IA : les victoires d'abord, puis le % de victoires.
+		var rec := _level(r, int(key.substr(3)))
+		return rec[0] * 1000.0 + (100.0 * rec[0] / maxi(1, rec[0] + rec[1]))
 	return float(r.get(key, 0))
+
+
+## [victoires, défaites] contre un niveau d'IA (0 Apprenti … 3 Challenger).
+func _level(r: Dictionary, i: int) -> Array:
+	var lv: Array = r.get("ai_levels", [])
+	return lv[i] if i < lv.size() else [0, 0]
 
 
 func _cell_text(r: Dictionary, key: String, rank: int) -> String:
@@ -266,12 +292,32 @@ func _cell_text(r: Dictionary, key: String, rank: int) -> String:
 			return "%.1f %%" % float(r.get(key, 0.0))
 		"ai_wins":
 			return "%d / %d" % [int(r.get("ai_wins", 0)), int(r.get("ai_losses", 0))]
+		"ai_score":
+			return ("%.1f" % float(r.ai_score)) if float(r.get("ai_score", -1)) >= 0 else "—"
+		"lvl0", "lvl1", "lvl2", "lvl3":
+			var rec := _level(r, int(key.substr(3)))
+			return ("%d / %d" % [rec[0], rec[1]]) if rec[0] + rec[1] > 0 else "—"
 		"inferno":
 			return str(int(r.get("inferno", 0))) if int(r.get("inferno", 0)) > 0 else "-"
 		"inferno_ts":
 			var ts := int(r.get("inferno_ts", 0))
 			return Time.get_date_string_from_unix_time(ts) if ts > 0 else "-"
 	return str(int(r.get(key, 0)))
+
+
+## Couleur d'une case : Inferno en orange ; bilan par niveau d'IA selon le % de victoires.
+func _cell_color(r: Dictionary, key: String, base: Color) -> Color:
+	if key == "inferno" and int(r.get("inferno", 0)) > 0:
+		return Color("ffa060")
+	if key.begins_with("lvl"):
+		var rec := _level(r, int(key.substr(3)))
+		if rec[0] + rec[1] == 0:
+			return Color("7a6a58")
+		var pct: float = 100.0 * rec[0] / (rec[0] + rec[1])
+		return UITheme.GREEN if pct >= 60.0 else (UITheme.RED if pct < 40.0 else base)
+	if key == "ai_score" and float(r.get("ai_score", -1)) >= 0:
+		return UITheme.GOLD
+	return base
 
 
 func _fill() -> void:
@@ -288,7 +334,16 @@ func _fill() -> void:
 		for i in rows.size():
 			rows[i] = rows[i].duplicate()
 			rows[i]["inferno_rank"] = i + 1
-	var rank_key := "inferno_rank" if _tab == "inferno" else "rank"
+	if _tab == "ai":
+		# Rang IA : meilleur score pondéré (les joueurs non classés, moins de 5 parties, à la fin).
+		rows.sort_custom(func(a, b):
+			if float(a.get("ai_score", -1)) != float(b.get("ai_score", -1)):
+				return float(a.get("ai_score", -1)) > float(b.get("ai_score", -1))
+			return int(a.get("ai_wins", 0)) > int(b.get("ai_wins", 0)))
+		for i in rows.size():
+			rows[i] = rows[i].duplicate()
+			rows[i]["ai_rank"] = i + 1
+	var rank_key := "inferno_rank" if _tab == "inferno" else ("ai_rank" if _tab == "ai" else "rank")
 	var key := rank_key if _sort_key == "rank" else _sort_key
 	var desc := _sort_desc
 	rows.sort_custom(func(a, b):
@@ -313,8 +368,14 @@ func _fill() -> void:
 			if c[0] == "name":
 				row.add_child(_name_cell(r, str(r.name), col, c[2]))
 				continue
-			var l := UITheme.label(_cell_text(r, c[0], rank), 17, Color("ffa060") if c[0] == "inferno" and r.get("inferno", 0) > 0 else col)
+			var l := UITheme.label(_cell_text(r, c[0], rank), 17, _cell_color(r, c[0], col))
 			l.custom_minimum_size.x = c[2]
+			if str(c[0]).begins_with("lvl"):
+				var rec := _level(r, int(str(c[0]).substr(3)))
+				if rec[0] + rec[1] > 0:
+					l.mouse_filter = Control.MOUSE_FILTER_PASS
+					l.tooltip_text = Loc.t("%s : %d victoires, %d défaites (%.0f %%)") % [
+						Loc.t(AI_LEVEL_NAMES[int(str(c[0]).substr(3))]), rec[0], rec[1], 100.0 * rec[0] / (rec[0] + rec[1])]
 			l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			l.size_flags_vertical = Control.SIZE_FILL
 			row.add_child(l)
