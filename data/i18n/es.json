@@ -1108,5 +1108,16 @@
  "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Cuando obtienes un título o un objeto de personalización, la condición que te lo hizo ganar aparece bajo su nombre.",
  "Tour %d": "Turno %d",
  "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Número de turno (se cuentan los turnos de ambos jugadores, como en el registro)",
- "Le numéro du tour est affiché sous la durée de la partie.": "El número de turno se muestra bajo la duración de la partida."
+ "Le numéro du tour est affiché sous la durée de la partie.": "El número de turno se muestra bajo la duración de la partida.",
+ "%s a commencé la partie (la pièce l'a désigné).": "%s empezó la partida (lo eligió la moneda).",
+ "Vous avez commencé la partie (la pièce vous a désigné).": "Empezaste la partida (te eligió la moneda).",
+ "Cliquez pour ouvrir la discussion": "Haz clic para abrir el chat",
+ "Déposez ici pour jouer": "Suelta aquí para jugar",
+ "Nouveau message de %s : %s": "Nuevo mensaje de %s: %s",
+ "Main lisible et glisser-déposer plus clair": "Mano legible y arrastrar y soltar más claro",
+ "Les cartes de la main rapetissent quand la main grandit : elles ne se chevauchent plus et leurs PV restent lisibles.": "Las cartas de la mano se encogen cuando la mano crece: ya no se superponen y sus PV siguen legibles.",
+ "Quand vous glissez une carte jouable, la zone où la déposer est en surbrillance (votre rangée pour un serviteur, vos enchantements, tout le plateau pour un sort).": "Al arrastrar una carta jugable, la zona donde soltarla se resalta (tu fila para un esbirro, tus encantamientos, todo el tablero para un hechizo).",
+ "Un nouveau message dans la discussion s'affiche en haut du journal ; un clic ouvre la discussion.": "Un nuevo mensaje del chat aparece arriba del registro; un clic abre el chat.",
+ "Un jeton doré « 1 » à côté du portrait indique le joueur qui a commencé la partie.": "Una ficha dorada «1» junto al retrato indica qué jugador empezó la partida.",
+ "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "La animación de robo muestra tantas cartas como robas (una carta «roba 2 cartas» mostraba 4)."
 }

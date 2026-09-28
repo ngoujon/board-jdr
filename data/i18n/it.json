@@ -1108,5 +1108,16 @@
  "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Quando ottieni un titolo o un oggetto di personalizzazione, la condizione che te lo ha fatto guadagnare è mostrata sotto il suo nome.",
  "Tour %d": "Turno %d",
  "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Numero del turno (si contano i turni di entrambi i giocatori, come nel registro)",
- "Le numéro du tour est affiché sous la durée de la partie.": "Il numero del turno è mostrato sotto la durata della partita."
+ "Le numéro du tour est affiché sous la durée de la partie.": "Il numero del turno è mostrato sotto la durata della partita.",
+ "%s a commencé la partie (la pièce l'a désigné).": "%s ha iniziato la partita (scelto dal lancio della moneta).",
+ "Vous avez commencé la partie (la pièce vous a désigné).": "Hai iniziato la partita (scelto dal lancio della moneta).",
+ "Cliquez pour ouvrir la discussion": "Clicca per aprire la chat",
+ "Déposez ici pour jouer": "Rilascia qui per giocare",
+ "Nouveau message de %s : %s": "Nuovo messaggio da %s: %s",
+ "Main lisible et glisser-déposer plus clair": "Mano leggibile e trascinamento più chiaro",
+ "Les cartes de la main rapetissent quand la main grandit : elles ne se chevauchent plus et leurs PV restent lisibles.": "Le carte in mano si rimpiccioliscono quando la mano cresce: non si sovrappongono più e i loro PS restano leggibili.",
+ "Quand vous glissez une carte jouable, la zone où la déposer est en surbrillance (votre rangée pour un serviteur, vos enchantements, tout le plateau pour un sort).": "Quando trascini una carta giocabile, la zona dove rilasciarla è evidenziata (la tua fila per un servitore, i tuoi incantamenti, tutto il tabellone per un incantesimo).",
+ "Un nouveau message dans la discussion s'affiche en haut du journal ; un clic ouvre la discussion.": "Un nuovo messaggio della chat appare in cima al registro; un clic apre la chat.",
+ "Un jeton doré « 1 » à côté du portrait indique le joueur qui a commencé la partie.": "Un gettone dorato «1» accanto al ritratto indica chi ha iniziato la partita.",
+ "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "L'animazione di pescata mostra tante carte quante ne peschi (una carta «pesca 2 carte» ne mostrava 4)."
 }

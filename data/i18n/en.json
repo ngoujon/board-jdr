@@ -1108,5 +1108,16 @@
  "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "When you earn a title or a customization item, the condition that earned it is shown under its name.",
  "Tour %d": "Turn %d",
  "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Turn number (both players' turns are counted, as in the log)",
- "Le numéro du tour est affiché sous la durée de la partie.": "The turn number is shown under the game duration."
+ "Le numéro du tour est affiché sous la durée de la partie.": "The turn number is shown under the game duration.",
+ "%s a commencé la partie (la pièce l'a désigné).": "%s went first (chosen by the coin toss).",
+ "Vous avez commencé la partie (la pièce vous a désigné).": "You went first (chosen by the coin toss).",
+ "Cliquez pour ouvrir la discussion": "Click to open the chat",
+ "Déposez ici pour jouer": "Drop here to play",
+ "Nouveau message de %s : %s": "New message from %s: %s",
+ "Main lisible et glisser-déposer plus clair": "Readable hand and clearer drag and drop",
+ "Les cartes de la main rapetissent quand la main grandit : elles ne se chevauchent plus et leurs PV restent lisibles.": "Cards in your hand get smaller as your hand grows: they no longer overlap and their health stays readable.",
+ "Quand vous glissez une carte jouable, la zone où la déposer est en surbrillance (votre rangée pour un serviteur, vos enchantements, tout le plateau pour un sort).": "When you drag a playable card, the zone where to drop it is highlighted (your row for a minion, your enchantments, the whole board for a spell).",
+ "Un nouveau message dans la discussion s'affiche en haut du journal ; un clic ouvre la discussion.": "A new chat message is shown at the top of the log; click it to open the chat.",
+ "Un jeton doré « 1 » à côté du portrait indique le joueur qui a commencé la partie.": "A gold “1” token next to the portrait shows which player went first.",
+ "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "The draw animation shows as many cards as you draw (a “draw 2 cards” card showed 4)."
 }

@@ -1108,5 +1108,16 @@
  "Quand vous obtenez un titre ou un objet de personnalisation, la condition qui vous l'a fait gagner est affichée sous son nom.": "Wenn du einen Titel oder ein Anpassungsobjekt erhältst, wird unter seinem Namen die Bedingung angezeigt, mit der du es verdient hast.",
  "Tour %d": "Zug %d",
  "Numéro du tour (les tours des deux joueurs sont comptés, comme dans le journal)": "Zugnummer (die Züge beider Spieler werden gezählt, wie im Protokoll)",
- "Le numéro du tour est affiché sous la durée de la partie.": "Die Zugnummer wird unter der Spieldauer angezeigt."
+ "Le numéro du tour est affiché sous la durée de la partie.": "Die Zugnummer wird unter der Spieldauer angezeigt.",
+ "%s a commencé la partie (la pièce l'a désigné).": "%s hat die Partie begonnen (vom Münzwurf bestimmt).",
+ "Vous avez commencé la partie (la pièce vous a désigné).": "Du hast die Partie begonnen (vom Münzwurf bestimmt).",
+ "Cliquez pour ouvrir la discussion": "Klicke, um den Chat zu öffnen",
+ "Déposez ici pour jouer": "Hier ablegen zum Spielen",
+ "Nouveau message de %s : %s": "Neue Nachricht von %s: %s",
+ "Main lisible et glisser-déposer plus clair": "Lesbare Hand und klareres Ziehen und Ablegen",
+ "Les cartes de la main rapetissent quand la main grandit : elles ne se chevauchent plus et leurs PV restent lisibles.": "Die Karten auf der Hand werden kleiner, je voller die Hand ist: Sie überlappen sich nicht mehr und ihre LP bleiben lesbar.",
+ "Quand vous glissez une carte jouable, la zone où la déposer est en surbrillance (votre rangée pour un serviteur, vos enchantements, tout le plateau pour un sort).": "Wenn du eine spielbare Karte ziehst, wird die Zone zum Ablegen hervorgehoben (deine Reihe für einen Diener, deine Verzauberungen, das ganze Spielfeld für einen Zauber).",
+ "Un nouveau message dans la discussion s'affiche en haut du journal ; un clic ouvre la discussion.": "Eine neue Chatnachricht wird oben im Protokoll angezeigt; ein Klick öffnet den Chat.",
+ "Un jeton doré « 1 » à côté du portrait indique le joueur qui a commencé la partie.": "Ein goldener „1“-Marker neben dem Porträt zeigt, wer die Partie begonnen hat.",
+ "L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4).": "Die Ziehanimation zeigt so viele Karten, wie du ziehst (eine Karte „Ziehe 2 Karten“ zeigte 4)."
 }

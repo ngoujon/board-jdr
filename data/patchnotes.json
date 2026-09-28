@@ -1,5 +1,27 @@
 [
 	{
+		"version": "2.0.6",
+		"date": "2026-09-28",
+		"title": "Main lisible et glisser-déposer plus clair",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Les cartes de la main rapetissent quand la main grandit : elles ne se chevauchent plus et leurs PV restent lisibles.",
+					"Quand vous glissez une carte jouable, la zone où la déposer est en surbrillance (votre rangée pour un serviteur, vos enchantements, tout le plateau pour un sort).",
+					"Un nouveau message dans la discussion s'affiche en haut du journal ; un clic ouvre la discussion.",
+					"Un jeton doré « 1 » à côté du portrait indique le joueur qui a commencé la partie."
+				]
+			],
+			[
+				"Corrections",
+				[
+					"L'animation de pioche montre autant de cartes que vous en piochez (une carte « piochez 2 cartes » en montrait 4)."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.5",
 		"date": "2026-09-28",
 		"title": "Bibliothèque adverse et récompenses expliquées",

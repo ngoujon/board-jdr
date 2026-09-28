@@ -88,6 +88,10 @@ var _stats := {}                 # statistiques de la partie (déblocage des tit
 var _discard_zone: PanelContainer   # zone « Défausser » en bas à droite, visible pendant le glisser d'une carte
 var _deck_piles := {}            # joueur -> pile de dos de cartes de sa bibliothèque
 var _deck_pile_counts := {}      # joueur -> nombre de cartes affiché sous la pile
+var _play_zone: Panel            # zone de jeu en surbrillance pendant le glisser d'une carte
+var _play_zone_label: Label
+var _first_token: Panel          # jeton « a commencé » à côté du portrait du premier joueur
+var _chat_notice: PanelContainer # bandeau « nouveau message » en haut de la discussion
 const DISCARD_RECT := Rect2(1040, 500, 132, 164)   # zone de défausse (coordonnées du plateau)
 const DECK_PILE_POS := Vector2(1184, 500)      # votre bibliothèque : en bas à droite, à côté de la main
 const ENEMY_PILE_POS := Vector2(940, 14)        # bibliothèque adverse : en haut, à droite de sa main
@@ -306,6 +310,7 @@ func _build_ui() -> void:
 	_build_deck_pile(me, DECK_PILE_POS)
 	_build_deck_pile(opp, ENEMY_PILE_POS)
 	_build_discard_zone()
+	_build_play_zone()
 	_inferno_label = UITheme.label("", 22, Color("ff8a3a"), 4)
 	_inferno_label.position = Vector2(206, 40)
 	_inferno_label.visible = false
@@ -372,7 +377,9 @@ func _build_chat() -> void:
 	_chat_tabs.tab_changed.connect(func(tab: int):
 		if tab == 1:
 			_unread = 0
-			_chat_tabs.set_tab_title(1, Loc.t("Discussion")))
+			_chat_tabs.set_tab_title(1, Loc.t("Discussion"))
+			if _chat_notice:
+				_chat_notice.visible = false)
 
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
@@ -434,6 +441,49 @@ func _chat_line(sender: String, text: String, mine: bool) -> void:
 		_unread += 1
 		_chat_tabs.set_tab_title(1, Loc.t("Discussion (%d)") % _unread)
 		Audio.play_sfx("click", 0.1, -8.0)
+		_show_chat_notice(sender, text)
+
+
+## Bandeau en haut de la discussion quand un message arrive alors que l'onglet Journal est affiché :
+## qui a écrit et le début du message ; un clic ouvre l'onglet Discussion.
+func _show_chat_notice(sender: String, text: String) -> void:
+	if _chat_notice == null:
+		_chat_notice = PanelContainer.new()
+		_chat_notice.position = Vector2(1040, 36)
+		_chat_notice.custom_minimum_size = Vector2(228, 0)
+		_chat_notice.size = Vector2(228, 0)
+		_chat_notice.z_index = 20
+		_chat_notice.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		var sb := UITheme.flat_style(Color(0.45, 0.12, 0.08, 0.96), Color("ffb080"), 2, 6)
+		sb.set_content_margin_all(6)
+		_chat_notice.add_theme_stylebox_override("panel", sb)
+		var l := UITheme.label("", 14, Color.WHITE, 3)
+		l.name = "notice_text"
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.custom_minimum_size.x = 214
+		l.max_lines_visible = 3
+		_chat_notice.add_child(l)
+		_chat_notice.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed:
+				_chat_tabs.current_tab = 1)
+		_board_root.add_child(_chat_notice)
+	var short := text if text.length() <= 70 else text.substr(0, 67) + "…"
+	(_chat_notice.get_node("notice_text") as Label).text = Loc.t("Nouveau message de %s : %s") % [sender, short]
+	_chat_notice.tooltip_text = Loc.t("Cliquez pour ouvrir la discussion")
+	_chat_notice.reset_size()
+	_chat_notice.visible = true
+	_chat_notice.modulate.a = 1.0
+	if _chat_notice.has_meta("tw"):
+		var old: Tween = _chat_notice.get_meta("tw")
+		if old and old.is_valid():
+			old.kill()
+	var tw := _chat_notice.create_tween()
+	tw.tween_property(_chat_notice, "scale", Vector2.ONE * 1.05, 0.12)
+	tw.tween_property(_chat_notice, "scale", Vector2.ONE, 0.12)
+	tw.tween_interval(6.0)
+	tw.tween_property(_chat_notice, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(func(): _chat_notice.visible = false)
+	_chat_notice.set_meta("tw", tw)
 
 
 func _system_chat(text: String) -> void:
@@ -496,6 +546,7 @@ func _start_game() -> void:
 	_start_msec = Time.get_ticks_msec()
 	_log_line(Loc.t("[color=#f2c14e]Le duel commence ![/color]"))
 	await _coin_toss(first)
+	_add_first_token(first)
 	_log_line(Loc.t("La pièce désigne [b]%s[/b] pour commencer.") % _pname(first))
 	await _show_banner(Loc.t("Vous commencez !") if first == me and mode != "replay" else Loc.t("%s commence !") % _pname(first), 1.2)
 	await _process_events(gs.pop_events(), true)
@@ -907,8 +958,22 @@ func _hand_less(a: CardView, b: CardView) -> bool:
 	return false
 
 
+## Main : les cartes rapetissent quand la main grandit, pour rester côte à côte sans se chevaucher
+## (PV et attaque toujours lisibles) dans la largeur entre les héros et la colonne de droite.
+const HAND_WIDTH := 710.0   # de x 285 à 995 : ni les héros ni la colonne de droite (« Main : ») ne sont recouverts
+const HAND_GAP := 6.0
+
+
+func _hand_scale(n: int) -> float:
+	return minf(HAND_SCALE, (HAND_WIDTH - (maxi(n, 1) - 1) * HAND_GAP) / (maxi(n, 1) * CardView.SIZE.x))
+
+
+func _hand_spacing(n: int) -> float:
+	return CardView.SIZE.x * _hand_scale(n) + HAND_GAP
+
+
 func _hand_x(i: int, n: int) -> float:
-	var spacing: float = min(120.0, 720.0 / n)
+	var spacing := _hand_spacing(n)
 	return 640.0 - (n - 1) * spacing / 2.0 + i * spacing - CardView.SIZE.x / 2
 
 
@@ -929,23 +994,25 @@ func _on_hand_drag(cv: CardView, gpos: Vector2) -> void:
 			var old: Tween = cv.get_meta("tw")
 			if old and old.is_valid():
 				old.kill()
-		cv.scale = Vector2.ONE * HAND_SCALE
+		cv.scale = Vector2.ONE * _hand_scale(_hand_views.size())
 		_discard_zone.visible = _can_act()
+		_show_play_zone(cv)
 	var local := gpos - _hand_root.global_position
 	_drag_pos = local
 	cv.z_index = 60
 	# Au-dessus de la zone « Défausser », la carte rapetisse pour laisser voir la zone.
 	var over_discard := _discard_zone.visible and DISCARD_RECT.has_point(local)
-	var s := 0.4 if over_discard else HAND_SCALE
+	var s := 0.4 if over_discard else _hand_scale(_hand_views.size())
 	cv.scale = Vector2.ONE * s
 	cv.modulate.a = 0.8 if over_discard else 1.0
 	# Pivot en bas au centre : la carte est centrée sur la souris.
 	cv.position = Vector2(local.x - CardView.SIZE.x / 2, local.y - CardView.SIZE.y + CardView.SIZE.y * s / 2)
 	_style_discard_zone(over_discard)
+	_style_play_zone(not over_discard and local.y < HAND_ZONE_Y and local.x < 1036.0)
 	if local.y < HAND_ZONE_Y or DISCARD_RECT.has_point(local):
 		return   # hors de la main : l'ordre des autres cartes ne change pas
 	var n := _hand_views.size()
-	var spacing: float = min(120.0, 720.0 / n)
+	var spacing := _hand_spacing(n)
 	var first := 640.0 - (n - 1) * spacing / 2.0
 	var idx := clampi(roundi((local.x - first) / spacing), 0, n - 1)
 	if _hand_views.find(cv) != idx:
@@ -962,6 +1029,7 @@ func _on_hand_drag_released(cv: CardView) -> void:
 		return
 	_dragging_card = null
 	_discard_zone.visible = false
+	_play_zone.visible = false
 	cv.modulate.a = 1.0
 	var local := _drag_pos
 	if DISCARD_RECT.has_point(local) and _can_act():
@@ -1202,7 +1270,8 @@ func _on_fx(ev: Dictionary) -> void:
 	if fx_name == "" or fx_name == "summon":
 		return   # l'invocation est animée lors de l'événement "summon"
 	if fx_name == "draw":
-		await fx.draw_cards(_hero_views[ev.player].center(), Vector2(640, 640) if ev.player == me else Vector2(640, 40), 2, _back_tex(ev.player))
+		# Pas d'animation ici : chaque carte réellement piochée est animée par son événement « draw »
+		# (l'ancienne animation de 2 cartes s'ajoutait aux pioches : 4 cartes volaient pour 2 piochées).
 		return
 	var targets: Array = []
 	for uid in ev.targets:
@@ -1306,7 +1375,7 @@ func _layout_hand() -> void:
 		var x := _hand_x(i, n)
 		cv.z_index = i
 		var target := Vector2(x, HAND_Y + abs(i - (n - 1) / 2.0) * 4.0)
-		var s := HAND_SCALE
+		var s := _hand_scale(n)
 		if cv == _selected_hand:
 			target.y = HAND_Y - 40
 			cv.z_index = 49
@@ -1398,6 +1467,46 @@ func _update_deck_pile() -> void:
 			var back: TextureRect = _deck_piles[player].get_node("pile_back_%d" % i)
 			back.texture = _back_tex(player)   # le dos de l'adversaire arrive avec son profil (en ligne)
 			back.visible = i >= 3 - layers
+
+
+## Zone où lâcher la carte glissée pour la jouer, en surbrillance pendant le glisser : votre rangée
+## pour un serviteur, votre zone d'enchantements pour un enchantement, tout le plateau pour un sort.
+func _build_play_zone() -> void:
+	_play_zone = Panel.new()
+	_play_zone.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_play_zone.visible = false
+	_play_zone.z_index = 30
+	_board_root.add_child(_play_zone)
+	_play_zone_label = UITheme.label(Loc.t("Déposez ici pour jouer"), 18, Color("fff2c0"), 4)
+	# En haut à gauche de la zone : la carte glissée (au centre, sous la souris) ne le cache pas.
+	_play_zone_label.position = Vector2(14, 8)
+	_play_zone.add_child(_play_zone_label)
+
+
+func _show_play_zone(cv: CardView) -> void:
+	if not _can_act() or not gs.can_play(me, cv.hand_uid):
+		_play_zone.visible = false
+		return
+	var c := CardDB.get_card(cv.card_id)
+	var r := Rect2(270, 176, 740, 330)   # sort : tout le plateau
+	if c.type == "minion":
+		r = Rect2(270, PLAYER_BOARD_Y - 74, 740, 148)
+	elif c.type == "enchantment":
+		r = Rect2(59, _enchant_zone_y(me) - 4, 162, 96)
+	_play_zone.position = r.position
+	_play_zone.size = r.size
+	_play_zone.visible = true
+	_style_play_zone(false)
+
+
+func _style_play_zone(hot: bool) -> void:
+	if not _play_zone.visible:
+		return
+	var sb := UITheme.flat_style(Color(1.0, 0.85, 0.35, 0.10 if hot else 0.04), Color(1.0, 0.85, 0.35, 1.0 if hot else 0.6), 4 if hot else 3, 10)
+	sb.shadow_color = Color(1.0, 0.8, 0.3, 0.5 if hot else 0.2)
+	sb.shadow_size = 14 if hot else 6
+	_play_zone.add_theme_stylebox_override("panel", sb)
+	_play_zone_label.modulate.a = 1.0 if hot else 0.7
 
 
 ## Zone « Défausser » (en bas à droite) : n'apparaît que pendant le glisser d'une carte de votre main.
@@ -2053,6 +2162,32 @@ func _show_banner(text: String, duration := 1.0) -> void:
 
 ## Pile ou face : une pièce frappée des avatars des deux joueurs tourne en l'air
 ## et retombe sur celui qui commence (`first` est déjà fixé : hasard local ou tirage de l'hôte).
+## Petit jeton doré « 1 » à droite du portrait du joueur qui a commencé (infobulle explicative).
+func _add_first_token(first: int) -> void:
+	if _first_token:
+		_first_token.queue_free()
+	_first_token = Panel.new()
+	_first_token.size = Vector2(30, 30)
+	_first_token.position = _hero_views[first].position + Vector2(166, 2)
+	var sb := UITheme.flat_style(Color("b8862b"), Color("ffe08a"), 2, 15)
+	sb.shadow_color = Color(0, 0, 0, 0.5)
+	sb.shadow_size = 3
+	_first_token.add_theme_stylebox_override("panel", sb)
+	_first_token.tooltip_text = (Loc.t("Vous avez commencé la partie (la pièce vous a désigné).") if first == me and mode != "replay"
+		else Loc.t("%s a commencé la partie (la pièce l'a désigné).") % _pname(first))
+	var l := UITheme.label("1", 17, Color("3a2408"), 0)
+	l.add_theme_font_override("font", UITheme.font_bold)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	l.set_anchors_preset(Control.PRESET_FULL_RECT)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_first_token.add_child(l)
+	_board_root.add_child(_first_token)
+	_first_token.pivot_offset = _first_token.size / 2
+	_first_token.scale = Vector2.ZERO
+	_first_token.create_tween().tween_property(_first_token, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
 func _coin_toss(first: int) -> void:
 	const SIDE := 180.0
 	var fast := Settings.autoplay

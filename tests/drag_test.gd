@@ -6,6 +6,7 @@ extends Node
 var _dir := "user://shots"
 var _fails := 0
 var battle: Node
+var _play_zone_seen := false
 
 
 func _ready() -> void:
@@ -47,6 +48,19 @@ func _ready() -> void:
 	_check(opp_pile.visible and opp_back.texture == battle._back_tex(battle.opp), "pile adverse affichée avec son dos de cartes (%s)" % battle._deck_pile_counts[battle.opp].text)
 	_shot("d0_plateau")
 
+	# 0) Jeton du premier joueur et notification de discussion (message de l'IA au début de la partie).
+	var tok: Panel = battle._first_token
+	_check(tok != null and tok.tooltip_text != "", "jeton du premier joueur : %s" % (tok.tooltip_text if tok else "absent"))
+	battle._chat_tabs.current_tab = 0
+	battle._chat_line("Morgrath", "Bonne chance !", false)
+	await _wait(0.3)
+	_check(battle._chat_notice != null and battle._chat_notice.visible, "notification de message en haut de la discussion")
+	_shot("d0b_notification")
+	battle._chat_tabs.current_tab = 1
+	await _wait(0.1)
+	_check(not battle._chat_notice.visible, "notification masquée en ouvrant la discussion")
+	battle._chat_tabs.current_tab = 0
+
 	# 1) Glisser dans la main : range sans jouer.
 	var n0: int = gs.players[me].hand.size()
 	var cv: CardView = battle._hand_views[0]
@@ -58,6 +72,7 @@ func _ready() -> void:
 	cv = _hand_card("chevalier")
 	var board_before: int = gs.players[me].board.size()
 	await _drag(cv, Vector2(640, 420), "d1_glisser_plateau")
+	_check(_play_zone_seen and not battle._play_zone.visible, "zone de jeu en surbrillance pendant le glisser, masquée ensuite")
 	await _idle()
 	_check(gs.players[me].board.size() == board_before + 1, "serviteur glissé sur le plateau : joué")
 
@@ -79,6 +94,23 @@ func _ready() -> void:
 	_check(_hand_card("archer") == null, "carte déposée en bas à droite : retirée de la main")
 	_check(gs.players[me].graveyard.size() == grave_before + 1, "carte déposée en bas à droite : au cimetière")
 	_check(not battle._discard_zone.visible, "zone de défausse masquée après le dépôt")
+
+	# 4b) Main pleine (9 cartes) : cartes plus petites, sans chevauchement.
+	for id in ["loup", "loup", "loup", "loup", "loup", "loup", "loup"]:
+		gs._add_to_hand(gs.players[me], id)
+	await battle._process_events(gs.pop_events(), true)
+	battle.busy = false
+	battle._refresh()
+	await _wait(0.8)
+	var rects: Array = []
+	for v in battle._hand_views:
+		rects.append(v.get_global_rect())
+	var overlap := false
+	for i in rects.size() - 1:
+		if rects[i].intersects(rects[i + 1].grow(-1)):
+			overlap = true
+	_check(battle._hand_views.size() == 9 and not overlap, "main de %d cartes sans chevauchement" % battle._hand_views.size())
+	_shot("d5_main_pleine")
 
 	# 5) Confirmer la fin du tour (cochée) : 1er appui = « Confirmer ».
 	battle._refresh()
@@ -126,6 +158,7 @@ func _drag(cv: CardView, to: Vector2, shot: String) -> void:
 	await _wait(0.2)
 	if shot != "":
 		_shot(shot)
+	_play_zone_seen = battle._play_zone.visible
 	await _mouse_button(to, false)
 	await _wait(0.4)
 
