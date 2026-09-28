@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Arcanes & Lames"
 config/description="Jeu de cartes médiéval-fantastique en pixel art 8-bit."
-config/version="2.0.4"
+config/version="2.0.5"
 run/main_scene="res://scenes/boot.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://assets/ui/game_icon.png"
