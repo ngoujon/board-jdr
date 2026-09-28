@@ -184,6 +184,8 @@ func _apply_zoom(resize := true) -> void:
 	RenderingServer.set_default_clear_color(Color("0d0a10"))
 	if not resize or fullscreen or DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_WINDOWED:
 		return
+	if OS.get_cmdline_args().has("--resolution"):
+		return   # taille de fenêtre imposée au lancement (captures vidéo) : on la garde
 	var screen := DisplayServer.screen_get_usable_rect(DisplayServer.window_get_current_screen())
 	var want := BASE_SIZE * ui_zoom
 	var k := minf(1.0, minf(screen.size.x * 0.96 / want.x, screen.size.y * 0.92 / want.y))
