@@ -60,9 +60,12 @@ func _rebuild() -> void:
 	tb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(tb)
 	var sname := Loc.t(str(s.get("name", "")))
-	tb.add_child(UITheme.title_label(Loc.t("Passe de combat · Saison %d%s") % [int(s.get("n", 1)), (" — " + Loc.t(sname)) if sname != "" else ""], 32))
+	var title_text := Loc.t("Passe de combat · Saison %d%s") % [int(s.get("n", 1)), (" — " + Loc.t(sname)) if sname != "" else ""]
+	# Nom de saison long : titre plus petit pour que le panneau garde sa largeur.
+	tb.add_child(UITheme.title_label(title_text, 32 if title_text.length() <= 40 else 26))
 	tb.add_child(UITheme.label((Loc.t("Hors ligne : connectez-vous au serveur pour suivre votre progression.") if s.get("offline", false) else days_left_text(s)), 16, Color("c9b79a"), 3))
-	var claimable: Array = s.get("claimable", [])
+	# Les nombres reçus en JSON sont des décimaux (1.0) : « 1 in [1.0] » est faux, d'où la conversion en entiers.
+	var claimable: Array = s.get("claimable", []).map(func(x): return int(x))
 	if not claimable.is_empty():
 		var all := UITheme.button(Loc.t("Tout récupérer (%d)") % claimable.size(), 230)
 		all.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -108,7 +111,7 @@ func _rebuild() -> void:
 	_body.add_child(grid)
 	var rewards: Array = s.get("rewards", [])
 	# Serveur d'avant la 2.0 (pas de liste « claimed ») : les niveaux atteints sont déjà obtenus.
-	var claimed: Array = s.get("claimed", []) if s.has("claimed") else rewards.map(func(r): return int(r.level)).filter(func(l): return l <= level)
+	var claimed: Array = s.get("claimed", []).map(func(x): return int(x)) if s.has("claimed") else rewards.map(func(r): return int(r.level)).filter(func(l): return l <= level)
 	for r in rewards:
 		var lv := int(r.level)
 		var state := "claimed" if lv in claimed and lv <= level else ("claimable" if lv in claimable else "locked")
@@ -226,5 +229,19 @@ static func _grey_out(tile: Control) -> void:
 	while not stack.is_empty():
 		var n: Node = stack.pop_back()
 		if n is CanvasItem:
-			n.use_parent_material = true
+			if n.material != null:
+				n.self_modulate = Color(0.45, 0.45, 0.45)   # élément animé par son propre shader (contour) : assombri
+			else:
+				n.use_parent_material = true
 		stack.append_array(n.get_children())
+	# Coche verte en haut à droite (hors du gris) : récompense déjà récupérée.
+	var overlay := Control.new()
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tile.add_child(overlay)
+	var check := CheckMark.new(24)
+	check.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	check.offset_left = -26
+	check.offset_right = -2
+	check.offset_top = -2
+	check.offset_bottom = 22
+	overlay.add_child(check)

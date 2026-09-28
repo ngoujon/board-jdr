@@ -25,6 +25,9 @@ const BORDER_STYLES := {
 	"obsidienne": [Color("7a6a9a"), Color("0a0612"), 0.9, 0.5],
 	"aurore": [Color("ffb0e0"), Color("7ad0ff"), 1.0, 0.6],
 	"eveil": [Color("fff8d0"), Color("ffb020"), 1.6, 0.9],
+	# Saison 2 : Le Crépuscule
+	"braises": [Color("ff8a2a"), Color("5a1a08"), 1.3, 0.8],
+	"crepuscule": [Color("ffb060"), Color("5a2a9a"), 1.5, 1.0],
 	"pionnier": [Color("9fe8ff"), Color("2a6aa0"), 0.8, 0.7],
 	"tenace": [Color("c0c0c0"), Color("5a3a2a"), 0.3, 0.2],
 	# Niveaux d'IA battus (2.0)

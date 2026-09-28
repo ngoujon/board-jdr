@@ -1,5 +1,24 @@
 [
 	{
+		"version": "2.0.4",
+		"date": "2026-09-28",
+		"title": "Saison 2 : Le Crépuscule",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"La saison 2, « Le Crépuscule », commence le 26 octobre : un nouveau passe de combat avec le dos de cartes Lune de moisson (niveau 5), le contour Braises (niveau 10), le plateau Bois d'automne (niveau 20), et le titre Héros de la saison 2 avec le contour Crépuscule (niveau 30)."
+				]
+			],
+			[
+				"Corrections",
+				[
+					"Passe de combat : les récompenses déjà récupérées sont bien grisées, avec une coche verte, et chaque récompense atteinte peut être récupérée d'un clic."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.3",
 		"date": "2026-09-28",
 		"title": "Glisser pour jouer, passe de combat et classement IA",

@@ -964,6 +964,32 @@
         32
       ],
       "prompt": "single white skull icon, centered, isolated on plain white background, game item icon"
+    },
+    {
+      "id": "back_moisson",
+      "workflow": "pixel_art_image",
+      "w": 768,
+      "h": 1024,
+      "seed": 902,
+      "out": "assets/cosmetics/back_moisson.png",
+      "size": [
+        80,
+        112
+      ],
+      "prompt": "back of a trading card, symmetrical ornamental pattern, deep violet and burnt orange, a round harvest moon emblem in the center, autumn leaf ornaments in the four corners, no people, no characters, flat design, card back"
+    },
+    {
+      "id": "board_automne",
+      "workflow": "pixel_art_image",
+      "w": 1344,
+      "h": 768,
+      "seed": 911,
+      "out": "assets/cosmetics/board_automne.png",
+      "size": [
+        336,
+        192
+      ],
+      "prompt": "seamless full frame top-down ground texture edge to edge, autumn forest floor covered with red orange and golden fallen leaves, mossy stones and small mushrooms, warm twilight light, no border, no background, fills the entire image"
     }
   ],
   "music": [

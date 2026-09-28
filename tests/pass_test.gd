@@ -13,10 +13,11 @@ func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(_dir)
 	var now := int(Time.get_unix_time_from_system())
 	var seasons: Dictionary = Cosmetics.data().get("seasons", {})
-	Lobby.profile = {"name": "PassTest", "gold": 820,
+	# Passage par JSON, comme les données reçues du serveur (les nombres y deviennent des décimaux).
+	Lobby.profile = JSON.parse_string(JSON.stringify({"name": "PassTest", "gold": 820,
 		"season": {"n": 1, "start": now - 86400 * 3, "end": now + 86400 * 27, "xp": 250 * 6 + 140, "level": 6,
 			"levels": 30, "xp_per_level": 250, "name": "L'Éveil", "rewards": seasons.rewards["1"], "games": 12,
-			"claimed": [1, 2, 3], "claimable": [4, 5, 6]}}
+			"claimed": [1, 2, 3], "claimable": [4, 5, 6]}}))
 	await _wait(0.5)
 	var bp := BattlePassPanel.new()
 	get_tree().root.add_child(bp)
@@ -41,6 +42,19 @@ func _ready() -> void:
 	for n in t.find_children("*", "Button", true, false):
 		btn = n
 	_check(btn != null and btn.disabled, "clic sur la récompense : récupération demandée")
+	bp.queue_free()
+
+	# Saison 2 (Le Crépuscule) : niveaux 1 à 10 récupérés, 11 à 20 à récupérer.
+	Lobby.profile = JSON.parse_string(JSON.stringify({"name": "PassTest", "gold": 820,
+		"season": {"n": 2, "start": now, "end": now + 86400 * 30, "xp": 250 * 20 + 40, "level": 20,
+			"levels": 30, "xp_per_level": 250, "name": seasons.names["2"], "rewards": seasons.rewards["2"], "games": 40,
+			"claimed": range(1, 11), "claimable": range(11, 21)}}))
+	bp = BattlePassPanel.new()
+	get_tree().root.add_child(bp)
+	await _wait(0.6)
+	tiles = _tiles(bp)
+	_check(tiles[9].material != null and tiles[10].material == null, "saison 2 : niveau 10 grisé, niveau 11 à récupérer")
+	_shot("p2_saison2")
 	get_tree().quit(1 if _fails > 0 else 0)
 
 

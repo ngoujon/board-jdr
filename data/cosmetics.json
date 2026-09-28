@@ -203,6 +203,14 @@
 			}
 		},
 		{
+			"id": "heros_s2",
+			"name": "Héros de la saison 2",
+			"rule": {
+				"pass": 30,
+				"season": 2
+			}
+		},
+		{
 			"id": "vainqueur_apprenti",
 			"name": "Vainqueur de l'Apprenti",
 			"rule": {
@@ -429,6 +437,22 @@
 			}
 		},
 		{
+			"id": "braises",
+			"name": "Braises (saison 2)",
+			"rule": {
+				"pass": 10,
+				"season": 2
+			}
+		},
+		{
+			"id": "crepuscule",
+			"name": "Crépuscule (saison 2)",
+			"rule": {
+				"pass": 30,
+				"season": 2
+			}
+		},
+		{
 			"id": "pionnier",
 			"name": "Pionnier",
 			"rule": {
@@ -520,6 +544,14 @@
 			"rule": {
 				"pass": 5,
 				"season": 1
+			}
+		},
+		{
+			"id": "moisson",
+			"name": "Lune de moisson (saison 2)",
+			"rule": {
+				"pass": 5,
+				"season": 2
 			}
 		},
 		{
@@ -623,6 +655,14 @@
 			}
 		},
 		{
+			"id": "automne",
+			"name": "Bois d'automne (saison 2)",
+			"rule": {
+				"pass": 20,
+				"season": 2
+			}
+		},
+		{
 			"id": "port",
 			"name": "Pont de navire",
 			"rule": {
@@ -674,7 +714,8 @@
 		"levels": 30,
 		"xp_per_level": 250,
 		"names": {
-			"1": "L'Éveil"
+			"1": "L'Éveil",
+			"2": "Le Crépuscule"
 		},
 		"rewards": {
 			"1": [
@@ -804,6 +845,136 @@
 					"extra": {
 						"kind": "border",
 						"id": "eveil"
+					}
+				}
+			],
+			"2": [
+				{
+					"level": 1,
+					"po": 20
+				},
+				{
+					"level": 2,
+					"po": 30
+				},
+				{
+					"level": 3,
+					"po": 20
+				},
+				{
+					"level": 4,
+					"po": 30
+				},
+				{
+					"level": 5,
+					"kind": "card_back",
+					"id": "moisson"
+				},
+				{
+					"level": 6,
+					"po": 30
+				},
+				{
+					"level": 7,
+					"po": 20
+				},
+				{
+					"level": 8,
+					"po": 30
+				},
+				{
+					"level": 9,
+					"po": 20
+				},
+				{
+					"level": 10,
+					"kind": "border",
+					"id": "braises"
+				},
+				{
+					"level": 11,
+					"po": 20
+				},
+				{
+					"level": 12,
+					"po": 30
+				},
+				{
+					"level": 13,
+					"po": 20
+				},
+				{
+					"level": 14,
+					"po": 30
+				},
+				{
+					"level": 15,
+					"po": 100
+				},
+				{
+					"level": 16,
+					"po": 30
+				},
+				{
+					"level": 17,
+					"po": 20
+				},
+				{
+					"level": 18,
+					"po": 30
+				},
+				{
+					"level": 19,
+					"po": 20
+				},
+				{
+					"level": 20,
+					"kind": "board",
+					"id": "automne"
+				},
+				{
+					"level": 21,
+					"po": 20
+				},
+				{
+					"level": 22,
+					"po": 30
+				},
+				{
+					"level": 23,
+					"po": 20
+				},
+				{
+					"level": 24,
+					"po": 30
+				},
+				{
+					"level": 25,
+					"po": 150
+				},
+				{
+					"level": 26,
+					"po": 30
+				},
+				{
+					"level": 27,
+					"po": 20
+				},
+				{
+					"level": 28,
+					"po": 30
+				},
+				{
+					"level": 29,
+					"po": 20
+				},
+				{
+					"level": 30,
+					"kind": "title",
+					"id": "heros_s2",
+					"extra": {
+						"kind": "border",
+						"id": "crepuscule"
 					}
 				}
 			]
