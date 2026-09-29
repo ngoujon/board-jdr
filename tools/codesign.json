@@ -1,6 +1,5 @@
 {
   "comment": "Signature de l'exe Windows. Certificat auto-signé « Arcanes & Lames » (magasin Windows CurrentUser\\My de ce PC, sauvegarde : %USERPROFILE%\\.arcanes-codesign). L'empreinte est publique : l'installateur la vérifie.",
   "thumbprint": "D2B812C2D48C282248BD97706AAE9610B66AC854",
-  "timestamp_server": "http://timestamp.digicert.com",
-  "web_base": "https://arcanes.example.com"
+  "timestamp_server": "http://timestamp.digicert.com"
 }

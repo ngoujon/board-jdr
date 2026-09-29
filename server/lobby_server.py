@@ -32,6 +32,23 @@ import ssl
 import time
 from urllib.parse import unquote
 
+
+# Réglages propres au déploiement (adresse publique…), hors dépôt : local_config.json à côté de ce fichier,
+# ou variable d'environnement ARCANES_WEB_BASE. Voir local_config.example.json.
+def _load_local_config() -> dict:
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "local_config.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            cfg = json.load(f)
+    except (OSError, ValueError):
+        cfg = {}
+    if os.environ.get("ARCANES_WEB_BASE"):
+        cfg["web_base"] = os.environ["ARCANES_WEB_BASE"]
+    return cfg
+
+
+LOCAL_CONFIG = _load_local_config()
+
 PROTOCOL_VERSION = 1
 NAME_RE = re.compile(r"^[\w\- ]{3,16}$", re.UNICODE)
 MAX_AVATAR = 15
@@ -2006,7 +2023,7 @@ class UpdateHttpServer:
     SITE_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ttf": "font/ttf",
                   ".woff2": "font/woff2", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8",
                   ".mp4": "video/mp4", ".vtt": "text/vtt; charset=utf-8"}
-    WEB_BASE = "https://arcanes.example.com"
+    WEB_BASE = LOCAL_CONFIG.get("web_base", "http://localhost:7779")
 
     async def handle(self, reader, writer):
         try:

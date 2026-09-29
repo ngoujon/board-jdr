@@ -16,12 +16,27 @@ import os
 import subprocess
 import sys
 import time
+import json
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOST = os.environ.get("ARCANES_HOST", "arcanes-vps")
 LANGS = ("en", "de", "es", "it", "pt")
-OTHER_SITES = ("https://site-a.example", "https://site-b.example")   # autres projets du VPS : ne doivent pas être touchés
+
+
+def load_local_config():
+    """Réglages propres à ce poste et au déploiement (adresse publique, chemin de Godot...), hors dépôt.
+    Copier local_config.example.json en local_config.json à la racine du projet."""
+    path = os.path.join(ROOT, "local_config.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+LOCAL = load_local_config()
+OTHER_SITES = tuple(LOCAL.get("other_sites", []))   # autres sites du serveur : ne doivent pas être touchés
 
 
 def ssh(cmd, check=True):
@@ -36,8 +51,15 @@ def main():
 	unit = ssh("systemctl cat arcanes-lobby")
 	if "ExecReload=" not in unit or "Restart=always" not in unit:
 		sys.exit("L'unité arcanes-lobby n'a pas encore ExecReload/Restart=always : à ajouter une fois (voir l'en-tête).")
+	if not LOCAL.get("web_base"):
+		sys.exit("local_config.json absent ou sans \"web_base\" (voir local_config.example.json).")
+	server_cfg = os.path.join(ROOT, "build", "local_config.json")
+	os.makedirs(os.path.dirname(server_cfg), exist_ok=True)
+	with open(server_cfg, "w", encoding="utf-8") as f:
+		json.dump({"web_base": LOCAL["web_base"]}, f)
 	files = [os.path.join(ROOT, "server", "lobby_server.py"), os.path.join(ROOT, "data", "cosmetics.json")]
 	files += [os.path.join(ROOT, "data", "i18n", f"{l}.json") for l in LANGS]
+	files.append(server_cfg)
 	r = subprocess.run(["python", "-m", "py_compile", files[0]])
 	if r.returncode != 0:
 		sys.exit("lobby_server.py ne compile pas.")
@@ -57,7 +79,8 @@ OWN=$(stat -c %U:%G /opt/arcanes/lobby_server.py)
 sudo install -o ${{OWN%:*}} -g ${{OWN#*:}} -m 644 /tmp/lobby_server.py /opt/arcanes/lobby_server.py
 sudo install -o ${{OWN%:*}} -g ${{OWN#*:}} -m 644 /tmp/cosmetics.json /opt/arcanes/cosmetics.json
 for l in {' '.join(LANGS)}; do sudo install -o ${{OWN%:*}} -g ${{OWN#*:}} -m 644 /tmp/$l.json /opt/arcanes/i18n/$l.json; rm -f /tmp/$l.json; done
-rm -f /tmp/lobby_server.py /tmp/cosmetics.json
+sudo install -o ${{OWN%:*}} -g ${{OWN#*:}} -m 644 /tmp/local_config.json /opt/arcanes/local_config.json
+rm -f /tmp/lobby_server.py /tmp/cosmetics.json /tmp/local_config.json
 sudo systemctl reload arcanes-lobby""")
 	print(f"Code installé (sauvegarde pre-deploy-{ts}). Redémarrage en douceur demandé : attente de la fin des parties en ligne...")
 	while True:

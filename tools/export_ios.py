@@ -14,7 +14,7 @@ import sys
 import zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GODOT = os.environ.get("GODOT", r"C:\Users\user\Downloads\Godot_v4.7.1-stable_win64.exe\Godot_v4.7.1-stable_win64_console.exe")
+GODOT = os.environ.get("GODOT", "godot")   # chemin de Godot (console) : variable d'environnement GODOT
 
 
 def main():

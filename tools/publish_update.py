@@ -45,9 +45,25 @@ BUILD_LINUX = os.path.join(ROOT, "build", "linux")
 BUILD_MACOS = os.path.join(ROOT, "build", "macos")
 MAC_APP = "Arcanes & Lames.app"   # nom de l'application produite par l'export macOS (nom du projet)
 DIST = os.path.join(ROOT, "dist")
-DEFAULT_GODOT = r"C:\Users\user\Downloads\Godot_v4.7.1-stable_win64.exe\Godot_v4.7.1-stable_win64_console.exe"
 DEPLOY = os.environ.get("ARCANES_DEPLOY", "arcanes-vps:/srv/arcanes/updates")
 CODESIGN = json.load(open(os.path.join(ROOT, "tools", "codesign.json"), encoding="utf-8"))
+
+
+def load_local_config():
+    """Réglages propres à ce poste et au déploiement (adresse publique, chemin de Godot...), hors dépôt.
+    Copier local_config.example.json en local_config.json à la racine du projet."""
+    path = os.path.join(ROOT, "local_config.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+LOCAL = load_local_config()
+DEFAULT_GODOT = LOCAL.get("godot", "godot")
+if LOCAL.get("web_base"):
+    CODESIGN["web_base"] = LOCAL["web_base"]
 CERT_DIR = os.path.join(os.path.expanduser("~"), ".arcanes-codesign")
 
 
@@ -394,9 +410,19 @@ def sign_exe(exe):
     print(f"  exe signé ({thumb[:12]}...), horodatage : {parts[2] or 'aucun'}")
 
 
+def check_deploy_config():
+    """L'adresse publique n'est pas versionnée : sans local_config.json et official_server.cfg, le jeu exporté
+    viserait un serveur local. On refuse de publier plutôt que de diffuser une version qui ne joint personne."""
+    if not CODESIGN.get("web_base"):
+        sys.exit("local_config.json absent ou sans \"web_base\" (voir local_config.example.json).")
+    if not os.path.exists(os.path.join(ROOT, "official_server.cfg")):
+        sys.exit("official_server.cfg absent (voir official_server.cfg.example) : le jeu ne saurait pas joindre le serveur officiel.")
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     local_only = "--local" in sys.argv
+    check_deploy_config()
     if "--site-only" in sys.argv:
         return site_only()
     if not args or not re.fullmatch(r"\d+(\.\d+){1,3}", args[0]):

@@ -1,14 +1,14 @@
 # TODO — Arcanes & Lames
 
 ## Déjà fait (26/09/2026)
-- [x] Serveur officiel installé sur le VPS OVH (203.0.113.10), service `arcanes-lobby`, isolé des autres projets.
+- [x] Serveur officiel installé, service `arcanes-lobby`, isolé des autres projets.
 - [x] Pare-feu : ports TCP 7778 (jeu) et 7779 (mises à jour + page de téléchargement) ouverts.
 - [x] Toutes les parties passent par le serveur : aucun port à ouvrir chez les joueurs.
 - [x] Le jeu se connecte au serveur officiel par défaut.
 - [x] Modèles d'export Windows installés, version **1.0.0 publiée**.
 - [x] Comptes, classement et historique de TOUTES les parties conservés sur le VPS, sans limite (SQLite).
 - [x] Sauvegardes quotidiennes sur le VPS (`/var/backups/arcanes`), toutes conservées.
-- [x] HTTPS : https://arcanes.example.com/ (Let's Encrypt, renouvellement automatique).
+- [x] HTTPS (Let's Encrypt, renouvellement automatique).
 - [x] Exe signé (certificat « Arcanes & Lames ») + installateur en une ligne, sans avertissement SmartScreen.
 - [x] Lobby multijoueur : créer une partie / rejoindre depuis la liste (plus de port ni d'IP).
 - [x] Notes de mise à jour dans le menu principal (`data/patchnotes.json`).
@@ -37,11 +37,9 @@
       sans elle, impossible de publier une mise à jour acceptée par le jeu.
 - [ ] Avant le 26/10 : prévoir les récompenses de la **saison 2** dans `data/cosmetics.json` (`seasons.rewards["2"]`,
       sinon seules des PO sont proposées) et redéployer `cosmetics.json` sur le serveur.
-
-      Cette machine se connecte par clé SSH (`~/.ssh/arcanes_vps`), elle n'a plus besoin du mot de passe.
 - [ ] **Sauvegarder** `%USERPROFILE%\.arcanes-codesign\` (clé de signature + mot de passe) sur une clé USB
       ou un cloud perso : sans elle, impossible de signer les prochaines versions avec la même identité.
-- [ ] Envoyer aux joueurs la page https://arcanes.example.com/ (commande d'installation à copier).
+- [ ] Envoyer aux joueurs la page de téléchargement (commande d'installation à copier).
 - [ ] Les joueurs en 1.2, 1.3 ou 1.4.0 qui ont cliqué « Mettre à jour » voient leur jeu se fermer :
       ils doivent **réinstaller une fois** depuis la page de téléchargement (la 1.4.1 corrige le problème).
 
@@ -55,7 +53,7 @@
 4. Si `data/cosmetics.json` ou `server/lobby_server.py` ont changé : redéployer aussi le serveur.
 
 ## Améliorations possibles (facultatif)
-- [ ] Nom de domaine personnalisé (ex. arcanes.example.com) au lieu du nom OVH.
+- [ ] Nom de domaine personnalisé pour le serveur officiel.
 - [ ] (Optionnel) Certificat reconnu par Windows (payant) pour que le zip manuel n'affiche plus d'avertissement.
 - [ ] Nouveaux decks et héros.
 - [ ] Messages hors ligne (aujourd'hui, seuls les amis connectés reçoivent les messages).

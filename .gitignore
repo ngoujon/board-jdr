@@ -20,3 +20,8 @@ __pycache__/
 
 # Réglages locaux de Claude Code
 /.claude/
+
+# Réglages de déploiement propres à ce poste (adresse du serveur officiel, chemin de Godot...)
+/local_config.json
+/official_server.cfg
+/server/local_config.json

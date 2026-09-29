@@ -1,212 +1,131 @@
 # Arcanes & Lames
 
-Jeu de cartes 2D au tour par tour inspiré de Hearthstone, dans un univers médiéval-fantastique
-en pixel art 8-bit, avec des effets visuels 3D pour les capacités des cartes. Moteur : **Godot 4.7**.
+A turn-based 2D card game inspired by Hearthstone, set in a medieval-fantasy world in 8-bit pixel art, with 3D visual effects for card abilities. Built with **Godot 4.7**. Single-player against four AI levels, plus online play through a small Python community server (accounts, lobby, friends, leaderboard, replays).
 
-## Lancer le jeu
+> The game is written in French and translated into English, German, Spanish, Italian and Portuguese.
 
-Ouvrir le dossier dans Godot 4.7 puis **F5** (scène principale : `scenes/main_menu.tscn`).
+## Screenshots
 
-## Contenu
+*Captured with a local demo profile ("Shots"); the chat message is sample content.*
 
-| Écran | Description |
+| Main menu | Battle |
+| --- | --- |
+| ![Main menu](tools/site/shot_adversaires.jpg) | ![Battle](tools/site/shot_combat.jpg) |
+
+| Card collection | Draw choice |
+| --- | --- |
+| ![Collection](tools/site/shot_collection.jpg) | ![Draw choice](tools/site/shot_pioche.jpg) |
+
+| Customisation | Library |
+| --- | --- |
+| ![Customisation](tools/trailer/shot_plateaux.png) | ![Library](tools/site/shot_bibliotheque.jpg) |
+
+## Run the game
+
+Open the folder in Godot 4.7 and press **F5** (main scene: `scenes/main_menu.tscn`).
+
+## Content
+
+| Screen | Description |
 |---|---|
-| Démarrage | Vérification de version, mise à jour automatique |
-| Menu principal | Défier l'IA, Multijoueur, Collection, Classement, Amis, Règles, Paramètres, badge de profil |
-| Collection | Toutes les cartes, filtres, explication détaillée, mots-clés, **aperçu de l'effet 3D** |
-| Combat | Plateau, main (rangement manuel / coût / PV / attaque, jeu en 2 clics), ciblage à la souris, chrono, journal + discussion, effets 3D, revanche en ligne |
-| Échap (partout) | Ferme la fenêtre ouverte ; sinon Profil (pseudo, avatar, personnalisation), Audio, Affichage, Jeu (difficulté, vitesse), Raccourcis, Règles |
-| Multijoueur | Créer une partie ou rejoindre la liste des parties ouvertes (serveur officiel), invitations d'amis |
-| Personnalisation | Titres, avatars, contours d'avatar, dos de cartes, plateaux à débloquer (`data/cosmetics.json`) ; accès par le badge de profil |
-| Statistiques | Statistiques globales du jeu (toutes les parties enregistrées) : cartes les plus jouées, % de victoires, durée, IA |
-| Profils et replays | Recherche dans le classement, profil public d'un joueur, historique et replays (« Revoir ») |
-| Messages | Messagerie privée avec les amis connectés, historique conservé sur le serveur, notifications « Répondre » |
+| Boot | Version check and automatic update |
+| Main menu | Play vs AI, Multiplayer, Collection, Leaderboard, Friends, Rules, Settings, profile badge, patch notes, battle pass |
+| Collection | All cards, filters, detailed explanations, keywords, **3D effect preview** |
+| Battle | Board, hand (manual / cost / HP / attack sorting, two-click play), mouse targeting, clock, log + chat, 3D effects, online rematch |
+| Esc (anywhere) | Profile (name, avatar, customisation), Audio, Display, Game, Key bindings, Rules |
+| Multiplayer | Create a game or join the list of open games, friend invitations |
+| Customisation | Titles, avatars, avatar frames, card backs and boards to unlock (`data/cosmetics.json`) |
+| Statistics, profiles, replays | Global stats, public player profiles, match history and replays |
+| Messages | Private messages between friends |
 
-### Règles (résumé)
-- 25 PV par héros au départ, **sans maximum** (les soins peuvent dépasser) ; une pièce aux avatars des joueurs désigne qui commence ; **énergie** : 1 au premier tour, +1 par tour (max 10), rechargée à chaque tour.
-- Les deux camps jouent **le même deck de 100 cartes** (59 cartes différentes en 1 à 4 exemplaires, mélangé différemment).
-- **Pioche au choix** : au début de son tour, on révèle 3 cartes, on en garde une, les 2 autres vont au fond du deck.
-- **Enchantements** (2 max par joueur, sans PV) : effet permanent ou à chaque tour, retirés uniquement par les cartes de destruction.
-- Serviteurs à **effet continu** (aura, début / fin de tour), cartes liées au **cimetière**, cartes qui retirent des cartes des decks.
-- IA : Apprenti, Chevalier, Seigneur de guerre (difficile : simule ses coups et le tour adverse ; `tests/ai_bench.tscn`).
-- **Défausse** gratuite pendant son tour (petit X sur la carte survolée).
-- Mots-clés : Provocation, Charge, Bouclier divin, Cri de guerre, Râle d'agonie, Effet continu.
-- Détail complet : menu principal > Règles du jeu, ou Échap > Règles.
+### Rules (summary)
 
-## Multijoueur
+- Heroes start with 25 HP **with no maximum**; a coin toss decides who starts; **energy**: 1 on the first turn, +1 per turn (max 10), refilled every turn.
+- Both sides play **the same 100-card deck** (59 different cards, 1–4 copies each, shuffled differently).
+- **Draw choice**: at the start of your turn, reveal 3 cards, keep one, the other two go to the bottom of the deck.
+- **Enchantments** (max 2 per player): permanent or per-turn effects, removed only by destruction cards.
+- Minions with continuous effects (auras, start / end of turn), graveyard synergies, deck-altering cards.
+- AI levels: Apprentice, Knight, Warlord (simulates its moves and the opponent's turn), Challenger, plus an **Inferno** score mode.
+- Keywords: Taunt, Charge, Divine Shield, Battlecry, Deathrattle, Continuous effect. Full rules in the game (main menu › Rules).
 
-### Serveur officiel (VPS) — par défaut
-Le jeu se connecte automatiquement au serveur officiel **203.0.113.10** (VPS OVH). Il gère les
-**comptes (pseudo unique + avatar)**, le **classement**, les **amis**, les **invitations**, et
-**relaie toutes les parties** : les joueurs n'ont **aucun port à ouvrir** (pas de connexion de joueur à joueur).
+## Multiplayer
 
-1. Dans le jeu : **Échap > Profil** : choisir un pseudo + avatar (connexion automatique).
-2. **Multijoueur** : **créer une partie** (nom facultatif) — elle apparaît dans la **liste des parties
-   ouvertes** de tous les joueurs, mise à jour en direct — ou **rejoindre** une partie de la liste.
-   L'hôte clique sur **Lancer la partie** quand l'adversaire est là.
-3. **Amis** : ajouter un ami par son pseudo, puis l'inviter directement (notification *Rejoindre*).
+All online games are **relayed by the server**: players never open a port. The host is authoritative; both clients run the same deterministic simulation (`GameState`, same random seed) and only exchange actions and chat.
 
-Aucun port, aucune adresse IP : l'ancienne connexion directe a été retirée du jeu.
+### Running a server
 
-Page de téléchargement du jeu : **https://arcanes.example.com/**
+```bash
+python server/lobby_server.py        # Python 3.9+, or server/lancer_serveur.bat on Windows
+```
 
-Installation recommandée pour les joueurs (Windows + R, puis coller) :
-`powershell -c "irm https://arcanes.example.com/install.ps1 | iex"`
-Le jeu est téléchargé en HTTPS, son empreinte SHA-256 et sa signature sont vérifiées, puis il est installé
-dans `%LOCALAPPDATA%\Programs\ArcanesEtLames` avec des raccourcis (aucun avertissement SmartScreen,
-car un téléchargement fait par PowerShell ne porte pas la marque « provenant d'internet »).
+It listens on TCP 7778 (game) and 7779 (HTTP: version check, updates and download page); TLS is available on 7780 when a certificate is configured. Point the game to it from **Esc › Profile**.
 
-### Signature de l'exécutable
-L'exe est signé et horodaté à chaque publication avec le certificat auto-signé **« Arcanes & Lames »**
-(empreinte `D2B812C2D48C282248BD97706AAE9610B66AC854`, valable jusqu'en 2036), stocké dans le magasin de
-certificats Windows de ce PC. La sauvegarde de la clé privée est dans `%USERPROFILE%\.arcanes-codesign\`
-(`.pfx` + mot de passe) : **à conserver précieusement**, car sans elle on ne pourrait plus signer avec
-la même identité. L'installateur refuse tout exe dont la signature ne correspond pas à cette empreinte.
-Un certificat auto-signé n'est pas reconnu par Windows : c'est l'installateur PowerShell qui évite
-l'avertissement ; le zip manuel l'affiche toujours.
+### Official server configuration
 
-### Installation sur le VPS (déjà faite)
-| Élément | Emplacement |
-|---|---|
-| Service systemd | `arcanes-lobby.service` (utilisateur système `arcanes`, isolé, 256 Mo max) |
-| Code | `/opt/arcanes/lobby_server.py` |
-| Comptes / classement | `/var/lib/arcanes/lobby_data.json` |
-| Historique des parties | `/var/lib/arcanes/history.db` (SQLite, toutes les parties, sans limite) |
-| Sauvegardes | quotidiennes dans `/var/backups/arcanes/`, toutes conservées |
-| HTTPS | nginx : `/etc/nginx/sites-available/arcanes-vps-hostname.conf` (certificat Let's Encrypt renouvelé automatiquement) |
-| Versions publiées | `/srv/arcanes/updates/` (latest.json, .pck, .zip) |
-| Ports (pare-feu ufw) | TCP 7778 (jeu), TCP 7779 (HTTP), 443 via nginx (HTTPS) |
+The address of your official server is **not stored in the repository**:
 
-Il cohabite avec les autres projets du VPS (nginx, Apache, Docker, MySQL non modifiés).
-Commandes utiles (`ssh arcanes-vps`) : `sudo systemctl restart arcanes-lobby`,
-`sudo journalctl -u arcanes-lobby -f`. Pour mettre à jour le code du serveur :
-`scp server/lobby_server.py arcanes-vps:/tmp/` puis
-`sudo install -m 644 /tmp/lobby_server.py /opt/arcanes/ && sudo systemctl restart arcanes-lobby`.
+- `official_server.cfg` (copy `official_server.cfg.example`) — read by the game at startup (address, web URL, TLS host name) and included in exports. Without it, the game targets a local server in plain TCP.
+- `local_config.json` (copy `local_config.example.json`) — used by the publishing tools (public web URL, path to Godot).
+- `server/local_config.json` — public web URL used by the server for its download page (written automatically by `tools/deploy_server.py`).
 
-Pour héberger votre propre serveur à la place : `server/lancer_serveur.bat` (Python 3.9+), ports TCP 7778
-et 7779 ouverts, puis indiquer son adresse dans **Échap > Profil**.
+`tools/publish_update.py` refuses to publish a version when these files are missing.
 
-### Architecture réseau
-L'hôte fait autorité ; les deux machines exécutent la même simulation déterministe (`GameState`,
-même graine aléatoire) et n'échangent que les actions (jouer, attaquer, fin de tour, abandon) plus le chat,
-relayées par le serveur.
+### Security and anti-cheat
 
-### Sécurité et anti-triche (1.8.0)
-- **Parties vérifiées** : au début de chaque partie, le jeu demande un « ticket » au serveur (`match_start`),
-  qui tire la graine et le premier joueur. En fin de partie, le serveur **rejoue** la partie avec le moteur du jeu
-  (Godot sans affichage, scène `scenes/tools/verifier.tscn`, logique dans `scripts/core/match_check.gd`) :
-  chaque action doit être légale, les coups de l'IA sont recalculés (IA déterministe, graine dérivée de celle
-  de la partie) et le vainqueur, les tours et les statistiques sont calculés par le serveur. Victoires, PO, XP,
-  statistiques et historique ne sont accordés qu'aux parties validées ; les refus sont notés dans le compte
-  (`cheat_flags` de `lobby_data.json`). Durée mesurée par le serveur.
-- **En ligne**, le serveur enregistre lui-même les actions relayées (demandes de l'invité, actions appliquées
-  et refus de l'hôte) : une action de l'invité doit avoir été demandée, un refus doit être justifié. Le serveur
-  impose la graine du ticket dans `_start` et remplace pseudo, avatar et personnalisation par ceux du compte.
-  Quitter une partie en cours = abandon. Au-delà de 10 parties par jour contre le même adversaire, plus rien n'est compté.
-- **Limites** : débit de messages par connexion, 3 comptes créés par IP et par heure, 8 connexions par IP.
-- **TLS** : le jeu se connecte au serveur officiel en TLS sur le port **7780** (certificat Let's Encrypt du nom
-  d'hôte vérifié). Le certificat est copié dans `/var/lib/arcanes/tls` par le hook
-  `/etc/letsencrypt/renewal-hooks/deploy/arcanes-lobby-tls.sh` à chaque renouvellement. Le port 7778 (en clair)
-  reste ouvert pour les serveurs de test et les anciennes versions.
-- **Mises à jour signées** : `latest.json` est signé (RSA 3072, SHA-256) par `tools/publish_update.py` avec la clé
-  `%USERPROFILE%\.arcanes-codesign\update_signing_key.pem` ; la clé publique est dans `scripts/autoload/updater.gd`.
-  Le jeu refuse un manifeste non signé ou modifié venant du serveur officiel : même un serveur compromis ne
-  peut pas diffuser de faux paquet. **Ne jamais perdre ni diffuser cette clé.**
-- Vérificateur sur le VPS : `/opt/arcanes/godot/godot` (Godot 4.7.1 Linux officiel, somme SHA-512 vérifiée),
-  qui charge le dernier paquet publié (`/srv/arcanes/updates/arcanes_X.pck`). Localement :
-  `--verifier-godot <godot.exe> --verifier-project <dossier du projet>` ; sans vérificateur, le serveur
-  (développement) fait confiance aux résultats déclarés.
-- Limite connue : chaque client connaît la graine de la partie (simulation locale), un client modifié pourrait
-  donc voir la main adverse. Seul un serveur qui simule la partie et n'envoie à chacun que ce qu'il voit
-  l'empêcherait (le vérificateur en est la première brique).
+- **Verified games**: the server issues a ticket (seed, first player) at the start of each game and **replays** the game at the end with the game engine in headless mode (`scenes/tools/verifier.tscn`, `scripts/core/match_check.gd`). Rewards, stats and history are only granted to validated games.
+- Online, the server records relayed actions, enforces the ticket's seed and the account's identity; leaving a game counts as a loss.
+- Rate limits per connection and per IP.
+- **Signed updates**: `latest.json` is signed (RSA 3072, SHA-256) by `tools/publish_update.py`; the public key is embedded in `scripts/autoload/updater.gd`, so even a compromised server cannot push a fake package.
+- Known limitation: each client knows the game seed (local simulation), so a modified client could see the opponent's hand.
 
-## Langues
-Français (texte source), anglais, allemand, espagnol, italien, portugais : **Paramètres > Langue**
-(par défaut, la langue du système). Le texte français sert de clé ; traductions dans `data/i18n/<langue>.json`,
-chargées par `scripts/core/loc.gd` (`Loc.t("...")` avant toute mise en forme ; les Label/Button se traduisent
-seuls). Le serveur traduit aussi ses messages (langue envoyée dans `hello`, fichiers copiés en `/opt/arcanes/i18n/`).
-Après ajout de textes : `python tools/i18n_extract.py --missing` liste ce qui manque (`data/i18n/_missing.json`),
-`python tools/i18n_check.py <langue>` vérifie marqueurs `%s`/`{nom}` et balises BBCode.
+## Updates
 
-## Notes de mise à jour
-`data/patchnotes.json` (la plus récente en premier) : affichées dans l'encart « Nouveautés » du menu
-principal, dans « Toutes les notes de mise à jour », et ouvertes automatiquement au premier lancement
-d'une nouvelle version. **Ajouter l'entrée de la version avant de publier** (le script le vérifie).
+At launch the boot screen asks the server for the current version. Outdated clients get a *New version available* screen with the patch notes and an **Update** button (the `.pck` package is downloaded, its SHA-256 checked, and the game restarts on it) or can play offline. The server refuses clients older than the published version.
 
-## Personnalisation
-Catalogue : `data/cosmetics.json`, **lu aussi par le serveur** (copié en `/opt/arcanes/cosmetics.json` sur le VPS :
-à redéployer avec le serveur si on le modifie). Le serveur compte les statistiques de chaque compte
-(calculées par le serveur en rejouant chaque partie : serviteurs / sorts / enchantements joués, mots-clés, dégâts au héros...),
-calcule les déblocages et valide chaque choix. Le n°1 du classement reçoit automatiquement le contour Champion.
-Visuels : `assets/cosmetics/` (dos `back_*.png`, plateaux `board_*.png`) et `assets/avatars/avatar_9..14.png`.
+To publish a version: `python tools/publish_update.py 1.1.0 "Release notes…"` (or `tools/publier_mise_a_jour.bat`). It sets the version, exports Windows / Linux / macOS / Android builds, signs the Windows executable, builds the update packages, the full downloads and the signed `latest.json`, then uploads everything. `--local` prepares everything without uploading. Add the version's entry to `data/patchnotes.json` first.
 
-## Icône
-`assets/ui/game_icon.png` / `.ico` (générée avec ComfyUI, `tools/raw/icon_2.png`). Posée dans l'exe à
-chaque publication par `tools/bin/rcedit-x64.exe` (electron/rcedit, MIT), avec les informations de version.
+## Languages
 
-## Mises à jour (tout le monde sur la dernière version)
+French is the source language and the translation key; translations live in `data/i18n/<lang>.json`, loaded by `scripts/core/loc.gd` (`Loc.t("…")`). `python tools/i18n_extract.py --missing` lists missing strings and `python tools/i18n_check.py <lang>` checks placeholders and BBCode tags.
 
-Au lancement, l'écran de démarrage (`scenes/boot.tscn`) interroge le serveur
-(`http://<serveur>:7779/version.json`) :
-- **à jour**, ou serveur injoignable : on arrive au menu principal ;
-- **version obsolète** : écran « Nouvelle version disponible » avec les nouveautés,
-  bouton **Mettre à jour** (téléchargement du paquet `.pck`, vérification SHA-256, redémarrage
-  automatique du jeu dessus) ou **Jouer hors ligne** (IA uniquement).
+## Assets generated with ComfyUI
 
-Le serveur **refuse la connexion** des clients plus anciens que la version publiée, et en connexion
-directe l'hôte refuse un joueur dont la version diffère : impossible de jouer en ligne sans être à jour.
-Le paquet téléchargé est rangé dans `user://updates/` ; aux lancements suivants, le jeu redémarre
-directement dessus (`--main-pack`).
+All graphics, music and sound effects were generated with ComfyUI:
 
-### Publier une nouvelle version
-Double-cliquer `tools/publier_mise_a_jour.bat` (ou `python tools/publish_update.py 1.1.0 "Nouveautés..."`) :
-1. met à jour `application/config/version` ;
-2. exporte le jeu Windows (`build/ArcanesEtLames/`) — modèles d'export Windows 4.7.1 déjà installés ;
-3. crée dans `dist/` le paquet de mise à jour `.pck`, le zip complet pour les nouveaux joueurs et `latest.json` ;
-4. envoie le tout sur le VPS (bascule atomique, anciennes versions supprimées).
-
-Le serveur n'a pas besoin d'être redémarré. Option `--local` : tout préparer sans rien envoyer.
-Depuis l'éditeur Godot, une mise à jour se télécharge mais ne peut pas relancer le jeu.
-
-## Assets générés avec ComfyUI
-
-Tous les graphismes, musiques et effets sonores ont été générés via ComfyUI (connecté en MCP) :
-
-| Type | Workflow (`tools/comfy_workflows/`) | Modèles |
+| Type | Workflow (`tools/comfy_workflows/`) | Models |
 |---|---|---|
-| Illustrations, décors, textures d'interface | `pixel_art_image.json` | SDXL base 1.0 + LoRA pixel-art-xl |
-| Icônes / sprites détourés | `pixel_art_sprite_nobg.json` | idem + BiRefNet |
-| Musiques chiptune | `chiptune_music.json` | ACE-Step 1.5 turbo |
-| Effets sonores 8-bit | `retro_sfx.json` | Stable Audio Open 1.0 + T5 base |
+| Illustrations, backgrounds, UI textures | `pixel_art_image.json` | SDXL base 1.0 + pixel-art-xl LoRA |
+| Icons / cut-out sprites | `pixel_art_sprite_nobg.json` | same + BiRefNet |
+| Chiptune music | `chiptune_music.json` | ACE-Step 1.5 turbo |
+| 8-bit sound effects | `retro_sfx.json` | Stable Audio Open 1.0 + T5 base |
 
-- Prompts, tailles et graines : `tools/assets_manifest.json`.
-- `tools/postprocess_assets.py` : réduction en vrai pixel art (palette limitée) et composition des
-  éléments d'interface (cadres de cartes, panneaux, boutons) depuis les textures générées.
-- Polices : Pixelify Sans (textes) et Press Start 2P (chiffres), licence OFL (`assets/fonts/OFL.txt`).
+Prompts, sizes and seeds are in `tools/assets_manifest.json`; `tools/postprocess_assets.py` reduces the images to true pixel art and composes the UI elements. Fonts: Pixelify Sans and Press Start 2P (OFL, `assets/fonts/OFL.txt`).
 
-## Effets 3D
-`scripts/fx/fx_3d.gd` : un `SubViewport` 3D transparent superposé au jeu 2D, avec une caméra en
-perspective calée sur l'écran. Boule de feu, éclair, soin, bénédiction, tempête de givre, flèche,
-invocation, souffle du dragon, bouclier divin, cartes volantes, braises du menu, feu d'artifice.
+## 3D effects
+
+`scripts/fx/fx_3d.gd` overlays a transparent 3D `SubViewport` on the 2D game with a perspective camera aligned to the screen: fireball, lightning, healing, blessing, frost storm, arrows, summoning, dragon breath, divine shield, flying cards, menu embers, fireworks.
 
 ## Tests
-- `tests/sim_test.tscn` : 200 parties IA contre IA + vérification du déterminisme
-  (`godot --headless --path . res://tests/sim_test.tscn`).
-- Test réseau automatique (serveur lancé sur 7778), deux instances headless :
-  ```
-  godot --headless --path . -- --profile=a --name=Invite --autoplay --auto-accept --quit-after-game
-  godot --headless --path . -- --profile=b --name=Hote --autoplay --auto-host=Invite --quit-after-game
-  ```
-- `--profile=X` permet aussi de lancer deux instances sur le même PC pour tester à la main.
 
-## Structure
+- `godot --headless --path . res://tests/sim_test.tscn` — 200 AI-vs-AI games + determinism check.
+- Automated network test (server running on 7778), two headless instances:
+
+  ```
+  godot --headless --path . -- --profile=a --name=Guest --autoplay --auto-accept --quit-after-game
+  godot --headless --path . -- --profile=b --name=Host --autoplay --auto-host=Guest --quit-after-game
+  ```
+
+- `--profile=X` also lets you run two instances on the same machine by hand.
+
+## Project structure
+
 ```
-scenes/            boot (mises à jour), main_menu, battle, collection, multiplayer
-scripts/autoload/  settings, updater, audio, card_db (cartes + deck), ui_theme, lobby (serveur), net, pause_menu
-scripts/core/      game_state (règles), ai (adversaire)
-scripts/ui/        card_view, minion_view, hero_view, rules/friends/leaderboard panels
-scripts/fx/        fx_3d (effets 3D)
-server/            serveur communautaire Python (déployé sur le VPS)
-tools/             workflows ComfyUI, post-traitement, police, publication des versions
-build/, dist/      générés par la publication (jeu exporté, paquets envoyés au VPS)
+scenes/            boot (updates), main_menu, battle, collection, multiplayer
+scripts/autoload/  settings, updater, audio, card_db (cards + deck), ui_theme, lobby (server), net, pause_menu
+scripts/core/      game_state (rules), ai, match_check (verification), loc (i18n)
+scripts/ui/        card, minion and hero views, panels
+scripts/fx/        fx_3d (3D effects)
+server/            Python community server
+tools/             ComfyUI workflows, post-processing, i18n, publishing and deployment scripts
+data/              cosmetics, patch notes, translations
 ```

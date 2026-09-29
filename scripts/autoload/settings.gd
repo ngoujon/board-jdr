@@ -51,12 +51,15 @@ var keybinds := {}
 var player_name := ""
 var avatar := 1
 var account_token := ""
-## Serveur officiel (VPS) : comptes, salons, relais des parties et mises à jour. Aucun port à ouvrir chez les joueurs.
-const OFFICIAL_SERVER := "203.0.113.10"
+## Serveur officiel : comptes, salons, relais des parties et mises à jour. Aucun port à ouvrir chez les joueurs.
+## Son adresse n'est pas versionnée : elle est lue dans res://official_server.cfg (voir official_server.cfg.example).
+## Sans ce fichier, le jeu vise un serveur local (server/lancer_serveur.bat), en clair.
+const OFFICIAL_CONFIG_PATH := "res://official_server.cfg"
+var OFFICIAL_SERVER: String = _official("address", "127.0.0.1")
 const OFFICIAL_PORT := 7778
-const OFFICIAL_WEB := "https://arcanes.example.com"
-const OFFICIAL_TLS_PORT := 7780                        # connexion chiffrée (TLS) au serveur officiel
-const OFFICIAL_TLS_NAME := "arcanes.example.com"   # nom attendu dans le certificat du serveur   # mises à jour, page de téléchargement, installateur
+var OFFICIAL_WEB: String = _official("web", "http://127.0.0.1:7779")   # mises à jour, page de téléchargement, installateur
+const OFFICIAL_TLS_PORT := 7780                                       # connexion chiffrée (TLS) au serveur officiel
+var OFFICIAL_TLS_NAME: String = _official("tls_name", "")             # nom attendu dans le certificat ; vide = pas de TLS
 ## Mode vérificateur (serveur) : rejoue une partie, sans réseau, sans mise à jour ni fichier de réglages.
 var verifier_mode := "--verifier" in OS.get_cmdline_user_args()
 var server_address := OFFICIAL_SERVER
@@ -337,6 +340,14 @@ func save_settings() -> void:
 	cfg.save(SAVE_PATH)
 
 
+## Lit une valeur de res://official_server.cfg (section [official]), ou la valeur par défaut.
+static func _official(key: String, default_value: String) -> String:
+	var cfg := ConfigFile.new()
+	if cfg.load(OFFICIAL_CONFIG_PATH) != OK:
+		return default_value
+	return str(cfg.get_value("official", key, default_value))
+
+
 func set_profile(new_name: String, new_avatar: int) -> void:
 	player_name = new_name.strip_edges()
 	avatar = new_avatar if new_avatar in CardDB.BASE_AVATARS else clampi(new_avatar, 1, 8)
@@ -346,7 +357,7 @@ func set_profile(new_name: String, new_avatar: int) -> void:
 
 ## Le serveur officiel est joint en TLS (certificat vérifié) ; un serveur local ou de test reste en clair.
 func uses_tls() -> bool:
-	return server_address == OFFICIAL_SERVER and server_port == OFFICIAL_PORT and not "--no-tls" in OS.get_cmdline_user_args()
+	return OFFICIAL_TLS_NAME != "" and server_address == OFFICIAL_SERVER and server_port == OFFICIAL_PORT and not "--no-tls" in OS.get_cmdline_user_args()
 
 
 func set_server(address: String, port: int) -> void:

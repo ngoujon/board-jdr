@@ -1,0 +1,5 @@
+; Copy to official_server.cfg (not versioned) to point the game at your official server.
+[official]
+address="your-server.example.com"
+web="https://your-server.example.com"
+tls_name="your-server.example.com"
