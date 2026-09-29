@@ -66,7 +66,7 @@ The address of your official server is **not stored in the repository**:
 
 - `official_server.cfg` (copy `official_server.cfg.example`) — read by the game at startup (address, web URL, TLS host name) and included in exports. Without it, the game targets a local server in plain TCP.
 - `local_config.json` (copy `local_config.example.json`) — used by the publishing tools (public web URL, path to Godot).
-- `server/local_config.json` — public web URL used by the server for its download page (written automatically by `tools/deploy_server.py`).
+- `server/local_config.json` (copy `server/local_config.example.json`, or set `ARCANES_WEB_BASE`) — public web URL the server shows on its download page. `tools/deploy_server.py` generates and installs it next to the deployed server from `local_config.json`.
 
 `tools/publish_update.py` refuses to publish a version when these files are missing.
 
