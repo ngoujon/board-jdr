@@ -165,6 +165,8 @@ func _best_play(gs: GameState) -> Dictionary:
 						score = _area_score(p, opp, sp.amount, sp.target == "all_minions", sp.target == "all_enemies")
 				"heal":
 					var missing := p.hero.max_health - p.hero.health
+					if gs.inferno == me:
+						missing = mini(gs.inferno_damage, int(sp.amount))   # Inferno : le soin fait baisser le score adverse
 					if missing >= 5:
 						score = 12.0 + missing
 						target = p.hero.uid

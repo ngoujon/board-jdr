@@ -18,6 +18,8 @@ extends RefCounted
 ##  - Pas de maximum de PV : les soins peuvent dépasser les PV de départ.
 ##  - Cimetière : cartes mortes, jouées, détruites, défaussées ou retirées du deck (certaines cartes s'en servent).
 ##  - Défausse : pendant son tour, un joueur peut défausser gratuitement une carte de sa main.
+##  - Changement de main : au début de son premier tour (avant toute autre action que le choix de pioche),
+##    un joueur peut envoyer toute sa main au cimetière et repiocher une main d'une carte de moins.
 
 const HERO_UIDS := [1, 2]
 
@@ -73,6 +75,8 @@ class Player:
 	var energy := 0
 	var max_energy := 0
 	var fatigue := 0
+	var turns := 0                 # nombre de tours commencés par ce joueur
+	var mulligan_ready := false    # changement de main encore possible (premier tour, aucune action faite)
 
 	func copy() -> Player:
 		var p := Player.new()
@@ -89,6 +93,8 @@ class Player:
 		p.energy = energy
 		p.max_energy = max_energy
 		p.fatigue = fatigue
+		p.turns = turns
+		p.mulligan_ready = mulligan_ready
 		return p
 
 
@@ -103,10 +109,9 @@ var events: Array[Dictionary] = []
 var _next_uid := 100
 var _rng := RandomNumberGenerator.new()
 ## Mode Inferno : camp dont le héros a des PV infinis (l'IA), -1 en partie normale.
-## Le score est la somme des dégâts infligés à ce héros (la fatigue ne compte pas).
+## Le score est la somme des dégâts subis par ce héros (fatigue comprise), moins ses soins (jamais sous 0).
 var inferno := -1
 var inferno_damage := 0
-var _fatigue_hit := false
 
 
 ## `bonus` (difficulté Challenger) : {"player": i, "health": PV en plus, "cards": cartes de départ en plus}.
@@ -278,6 +283,8 @@ func valid_attack_targets(attacker_uid: int) -> Array[int]:
 func _start_turn() -> void:
 	turn_number += 1
 	var p := players[current]
+	p.turns += 1
+	p.mulligan_ready = p.turns == 1
 	p.max_energy = mini(p.max_energy + 1, CardDB.MAX_ENERGY)
 	p.energy = p.max_energy
 	for m in p.board:
@@ -330,6 +337,7 @@ func choose_draw(p: int, index: int) -> bool:
 func end_turn() -> void:
 	if is_over() or not pending_choice.is_empty():
 		return
+	players[current].mulligan_ready = false
 	_trigger_permanents(players[current], "turn_end")
 	if is_over():
 		return
@@ -342,9 +350,7 @@ func _draw(p: Player) -> void:
 	if p.deck.is_empty():
 		p.fatigue += 1
 		_emit({"t": "fatigue", "player": p.index, "amount": p.fatigue})
-		_fatigue_hit = true
 		_damage(p.hero, p.fatigue)
-		_fatigue_hit = false
 		return
 	_add_to_hand(p, p.deck.pop_back())
 
@@ -375,6 +381,7 @@ func play_card(p: int, hand_uid: int, target_uid := -1, board_index := -1) -> bo
 	if needs_target(hc.card_id) and not valid_spell_targets(p, hc.card_id).has(target_uid):
 		return false
 	var pl := players[p]
+	pl.mulligan_ready = false
 	pl.energy -= card.cost
 	pl.hand.erase(hc)
 	_emit({"t": "play", "player": p, "hand_uid": hand_uid, "card_id": hc.card_id, "target": target_uid})
@@ -398,6 +405,7 @@ func attack(attacker_uid: int, defender_uid: int) -> bool:
 	var a := get_entity(attacker_uid)
 	var d := get_entity(defender_uid)
 	a.attacks_left -= 1
+	players[a.owner].mulligan_ready = false
 	_emit({"t": "attack", "attacker": a.uid, "defender": d.uid})
 	var dmg_to_d := a.attack
 	var dmg_to_a := d.attack if not d.is_hero and not d.is_enchant else 0
@@ -418,9 +426,36 @@ func discard(p: int, hand_uid: int) -> bool:
 	if not can_discard(p, hand_uid):
 		return false
 	var hc := hand_card(p, hand_uid)
+	players[p].mulligan_ready = false
 	players[p].hand.erase(hc)
 	players[p].graveyard.append(hc.card_id)
 	_emit({"t": "discard", "player": p, "hand_uid": hand_uid, "card_id": hc.card_id})
+	return true
+
+
+## Changement de main : seulement au premier tour du joueur, avant toute autre action que le choix de pioche.
+func can_mulligan(p: int) -> bool:
+	return not is_over() and p == current and pending_choice.is_empty() and players[p].mulligan_ready \
+		and players[p].hand.size() >= 2
+
+
+## Toute la main part au cimetière, puis le joueur pioche une main d'une carte de moins.
+func mulligan(p: int) -> bool:
+	if not can_mulligan(p):
+		return false
+	var pl := players[p]
+	pl.mulligan_ready = false
+	var uids: Array[int] = []
+	var ids: Array[String] = []
+	for hc in pl.hand:
+		uids.append(int(hc.uid))
+		ids.append(str(hc.card_id))
+	pl.hand.clear()
+	pl.graveyard.append_array(ids)
+	_emit({"t": "mulligan", "player": p, "hand_uids": uids, "cards": ids})
+	for i in ids.size() - 1:
+		_draw(pl)
+	_check_game_over()
 	return true
 
 
@@ -661,9 +696,8 @@ func _damage(t: Entity, amount: int) -> void:
 		_emit({"t": "shield_pop", "uid": t.uid})
 		return
 	if t.is_hero and t.owner == inferno:
-		# PV infinis : les dégâts s'ajoutent au score au lieu de faire baisser les PV.
-		if not _fatigue_hit:
-			inferno_damage += amount
+		# PV infinis : les dégâts (fatigue comprise) s'ajoutent au score au lieu de faire baisser les PV.
+		inferno_damage += amount
 		_emit({"t": "damage", "uid": t.uid, "amount": amount, "hero": true, "inferno": inferno_damage})
 		return
 	t.health -= amount
@@ -675,7 +709,10 @@ func _heal(t: Entity, amount: int) -> void:
 	if amount <= 0 or t == null or t.is_enchant:
 		return
 	if t.is_hero and t.owner == inferno:
-		return   # PV infinis : rien à soigner
+		# PV infinis : un soin fait baisser le score (jamais sous 0).
+		inferno_damage = maxi(0, inferno_damage - amount)
+		_emit({"t": "heal", "uid": t.uid, "amount": amount, "inferno": inferno_damage})
+		return
 	t.health += amount
 	_emit({"t": "heal", "uid": t.uid, "amount": amount})
 

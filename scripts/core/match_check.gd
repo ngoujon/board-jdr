@@ -32,6 +32,8 @@ static func apply_action(gs: GameState, p: int, act: Dictionary) -> bool:
 			return gs.choose_draw(p, int(act.get("index", -1)))
 		"discard":
 			return gs.discard(p, int(act.get("hand_uid", -1)))
+		"mulligan":
+			return gs.mulligan(p)
 		"end_turn":
 			if gs.current != p or not gs.pending_choice.is_empty():
 				return false
@@ -53,6 +55,8 @@ static func encode(p: int, act: Dictionary) -> Array:
 			return [p, "c", int(act.get("index", 0))]
 		"discard":
 			return [p, "d", int(act.hand_uid)]
+		"mulligan":
+			return [p, "m"]
 		"end_turn":
 			return [p, "e"]
 		"concede":
@@ -72,6 +76,8 @@ static func decode(a: Array) -> Dictionary:
 			return {"type": "choose", "index": int(a[2])} if a.size() >= 3 else {}
 		"d":
 			return {"type": "discard", "hand_uid": int(a[2])} if a.size() >= 3 else {}
+		"m":
+			return {"type": "mulligan"}
 		"e":
 			return {"type": "end_turn"}
 		"x":
