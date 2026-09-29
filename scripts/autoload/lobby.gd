@@ -762,9 +762,19 @@ func send_suggestion(cards: Array, kind: String, text: String) -> void:
 	send({"t": "suggest", "cards": cards.slice(0, 5), "kind": kind, "text": text.strip_edges().left(600)})
 
 
-## Liste des sujets : filtre par type ("" = tous) et recherche (texte, auteur, réponses et cartes `card_ids`).
-func request_sugg_list(kind := "", query := "", card_ids: Array = []) -> void:
-	send({"t": "sugg_list", "kind": kind, "q": query.strip_edges().left(60), "cards": card_ids.slice(0, 40)})
+## Liste des sujets : filtre par type ("" = tous), recherche (texte, auteur, réponses et cartes `card_ids`),
+## `open_only` : sans les sujets clôturés.
+func request_sugg_list(kind := "", query := "", card_ids: Array = [], open_only := false) -> void:
+	send({"t": "sugg_list", "kind": kind, "q": query.strip_edges().left(60), "cards": card_ids.slice(0, 40), "open_only": open_only})
+
+
+## Clôture d'un sujet (tout joueur) / réouverture (auteur du sujet ou modérateur).
+func lock_sugg(id: int) -> void:
+	send({"t": "sugg_lock", "id": id})
+
+
+func unlock_sugg(id: int) -> void:
+	send({"t": "sugg_unlock", "id": id})
 
 
 func request_sugg_thread(id: int) -> void:

@@ -57,6 +57,9 @@ SUGGEST_MAX_CARDS = 5
 SUGGEST_KINDS = ("buff", "nerf", "bug", "autre")
 SUGGEST_LIST = 150         # sujets renvoyés par la liste (activité la plus récente d'abord)
 SUGGEST_REPLIES = 300      # réponses renvoyées pour un fil
+# Modérateurs du forum (peuvent rouvrir n'importe quel sujet clôturé) : pseudos, remplaçables par le fichier
+# moderators.json (liste de pseudos) à côté des données. Les pseudos sont convertis en comptes au démarrage.
+FORUM_MODERATORS = ["Dupond"]
 CARD_ID_RE = re.compile(r"[a-z0-9_]{1,32}")
 CTRL_RE = re.compile(r"[\x00-\x1f\x7f]")
 UPDATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "updates")
@@ -203,6 +206,15 @@ class History:
             text TEXT NOT NULL)""")
         self.db.execute("CREATE INDEX IF NOT EXISTS idx_reply_sugg ON suggestion_replies(sugg_id, id)")
         self.db.execute("CREATE INDEX IF NOT EXISTS idx_reply_token ON suggestion_replies(token, ts)")
+        # Clôture (n'importe quel joueur) et réouverture (auteur ou modérateur) ; chaque changement est aussi
+        # noté dans le fil (event = 'close' | 'reopen', NULL pour un message) pour savoir qui l'a fait.
+        cols = {r[1] for r in self.db.execute("PRAGMA table_info(suggestions)")}
+        if "closed_by" not in cols:
+            self.db.execute("ALTER TABLE suggestions ADD COLUMN closed_by TEXT")
+            self.db.execute("ALTER TABLE suggestions ADD COLUMN closed_ts INTEGER")
+        cols = {r[1] for r in self.db.execute("PRAGMA table_info(suggestion_replies)")}
+        if "event" not in cols:
+            self.db.execute("ALTER TABLE suggestion_replies ADD COLUMN event TEXT")
         self.db.commit()
         self._stats_cache = {}
 
@@ -218,19 +230,26 @@ class History:
         return cur.lastrowid
 
     def count_since(self, table, token, since):
-        return self.db.execute(f"SELECT COUNT(*) FROM {table} WHERE token=? AND ts>=?", (token, since)).fetchone()[0]
+        extra = " AND event IS NULL" if table == "suggestion_replies" else ""
+        return self.db.execute(f"SELECT COUNT(*) FROM {table} WHERE token=? AND ts>=?{extra}", (token, since)).fetchone()[0]
+
+    TOPIC_COLS = "id, ts, name, cards, kind, text, last_ts, replies, closed_by, closed_ts, token"
 
     @staticmethod
     def _topic(row):
-        sid, ts, name, cards, kind, text, last_ts, replies = row
+        """Sujet ; « token » (auteur) reste côté serveur (voir LobbyServer.topic_for)."""
+        sid, ts, name, cards, kind, text, last_ts, replies, closed_by, closed_ts, token = row
         return {"id": sid, "ts": ts, "name": name, "cards": [x for x in cards.split(",") if x], "kind": kind,
-                "text": text, "last_ts": last_ts or ts, "replies": replies or 0}
+                "text": text, "last_ts": last_ts or ts, "replies": replies or 0,
+                "closed_by": closed_by or "", "closed_ts": closed_ts or 0, "token": token}
 
-    def suggestion_topics(self, kind="", search="", card_ids=(), limit=SUGGEST_LIST):
+    def suggestion_topics(self, kind="", search="", card_ids=(), open_only=False, limit=SUGGEST_LIST):
         """Sujets du forum. `search` : mots cherchés dans le texte, l'auteur et les réponses ; `card_ids` : cartes
         dont le nom (traduit, calculé par le jeu) correspond à la recherche."""
-        q = "SELECT id, ts, name, cards, kind, text, last_ts, replies FROM suggestions WHERE 1=1"
+        q = f"SELECT {self.TOPIC_COLS} FROM suggestions WHERE 1=1"
         args = []
+        if open_only:
+            q += " AND closed_by IS NULL"
         if kind in SUGGEST_KINDS:
             q += " AND kind=?"
             args.append(kind)
@@ -248,14 +267,22 @@ class History:
         return [self._topic(r) for r in self.db.execute(q, args).fetchall()]
 
     def suggestion_thread(self, sid):
-        row = self.db.execute("SELECT id, ts, name, cards, kind, text, last_ts, replies FROM suggestions WHERE id=?", (sid,)).fetchone()
+        row = self.db.execute(f"SELECT {self.TOPIC_COLS} FROM suggestions WHERE id=?", (sid,)).fetchone()
         if row is None:
             return None
         topic = self._topic(row)
-        rows = self.db.execute("SELECT ts, name, text FROM suggestion_replies WHERE sugg_id=? ORDER BY id DESC LIMIT ?",
+        rows = self.db.execute("SELECT ts, name, text, event FROM suggestion_replies WHERE sugg_id=? ORDER BY id DESC LIMIT ?",
                                (sid, SUGGEST_REPLIES)).fetchall()
-        topic["messages"] = [{"ts": ts, "name": name, "text": text} for ts, name, text in rows[::-1]]
+        topic["messages"] = [{"ts": ts, "name": name, "text": text, "event": event or ""} for ts, name, text, event in rows[::-1]]
         return topic
+
+    def set_closed(self, sid, ts, token, name, closed):
+        """Clôture ou réouverture d'un sujet, notée aussi dans le fil (sans compter comme une réponse)."""
+        self.db.execute("UPDATE suggestions SET closed_by=?, closed_ts=?, last_ts=? WHERE id=?",
+                        (name if closed else None, ts if closed else None, ts, sid))
+        self.db.execute("INSERT INTO suggestion_replies (sugg_id, ts, token, name, text, event) VALUES (?, ?, ?, ?, '', ?)",
+                        (sid, ts, token, name, "close" if closed else "reopen"))
+        self.db.commit()
 
     def add_reply(self, sid, ts, token, name, text):
         self.db.execute("INSERT INTO suggestion_replies (sugg_id, ts, token, name, text) VALUES (?, ?, ?, ?, ?)",
@@ -704,6 +731,7 @@ class LobbyServer:
         self.ai_tickets = self.load_tickets()
         self._ai_levels, self._ai_levels_at = {}, 0.0   # cache de History.ai_records (classement)
         self.tasks = set()           # validations de parties en cours (attendues avant un redémarrage)
+        self.moderators = self.load_moderators(data_path)
         self.draining = False        # redémarrage demandé : on attend la fin des parties en ligne
         levels = self.history.ai_wins_by_level()
         changed = False
@@ -1067,6 +1095,63 @@ class LobbyServer:
         c.send({"t": "dm_history", "with": names[target], "messages": rows})
 
     # ------------------------------------------------------------ suggestions (forum)
+    def load_moderators(self, data_path):
+        """Comptes modérateurs du forum : moderators.json (liste de pseudos) à côté des données, sinon FORUM_MODERATORS."""
+        path = os.path.join(os.path.dirname(os.path.abspath(data_path)), "moderators.json")
+        names = FORUM_MODERATORS
+        try:
+            with open(path, encoding="utf-8") as fh:
+                data = json.load(fh)
+            if isinstance(data, list):
+                names = [str(n) for n in data]
+        except (OSError, ValueError):
+            pass
+        tokens = set()
+        for n in names:
+            tok = self.store.token_for_name(n)
+            if tok:
+                tokens.add(tok)
+        print("Modérateurs du forum : " + (", ".join(f"{n} ({'trouvé' if self.store.token_for_name(n) else 'compte introuvable'})"
+                                                     for n in names) or "aucun"))
+        return tokens
+
+    def topic_for(self, c, topic):
+        """Sujet tel qu'envoyé à un joueur : sans le jeton de l'auteur, avec ses droits (réouverture)."""
+        out = {k: v for k, v in topic.items() if k != "token"}
+        out["can_reopen"] = c.token == topic.get("token") or c.token in self.moderators
+        return out
+
+    def send_thread(self, sid, actor=None):
+        """Fil mis à jour chez l'auteur de l'action et chez tous ceux qui le lisent (discussion en direct)."""
+        topic = self.history.suggestion_thread(sid)
+        for oc in list(self.online.values()):
+            if oc is actor or getattr(oc, "sugg_view", 0) == sid:
+                oc.send({"t": "sugg_thread", "created": False, "topic": self.topic_for(oc, topic)})
+
+    def on_sugg_lock(self, c, msg):
+        """Clôture d'un sujet : possible pour tout joueur, son nom est enregistré."""
+        topic = self.history.suggestion_thread(_int(msg.get("id"), 0, 2 ** 62))
+        if topic is None:
+            return c.send({"t": "error", "code": "sugg_missing", "msg": c.t("Ce sujet n'existe plus.")})
+        if topic["closed_by"]:
+            return self.send_thread(topic["id"], c)
+        self.history.set_closed(topic["id"], int(time.time()), c.token, c.account["name"], True)
+        print(f"Suggestion #{topic['id']} clôturée par {c.account['name']}")
+        self.send_thread(topic["id"], c)
+
+    def on_sugg_unlock(self, c, msg):
+        """Réouverture : seulement l'auteur du sujet ou un modérateur."""
+        topic = self.history.suggestion_thread(_int(msg.get("id"), 0, 2 ** 62))
+        if topic is None:
+            return c.send({"t": "error", "code": "sugg_missing", "msg": c.t("Ce sujet n'existe plus.")})
+        if not self.topic_for(c, topic)["can_reopen"]:
+            return c.send({"t": "error", "code": "sugg_forbidden",
+                           "msg": c.t("Seuls l'auteur du sujet et les modérateurs peuvent le rouvrir.")})
+        if topic["closed_by"]:
+            self.history.set_closed(topic["id"], int(time.time()), c.token, c.account["name"], False)
+            print(f"Suggestion #{topic['id']} rouverte par {c.account['name']}")
+        self.send_thread(topic["id"], c)
+
     def on_suggest(self, c, msg):
         """Nouveau sujet : cartes visées (obligatoires pour un buff ou un nerf), type, texte."""
         raw = msg.get("cards", [])
@@ -1089,7 +1174,7 @@ class LobbyServer:
         sid = self.history.add_suggestion(now, c.token, c.account["name"], cards, kind, text, c.game_version)
         print(f"Suggestion #{sid} de {c.account['name']} ({kind}) : {', '.join(cards)} : {text}")
         c.sugg_view = sid
-        c.send({"t": "sugg_thread", "created": True, "topic": self.history.suggestion_thread(sid)})
+        c.send({"t": "sugg_thread", "created": True, "topic": self.topic_for(c, self.history.suggestion_thread(sid))})
 
     def on_sugg_list(self, c, msg):
         kind = str(msg.get("kind", ""))
@@ -1097,15 +1182,15 @@ class LobbyServer:
         raw = msg.get("cards", [])
         card_ids = [str(x) for x in (raw if isinstance(raw, list) else [])[:40] if CARD_ID_RE.fullmatch(str(x))]
         c.sugg_view = 0
-        c.send({"t": "sugg_list", "kind": kind, "q": search,
-                "topics": self.history.suggestion_topics(kind, search, card_ids)})
+        topics = self.history.suggestion_topics(kind, search, card_ids, bool(msg.get("open_only", False)))
+        c.send({"t": "sugg_list", "kind": kind, "q": search, "topics": [self.topic_for(c, t) for t in topics]})
 
     def on_sugg_thread(self, c, msg):
         topic = self.history.suggestion_thread(_int(msg.get("id"), 0, 2 ** 62))
         if topic is None:
             return c.send({"t": "error", "code": "sugg_missing", "msg": c.t("Ce sujet n'existe plus.")})
         c.sugg_view = topic["id"]
-        c.send({"t": "sugg_thread", "created": False, "topic": topic})
+        c.send({"t": "sugg_thread", "created": False, "topic": self.topic_for(c, topic)})
 
     def on_sugg_close(self, c, msg):
         c.sugg_view = 0
@@ -1119,14 +1204,14 @@ class LobbyServer:
         if self.history.count_since("suggestion_replies", c.token, now - REPLY_RATE[1]) >= REPLY_RATE[0]:
             return c.send({"t": "error", "code": "rate",
                            "msg": c.t("Vous envoyez trop de messages : patientez quelques secondes.")})
-        if self.history.suggestion_thread(sid) is None:
-            return c.send({"t": "error", "code": "sugg_missing", "msg": c.t("Ce sujet n'existe plus.")})
-        self.history.add_reply(sid, now, c.token, c.account["name"], text)
         topic = self.history.suggestion_thread(sid)
-        # Fil mis à jour chez tous ceux qui le lisent (discussion en direct).
-        for oc in list(self.online.values()):
-            if oc is c or getattr(oc, "sugg_view", 0) == sid:
-                oc.send({"t": "sugg_thread", "created": False, "topic": topic})
+        if topic is None:
+            return c.send({"t": "error", "code": "sugg_missing", "msg": c.t("Ce sujet n'existe plus.")})
+        if topic["closed_by"]:
+            return c.send({"t": "error", "code": "sugg_closed",
+                           "msg": c.t("Ce sujet est clôturé : il n'accepte plus de réponses.")})
+        self.history.add_reply(sid, now, c.token, c.account["name"], text)
+        self.send_thread(sid, c)
 
     # ------------------------------------------------------------ classement
     def ai_levels(self):

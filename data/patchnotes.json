@@ -1,5 +1,21 @@
 [
 	{
+		"version": "2.0.9",
+		"date": "2026-09-29",
+		"title": "Clôture des sujets du forum",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Forum « Suggestions et bugs » : tout joueur peut clôturer un sujet (réglé, doublon...) ; le nom de la personne qui l'a clôturé est affiché, et le fil garde l'historique des clôtures et réouvertures.",
+					"Seuls l'auteur du sujet et les modérateurs peuvent rouvrir un sujet clôturé ; un sujet clôturé n'accepte plus de réponses.",
+					"Case « Masquer les sujets clôturés » dans la liste des sujets.",
+					"Règles du jeu : ajout du changement de main au premier tour et des règles de fatigue et de soins du mode Inferno."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.8",
 		"date": "2026-09-29",
 		"title": "Changement de main et suggestions",

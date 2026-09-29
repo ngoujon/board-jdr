@@ -59,12 +59,30 @@ func _ready() -> void:
 	Lobby.request_sugg_thread(1)
 	await _wait(1.0)
 	_shot("6_fil")
+	sp._lock_btn.pressed.emit()
+	await _wait(0.3)
+	_shot("6b_confirmer_cloture")
+	sp._lock_btn.pressed.emit()
+	await _wait(1.0)
+	_shot("6c_cloture")
+	sp._show_page(0)
+	sp._request_list()
+	await _wait(1.0)
+	_shot("6d_liste_cloture")
 	sp._open_new()
 	sp._kind = "bug"
 	sp._rows["goule"].button_pressed = true
 	sp._update_form()
 	await _wait(0.3)
 	_shot("7_nouveau_sujet")
+	sp.queue_free()
+	var rules := RulesPanel.new()
+	menu.add_child(rules)
+	await _wait(0.5)
+	var rt: RichTextLabel = rules.find_children("*", "RichTextLabel", true, false)[0]
+	rt.scroll_to_line(rt.get_line_count() / 5)
+	await _wait(0.3)
+	_shot("8_regles")
 	get_tree().quit()
 
 

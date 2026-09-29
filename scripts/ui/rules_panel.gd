@@ -18,6 +18,7 @@ Chaque carte coûte le nombre d'énergie indiqué en haut à gauche. L'énergie 
 2. Vous jouez des cartes tant que vous avez de l'énergie. Vous pouvez aussi [b]défausser[/b] gratuitement une carte : glissez-la sur la zone [b]Défausser[/b] en bas à droite.
 3. Vos serviteurs attaquent (une fois chacun).
 4. Vous terminez votre tour (bouton [b]Fin du tour[/b] ou touche [b]Espace[/b]).
+[b]Changer de main[/b] : au début de votre [b]premier tour[/b], avant toute autre action que le choix de pioche, le bouton [b]Changer de main[/b] (au centre de votre plateau, à confirmer d'un second clic) envoie toute votre main au cimetière et vous piochez une nouvelle main d'[b]une carte de moins[/b]. Une seule fois par partie.
 
 [center][b][color=#f2c14e]LES DECKS[/color][/b][/center]
 Vous et votre adversaire jouez [b]exactement le même deck de 100 cartes[/b] (59 cartes différentes, de 1 à 4 exemplaires chacune), mélangé différemment. Main de départ : 3 cartes (4 pour le joueur qui commence en second). Main maximum : 9 cartes (les cartes piochées en trop sont détruites). Plateau maximum : 6 serviteurs.
@@ -44,7 +45,7 @@ D'autres modifient les decks : [b]Tri des archives[/b] retire des cartes de coû
 [center][b][color=#f2c14e]CONTRE L'IA[/color][/b][/center]
 Quatre niveaux : [b]Apprenti[/b], [b]Chevalier[/b], [b]Seigneur de guerre[/b] (anticipe vos réponses) et [b]Challenger[/b] : il joue comme le Seigneur de guerre et commence avec [b]5 PV[/b] et [b]1 carte[/b] de plus. Plus le niveau est élevé, plus les récompenses sont importantes.
 Chaque niveau battu est marqué d'une [b]coche verte[/b] dans le menu et débloque un titre, un contour d'avatar, un dos de cartes et un plateau.
-[b]Inferno[/b] : l'IA la plus forte, avec des [b]PV infinis[/b]. Infligez-lui un maximum de dégâts avant de tomber : votre meilleur score entre dans l'onglet [b]Inferno[/b] du classement.
+[b]Inferno[/b] : l'IA la plus forte, avec des [b]PV infinis[/b]. Infligez-lui un maximum de dégâts avant de tomber : votre meilleur score entre dans l'onglet [b]Inferno[/b] du classement. Quand son deck est vide, elle subit la [b]fatigue[/b] (comptée dans le score) ; chacun de ses [b]soins[/b] fait baisser le score d'autant.
 En partie, la case [b]Fin du tour automatique[/b] (sous la durée) termine votre tour dès que vous n'avez plus rien à jouer. La case [b]Confirmer la fin du tour[/b] demande une confirmation s'il vous reste des actions ; décochée, [b]Fin du tour[/b] termine le tour immédiatement.
 
 [center][b][color=#f2c14e]MULTIJOUEUR[/color][/b][/center]

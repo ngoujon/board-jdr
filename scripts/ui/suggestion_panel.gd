@@ -5,6 +5,7 @@ extends Control
 ## Trois pages : liste des sujets (recherche + filtres, pour vérifier qu'un sujet n'existe pas déjà),
 ## fil de discussion d'un sujet, création d'un sujet. Le serveur enregistre l'auteur de chaque message
 ## (tables « suggestions » et « suggestion_replies », lues avec tools/suggestions.py).
+## Tout joueur peut clôturer un sujet (son nom est affiché) ; seuls l'auteur et les modérateurs peuvent le rouvrir.
 
 const MAX_CARDS := 5
 const MAX_LEN := 600
@@ -22,6 +23,7 @@ var _filter := ""
 var _filter_btns: Array[Button] = []
 var _topic_list: VBoxContainer
 var _search_timer: Timer
+var _hide_closed: CheckBox
 
 # Fil de discussion
 var _topic := {}
@@ -29,6 +31,8 @@ var _thread_head: RichTextLabel
 var _thread_msgs: RichTextLabel
 var _reply: LineEdit
 var _reply_btn: Button
+var _lock_btn: Button     # « Clôturer le sujet » (2 clics) ou « Rouvrir le sujet » (auteur / modérateur)
+var _lock_confirm := false
 
 # Nouveau sujet
 var _selected: Array[String] = []
@@ -148,10 +152,17 @@ func _build_list_page() -> Control:
 		filters.add_child(b)
 		_filter_btns.append(b)
 	var hint := UITheme.label(Loc.t("Avant de créer un sujet, cherchez s'il existe déjà : vous pourrez y répondre."), 14, Color("9a8aa8"), 3)
-	hint.autowrap_mode = TextServer.AUTOWRAP_WORD
-	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hint.custom_minimum_size.x = 300
-	filters.add_child(hint)
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	filters.add_child(spacer)
+	_hide_closed = CheckBox.new()
+	_hide_closed.text = Loc.t("Masquer les sujets clôturés")
+	_hide_closed.focus_mode = Control.FOCUS_NONE
+	_hide_closed.add_theme_font_size_override("font_size", 14)
+	_hide_closed.add_theme_color_override("font_color", Color("e8d6b0"))
+	_hide_closed.toggled.connect(func(_on): _request_list())
+	filters.add_child(_hide_closed)
+	page.add_child(hint)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -176,7 +187,7 @@ func _request_list() -> void:
 			if str(CardDB.get_card(id).get("name", "")).to_lower().contains(q.to_lower()):
 				ids.append(id)
 	_status.text = Loc.t("Chargement...")
-	Lobby.request_sugg_list(_filter, q, ids)
+	Lobby.request_sugg_list(_filter, q, ids, _hide_closed.button_pressed)
 
 
 func _on_list(topics: Array) -> void:
@@ -214,8 +225,12 @@ func _topic_row(t: Dictionary) -> Control:
 		excerpt = excerpt.left(107) + "..."
 	var n := int(t.get("replies", 0))
 	var replies := (Loc.t("%d réponses") if n > 1 else Loc.t("%d réponse")) % n
-	rt.text = "%s %s%s\n[color=#9a8aa8]%s[/color]" % [_tag(str(t.get("kind", "autre"))), _cards_txt(t), _esc(excerpt),
-		Loc.t("par %s · %s · %s") % [_esc(str(t.get("name", "?"))), _date(int(t.get("last_ts", t.get("ts", 0)))), replies]]
+	var closed := str(t.get("closed_by", ""))
+	var meta := Loc.t("par %s · %s · %s") % [_esc(str(t.get("name", "?"))), _date(int(t.get("last_ts", t.get("ts", 0)))), replies]
+	if closed != "":
+		meta += "  [color=#c0b0a0]■ %s[/color]" % (Loc.t("Clôturé par %s") % _esc(closed))
+		b.modulate = Color(0.75, 0.72, 0.7)
+	rt.text = "%s %s%s\n[color=#9a8aa8]%s[/color]" % [_tag(str(t.get("kind", "autre"))), _cards_txt(t), _esc(excerpt), meta]
 	b.add_child(rt)
 	var id := int(t.get("id", 0))
 	b.pressed.connect(func():
@@ -232,12 +247,22 @@ func _build_thread_page() -> Control:
 	var back := UITheme.button(Loc.t("Retour à la liste"), 240)
 	back.custom_minimum_size.y = 34
 	back.add_theme_font_size_override("font_size", 15)
-	back.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	back.pressed.connect(func():
 		_topic = {}
 		_show_page(0)
 		_request_list())
-	page.add_child(back)
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 10)
+	page.add_child(top)
+	top.add_child(back)
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(spacer)
+	_lock_btn = UITheme.button(Loc.t("Clôturer le sujet"), 240)
+	_lock_btn.custom_minimum_size.y = 34
+	_lock_btn.add_theme_font_size_override("font_size", 15)
+	_lock_btn.pressed.connect(_on_lock_pressed)
+	top.add_child(_lock_btn)
 	_thread_head = RichTextLabel.new()
 	_thread_head.bbcode_enabled = true
 	_thread_head.fit_content = true
@@ -278,19 +303,68 @@ func _on_thread(topic: Dictionary, created: bool) -> void:
 	if not created and not _topic.is_empty() and int(_topic.get("id", 0)) != int(topic.get("id", 0)) and _pages[1].visible:
 		return
 	_topic = topic
+	_lock_confirm = false
 	_status.text = Loc.t("Merci ! Votre sujet est publié : les autres joueurs peuvent y répondre.") if created else ""
 	if created:
 		_reset_form()
-	_thread_head.text = "%s %s[color=#9a8aa8]%s[/color]\n%s" % [_tag(str(topic.get("kind", "autre"))), _cards_txt(topic),
+	var closed := str(topic.get("closed_by", ""))
+	var head := "%s %s[color=#9a8aa8]%s[/color]\n%s" % [_tag(str(topic.get("kind", "autre"))), _cards_txt(topic),
 		Loc.t("par %s · %s") % [_esc(str(topic.get("name", "?"))), _date(int(topic.get("ts", 0)))], _esc(str(topic.get("text", "")))]
+	if closed != "":
+		head += "\n[color=#ffb347][b]%s[/b][/color]" % (Loc.t("Sujet clôturé par %s le %s.") % [_esc(closed), _date(int(topic.get("closed_ts", 0)))])
+	_thread_head.text = head
 	var lines: Array[String] = []
 	for m in topic.get("messages", []):
-		lines.append("[color=#f2c14e][b]%s[/b][/color] [color=#9a8aa8]%s[/color]\n%s" % [
-			_esc(str(m.get("name", "?"))), _date(int(m.get("ts", 0))), _esc(str(m.get("text", "")))])
+		match str(m.get("event", "")):
+			"close":
+				lines.append("[color=#ffb347]■ %s[/color] [color=#9a8aa8]%s[/color]" % [
+					Loc.t("%s a clôturé le sujet.") % _esc(str(m.get("name", "?"))), _date(int(m.get("ts", 0)))])
+			"reopen":
+				lines.append("[color=#7fd67f]■ %s[/color] [color=#9a8aa8]%s[/color]" % [
+					Loc.t("%s a rouvert le sujet.") % _esc(str(m.get("name", "?"))), _date(int(m.get("ts", 0)))])
+			_:
+				lines.append("[color=#f2c14e][b]%s[/b][/color] [color=#9a8aa8]%s[/color]\n%s" % [
+					_esc(str(m.get("name", "?"))), _date(int(m.get("ts", 0))), _esc(str(m.get("text", "")))])
 	_thread_msgs.text = "\n\n".join(lines) if not lines.is_empty() \
 		else "[color=#9a8aa8]%s[/color]" % Loc.t("Aucune réponse pour l'instant : donnez votre avis !")
-	_reply_btn.disabled = not Lobby.online
+	_reply_btn.disabled = not Lobby.online or closed != ""
+	_reply.editable = closed == ""
+	_reply.placeholder_text = Loc.t("Sujet clôturé : plus de réponses possibles.") if closed != "" else Loc.t("Votre réponse...")
+	_update_lock_btn()
 	_show_page(1)
+
+
+func _update_lock_btn() -> void:
+	var closed := str(_topic.get("closed_by", "")) != ""
+	if closed:
+		_lock_btn.text = Loc.t("Rouvrir le sujet")
+		_lock_btn.visible = bool(_topic.get("can_reopen", false))
+		_lock_btn.tooltip_text = Loc.t("Seuls l'auteur du sujet et les modérateurs peuvent le rouvrir.")
+	else:
+		_lock_btn.text = Loc.t("Confirmer la clôture ?") if _lock_confirm else Loc.t("Clôturer le sujet")
+		_lock_btn.visible = true
+		_lock_btn.tooltip_text = Loc.t("Tout joueur peut clôturer un sujet (réglé, doublon...) : votre nom sera affiché.")
+	_lock_btn.disabled = not Lobby.online
+
+
+## Clôture : un premier clic demande confirmation (4 s) ; réouverture : directe (auteur ou modérateur).
+func _on_lock_pressed() -> void:
+	if _topic.is_empty() or not Lobby.online:
+		return
+	var id := int(_topic.get("id", 0))
+	if str(_topic.get("closed_by", "")) != "":
+		Lobby.unlock_sugg(id)
+		return
+	if not _lock_confirm:
+		_lock_confirm = true
+		_update_lock_btn()
+		get_tree().create_timer(4.0).timeout.connect(func():
+			if is_instance_valid(self) and _lock_confirm and int(_topic.get("id", 0)) == id:
+				_lock_confirm = false
+				_update_lock_btn())
+		return
+	_lock_confirm = false
+	Lobby.lock_sugg(id)
 
 
 func _send_reply() -> void:
@@ -457,7 +531,7 @@ func _reset_form() -> void:
 
 
 func _on_error(code: String, msg: String) -> void:
-	if code in ["suggest_invalid", "rate", "sugg_missing"]:
+	if code in ["suggest_invalid", "rate", "sugg_missing", "sugg_closed", "sugg_forbidden"]:
 		_status.text = msg
 		_update_form()
 
