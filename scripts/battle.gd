@@ -61,6 +61,8 @@ var _minion_views := {}      # uid -> MinionView
 var _hand_views: Array[CardView] = []
 var _enemy_hand_views: Array[CardView] = []
 var _end_turn_btn: Button
+var _mulligan_btn: Button   # « Changer de main » : premier tour du joueur, avant toute action
+var _mulligan_confirm := false
 const AI_NAMES := ["Apprenti", "Chevalier", "Seigneur de guerre", "Challenger", "Inferno"]
 var _inferno_label: Label        # score du mode Inferno (dégâts infligés au héros aux PV infinis)
 var _auto_end_check: CheckBox    # « Fin du tour automatique »
@@ -246,6 +248,15 @@ func _build_ui() -> void:
 	_end_turn_btn.pressed.connect(_on_end_turn_pressed)
 	_board_root.add_child(_end_turn_btn)
 
+	_mulligan_btn = UITheme.button(Loc.t("Changer de main"), 200)
+	_mulligan_btn.position = Vector2(540, 408)
+	_mulligan_btn.custom_minimum_size = Vector2(200, 52)
+	_mulligan_btn.focus_mode = Control.FOCUS_NONE
+	_mulligan_btn.tooltip_text = Loc.t("Premier tour seulement : toute votre main part au cimetière et vous piochez une nouvelle main d'une carte de moins.")
+	_mulligan_btn.visible = false
+	_mulligan_btn.pressed.connect(_on_mulligan_pressed)
+	_board_root.add_child(_mulligan_btn)
+
 	var key_hint := UITheme.label("", 13, Color("c9b79a"), 3)
 	key_hint.position = Vector2(1040, 382)
 	key_hint.size = Vector2(228, 20)
@@ -311,6 +322,16 @@ func _build_ui() -> void:
 	_build_deck_pile(opp, ENEMY_PILE_POS)
 	_build_discard_zone()
 	_build_play_zone()
+	# Petit bouton « Suggestion / bug » : ouvre le forum des suggestions par-dessus la partie.
+	var sugg_btn := UITheme.button(Loc.t("Suggestion / bug"), 150)
+	sugg_btn.position = Vector2(206, 6)
+	sugg_btn.custom_minimum_size = Vector2(150, 28)
+	sugg_btn.add_theme_font_size_override("font_size", 13)
+	sugg_btn.focus_mode = Control.FOCUS_NONE
+	sugg_btn.tooltip_text = Loc.t("Proposer une amélioration de carte ou signaler un bug, sans quitter la partie.")
+	sugg_btn.visible = mode != "replay"
+	sugg_btn.pressed.connect(_open_suggestions)
+	_board_root.add_child(sugg_btn)
 	_inferno_label = UITheme.label("", 22, Color("ff8a3a"), 4)
 	_inferno_label.position = Vector2(206, 40)
 	_inferno_label.visible = false
@@ -532,6 +553,7 @@ func _start_game() -> void:
 	if mode == "ai" and Settings.ai_difficulty == 4:
 		_bonus = AIPlayer.inferno_bonus(opp)
 		_system_chat(Loc.t("Inferno : %s a des PV infinis. Infligez-lui un maximum de dégâts avant de tomber !") % _pname(opp))
+		_system_chat(Loc.t("Ses dégâts de fatigue (deck vide) comptent dans votre score, mais chacun de ses soins le fait baisser."))
 	elif mode == "ai" and Settings.ai_difficulty >= 3:
 		_bonus = AIPlayer.challenger_bonus(opp)
 		_system_chat(Loc.t("Challenger : %s commence avec %d PV et %d carte de plus.") % [_pname(opp), int(_bonus.health), int(_bonus.cards)])
@@ -797,7 +819,11 @@ func _process_events(events: Array[Dictionary], quick := false) -> void:
 				_on_damage(ev)
 			"heal":
 				_float_text(_entity_pos(ev.uid), "+%d" % ev.amount, UITheme.GREEN)
-				_view_add_hp(ev.uid, ev.amount)
+				if ev.has("inferno"):
+					_update_inferno_score(int(ev.inferno))
+					_float_text(_inferno_label.global_position + Vector2(20, 30), Loc.t("Score -%d") % ev.amount, UITheme.RED, 20)
+				else:
+					_view_add_hp(ev.uid, ev.amount)
 				if int(ev.uid) == GameState.HERO_UIDS[me]:
 					_log_line(Loc.t("Vous récupérez %d PV.") % ev.amount)
 				else:
@@ -854,6 +880,8 @@ func _process_events(events: Array[Dictionary], quick := false) -> void:
 					_minion_views[ev.uid].sync(ae, false)
 			"discard":
 				await _on_discard(ev)
+			"mulligan":
+				await _on_mulligan(ev)
 			"shield_pop":
 				_log_line(Loc.t("Le bouclier divin de %s se brise.") % _entity_name(ev.uid))
 				if _minion_views.has(ev.uid):
@@ -1251,6 +1279,42 @@ func _on_discard(ev: Dictionary) -> void:
 	await _wait(0.25)
 
 
+## Changement de main : la main part au cimetière (les nouvelles cartes arrivent par les événements « draw »).
+func _on_mulligan(ev: Dictionary) -> void:
+	Audio.play_sfx("card_draw", 0.1, -4.0)
+	var n: int = ev.cards.size()
+	if ev.player == me:
+		_log_line(Loc.t("Vous changez de main : %d cartes au cimetière, nouvelle main de %d cartes.") % [n, n - 1])
+		for uid in ev.hand_uids:
+			var cv := _find_hand_view(int(uid))
+			if cv == null:
+				continue
+			_hand_views.erase(cv)
+			if _hovered_hand == cv:
+				_hovered_hand = null
+				_tips.hide_tips()
+			if _selected_hand == cv:
+				_select_hand(null)
+			cv.z_index = 20
+			var tw := cv.create_tween().set_parallel(true)
+			tw.tween_property(cv, "position", cv.position + Vector2(0, 140), 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+			tw.tween_property(cv, "rotation", 0.35, 0.35)
+			tw.tween_property(cv, "modulate", Color(0.4, 0.3, 0.3, 0.0), 0.35)
+			tw.chain().tween_callback(cv.queue_free)
+	else:
+		_log_line(Loc.t("%s change de main : %d cartes au cimetière, nouvelle main de %d cartes.") % [_pname(ev.player), n, n - 1])
+		for b in _enemy_hand_views.duplicate():
+			if int(b.hand_uid) in ev.hand_uids:
+				_enemy_hand_views.erase(b)
+				var tw: Tween = b.create_tween()
+				tw.tween_property(b, "modulate:a", 0.0, 0.25)
+				tw.tween_callback(b.queue_free)
+		_layout_enemy_hand()
+	_float_text(_hero_views[ev.player].center() + Vector2(0, -60), Loc.t("Nouvelle main !"), Color("c9a0ff"), 24)
+	_refresh_heroes()
+	await _wait(0.45)
+
+
 func _enchant_zone_y(player: int) -> float:
 	return 230.0 if player == opp else 384.0
 
@@ -1566,6 +1630,11 @@ func _refresh() -> void:
 	_end_confirm = false   # l'état a changé : la confirmation éventuelle est annulée
 	_end_turn_btn.disabled = not can
 	_style_end_turn_btn(my_turn)
+	var can_mull := can and gs.can_mulligan(me)
+	if not can_mull:
+		_mulligan_confirm = false
+	_mulligan_btn.visible = can_mull
+	_mulligan_btn.text = Loc.t("Confirmer ?") if _mulligan_confirm else Loc.t("Changer de main")
 	_maybe_auto_end_turn()
 	_layout_hand()
 	if _can_choose() and _choice_layer == null:
@@ -1677,11 +1746,14 @@ func _open_choice() -> void:
 	_choice_layer.add_child(choice_tips)
 	# Consulter le plateau (main, serviteurs, héros) avant de choisir.
 	var peek := UITheme.button(Loc.t("Voir le plateau (Tab)"), 240)
-	peek.position = Vector2(22, 336)
+	peek.position = CHOICE_TOGGLE_POS
 	peek.tooltip_text = Loc.t("Masque le choix pour consulter votre main et le plateau (touche Tab ou V).")
 	peek.pressed.connect(_peek_board)
 	_choice_layer.add_child(peek)
 	Audio.play_sfx("card_draw")
+
+
+const CHOICE_TOGGLE_POS := Vector2(22, 336)   # « Voir le plateau » / « Revenir au choix » : même place
 
 
 ## Masque temporairement le choix de pioche pour regarder la main et le plateau.
@@ -1704,10 +1776,11 @@ func _peek_board() -> void:
 	var info := UITheme.label(Loc.t("Consultation du plateau : choisissez ensuite votre carte."), 15, Color("e8d9b8"))
 	info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(info)
-	var back := UITheme.button(Loc.t("Revenir au choix des cartes (Tab)"), 340)
-	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	# Même emplacement que « Voir le plateau » : on alterne sans bouger la souris.
+	var back := UITheme.button(Loc.t("Revenir au choix (Tab)"), 240)
+	back.position = CHOICE_TOGGLE_POS
 	back.pressed.connect(_back_to_choice)
-	box.add_child(back)
+	_choice_return.add_child(back)
 	var tw := back.create_tween().set_loops()
 	tw.tween_property(back, "modulate", Color(1.3, 1.2, 0.8), 0.6)
 	tw.tween_property(back, "modulate", Color.WHITE, 0.6)
@@ -1943,6 +2016,36 @@ func _set_targetable(uid: int, on: bool) -> void:
 		_enchant_views[uid].set_targetable(on)
 
 
+## Forum des suggestions par-dessus la partie (au-dessus du choix de pioche).
+func _open_suggestions() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 90
+	add_child(layer)
+	var panel := SuggestionPanel.new()
+	panel.tree_exited.connect(layer.queue_free)
+	layer.add_child(panel)
+
+
+## « Changer de main » : un premier appui demande confirmation (4 s), le second envoie l'action.
+func _on_mulligan_pressed() -> void:
+	if not _can_act() or not gs.can_mulligan(me):
+		return
+	_cancel_targeting()
+	if not _mulligan_confirm:
+		_mulligan_confirm = true
+		_mulligan_btn.text = Loc.t("Confirmer ?")
+		Audio.play_sfx("click", 0.1)
+		var turn := gs.turn_number
+		get_tree().create_timer(4.0).timeout.connect(func():
+			if _mulligan_confirm and gs.turn_number == turn:
+				_mulligan_confirm = false
+				_mulligan_btn.text = Loc.t("Changer de main"))
+		return
+	_mulligan_confirm = false
+	_mulligan_btn.visible = false
+	_submit({"type": "mulligan"})
+
+
 func _on_end_turn_pressed() -> void:
 	if not _can_act():
 		return
@@ -1965,6 +2068,8 @@ func _on_end_turn_pressed() -> void:
 func _maybe_auto_end_turn() -> void:
 	if not Settings.auto_end_turn or mode == "replay" or _auto_end_pending or not _can_act() or _any_action:
 		return
+	if gs.can_mulligan(me):
+		return   # premier tour : on laisse au joueur le temps de changer de main
 	if Settings.autoplay or _dragging_card != null or not _targeting.is_empty():
 		return
 	_auto_end_pending = true
@@ -2002,7 +2107,8 @@ func _input(event: InputEvent) -> void:
 		return
 	# Tab : bascule entre le choix de pioche et le plateau (avant la navigation au clavier de Godot).
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_TAB \
-			and _choice_layer and is_instance_valid(_choice_layer) and not (get_viewport().gui_get_focus_owner() is LineEdit):
+			and _choice_layer and is_instance_valid(_choice_layer) \
+			and not (get_viewport().gui_get_focus_owner() is LineEdit or get_viewport().gui_get_focus_owner() is TextEdit):
 		if _choice_layer.visible:
 			_peek_board()
 		else:

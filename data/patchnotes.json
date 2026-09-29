@@ -1,5 +1,28 @@
 [
 	{
+		"version": "2.0.8",
+		"date": "2026-09-29",
+		"title": "Changement de main et suggestions",
+		"sections": [
+			[
+				"Nouveautés",
+				[
+					"Changement de main : au début de votre premier tour, si votre main ne vous plaît pas, le bouton « Changer de main » l'envoie au cimetière et vous piochez une nouvelle main d'une carte de moins.",
+					"Forum « Suggestions et bugs » (menu d'accueil, et bouton « Suggestion / bug » en haut du plateau pendant une partie) : proposez un buff ou un nerf de cartes, signalez un bug ou partagez une idée ; chaque sujet a son fil de discussion où tous les joueurs peuvent répondre.",
+					"Barre de recherche et filtres (buffs, nerfs, bugs, autres) dans le forum pour vérifier si un sujet existe déjà.",
+					"Pendant le choix de pioche, « Voir le plateau » et « Revenir au choix » sont au même endroit : plus besoin de déplacer la souris."
+				]
+			],
+			[
+				"Inferno",
+				[
+					"Quand son deck est vide, l'IA subit elle aussi la fatigue : ces dégâts comptent dans votre score.",
+					"Chaque soin de l'IA fait baisser votre score d'autant (jamais sous 0)."
+				]
+			]
+		]
+	},
+	{
 		"version": "2.0.7",
 		"date": "2026-09-28",
 		"title": "Accueil des nouveaux joueurs",

@@ -49,6 +49,15 @@ CARD_ID_RE = re.compile(r"^[a-z0-9_]{1,32}$")
 DM_MAX_LEN = 300          # longueur maximale d'un message privé
 DM_HISTORY = 200          # messages renvoyés à l'ouverture d'une conversation
 DM_RATE = (8, 10.0)       # au plus 8 messages par tranche de 10 s
+SUGGEST_RATE = (10, 3600)  # sujets de suggestion : au plus 10 par heure et par compte
+REPLY_RATE = (30, 600)     # réponses dans les fils : au plus 30 par tranche de 10 min
+SUGGEST_MAX_LEN = 600
+REPLY_MAX_LEN = 400
+SUGGEST_MAX_CARDS = 5
+SUGGEST_KINDS = ("buff", "nerf", "bug", "autre")
+SUGGEST_LIST = 150         # sujets renvoyés par la liste (activité la plus récente d'abord)
+SUGGEST_REPLIES = 300      # réponses renvoyées pour un fil
+CARD_ID_RE = re.compile(r"[a-z0-9_]{1,32}")
 CTRL_RE = re.compile(r"[\x00-\x1f\x7f]")
 UPDATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "updates")
 TICKET_TTL = 4 * 3600      # une partie enregistrée doit être terminée dans les 4 h
@@ -174,12 +183,84 @@ class History:
             won INTEGER NOT NULL)""")
         self.db.execute("CREATE INDEX IF NOT EXISTS idx_mc_match ON match_cards(match_id)")
         self.db.execute("CREATE INDEX IF NOT EXISTS idx_mc_token ON match_cards(token)")
+        # 2.0.8 : forum des suggestions (équilibrage des cartes, bugs, idées) : un sujet par suggestion,
+        # les joueurs y répondent dans un fil de discussion public.
+        self.db.execute("""CREATE TABLE IF NOT EXISTS suggestions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts INTEGER NOT NULL,
+            token TEXT NOT NULL, name TEXT NOT NULL,   -- auteur (nom au moment de l'envoi)
+            cards TEXT NOT NULL,                       -- identifiants des cartes, séparés par des virgules
+            kind TEXT NOT NULL,                        -- 'buff' | 'nerf' | 'bug' | 'autre'
+            text TEXT NOT NULL,
+            game_version TEXT,
+            last_ts INTEGER, replies INTEGER DEFAULT 0)""")
+        self.db.execute("CREATE INDEX IF NOT EXISTS idx_sugg_token ON suggestions(token, ts)")
+        self.db.execute("""CREATE TABLE IF NOT EXISTS suggestion_replies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sugg_id INTEGER NOT NULL,
+            ts INTEGER NOT NULL,
+            token TEXT NOT NULL, name TEXT NOT NULL,
+            text TEXT NOT NULL)""")
+        self.db.execute("CREATE INDEX IF NOT EXISTS idx_reply_sugg ON suggestion_replies(sugg_id, id)")
+        self.db.execute("CREATE INDEX IF NOT EXISTS idx_reply_token ON suggestion_replies(token, ts)")
         self.db.commit()
         self._stats_cache = {}
 
     def add_message(self, ts, from_token, to_token, text):
         self.db.execute("INSERT INTO messages (ts, from_token, to_token, text) VALUES (?, ?, ?, ?)",
                         (ts, from_token, to_token, text))
+        self.db.commit()
+
+    def add_suggestion(self, ts, token, name, cards, kind, text, version):
+        cur = self.db.execute("INSERT INTO suggestions (ts, token, name, cards, kind, text, game_version, last_ts, replies) "
+                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)", (ts, token, name, ",".join(cards), kind, text, version, ts))
+        self.db.commit()
+        return cur.lastrowid
+
+    def count_since(self, table, token, since):
+        return self.db.execute(f"SELECT COUNT(*) FROM {table} WHERE token=? AND ts>=?", (token, since)).fetchone()[0]
+
+    @staticmethod
+    def _topic(row):
+        sid, ts, name, cards, kind, text, last_ts, replies = row
+        return {"id": sid, "ts": ts, "name": name, "cards": [x for x in cards.split(",") if x], "kind": kind,
+                "text": text, "last_ts": last_ts or ts, "replies": replies or 0}
+
+    def suggestion_topics(self, kind="", search="", card_ids=(), limit=SUGGEST_LIST):
+        """Sujets du forum. `search` : mots cherchés dans le texte, l'auteur et les réponses ; `card_ids` : cartes
+        dont le nom (traduit, calculé par le jeu) correspond à la recherche."""
+        q = "SELECT id, ts, name, cards, kind, text, last_ts, replies FROM suggestions WHERE 1=1"
+        args = []
+        if kind in SUGGEST_KINDS:
+            q += " AND kind=?"
+            args.append(kind)
+        if search:
+            like = "%" + search.replace("\\", "").replace("%", "") + "%"
+            ors = ["text LIKE ?", "name LIKE ?",
+                   "id IN (SELECT sugg_id FROM suggestion_replies WHERE text LIKE ?)"]
+            args += [like, like, like]
+            for cid in card_ids:
+                ors.append("(',' || cards || ',') LIKE ?")
+                args.append(f"%,{cid},%")
+            q += " AND (" + " OR ".join(ors) + ")"
+        q += " ORDER BY COALESCE(last_ts, ts) DESC, id DESC LIMIT ?"
+        args.append(limit)
+        return [self._topic(r) for r in self.db.execute(q, args).fetchall()]
+
+    def suggestion_thread(self, sid):
+        row = self.db.execute("SELECT id, ts, name, cards, kind, text, last_ts, replies FROM suggestions WHERE id=?", (sid,)).fetchone()
+        if row is None:
+            return None
+        topic = self._topic(row)
+        rows = self.db.execute("SELECT ts, name, text FROM suggestion_replies WHERE sugg_id=? ORDER BY id DESC LIMIT ?",
+                               (sid, SUGGEST_REPLIES)).fetchall()
+        topic["messages"] = [{"ts": ts, "name": name, "text": text} for ts, name, text in rows[::-1]]
+        return topic
+
+    def add_reply(self, sid, ts, token, name, text):
+        self.db.execute("INSERT INTO suggestion_replies (sugg_id, ts, token, name, text) VALUES (?, ?, ?, ?, ?)",
+                        (sid, ts, token, name, text))
+        self.db.execute("UPDATE suggestions SET last_ts=?, replies=COALESCE(replies, 0)+1 WHERE id=?", (ts, sid))
         self.db.commit()
 
     def conversation(self, a, b, limit=DM_HISTORY):
@@ -460,6 +541,7 @@ class Client:
         self.status = "online"  # online | lobby | in_game
         self.room = None
         self.dm_times = []   # horodatages des derniers messages privés (limite de débit)
+        self.sugg_view = 0   # sujet de suggestion ouvert (réponses reçues en direct)
         peer = writer.get_extra_info("peername") if writer else None
         self.ip = peer[0] if peer else "?"
         self.rate_tokens = MSG_RATE[1]
@@ -983,6 +1065,68 @@ class LobbyServer:
         rows = [{"from": names.get(f, "?"), "text": text, "ts": ts}
                 for ts, f, text in self.history.conversation(c.token, target)]
         c.send({"t": "dm_history", "with": names[target], "messages": rows})
+
+    # ------------------------------------------------------------ suggestions (forum)
+    def on_suggest(self, c, msg):
+        """Nouveau sujet : cartes visées (obligatoires pour un buff ou un nerf), type, texte."""
+        raw = msg.get("cards", [])
+        cards = []
+        for x in raw if isinstance(raw, list) else []:
+            x = str(x)
+            if CARD_ID_RE.fullmatch(x) and x not in cards:
+                cards.append(x)
+        cards = cards[:SUGGEST_MAX_CARDS]
+        kind = msg.get("kind") if msg.get("kind") in SUGGEST_KINDS else "autre"
+        text = CTRL_RE.sub(" ", str(msg.get("text", ""))).strip()[:SUGGEST_MAX_LEN]
+        if not text or (kind in ("buff", "nerf") and not cards):
+            return c.send({"t": "error", "code": "suggest_invalid",
+                           "msg": c.t("Choisissez au moins une carte et décrivez votre proposition.") if kind in ("buff", "nerf")
+                           else c.t("Décrivez votre suggestion.")})
+        now = int(time.time())
+        if self.history.count_since("suggestions", c.token, now - SUGGEST_RATE[1]) >= SUGGEST_RATE[0]:
+            return c.send({"t": "error", "code": "rate",
+                           "msg": c.t("Trop de suggestions envoyées : réessayez dans une heure.")})
+        sid = self.history.add_suggestion(now, c.token, c.account["name"], cards, kind, text, c.game_version)
+        print(f"Suggestion #{sid} de {c.account['name']} ({kind}) : {', '.join(cards)} : {text}")
+        c.sugg_view = sid
+        c.send({"t": "sugg_thread", "created": True, "topic": self.history.suggestion_thread(sid)})
+
+    def on_sugg_list(self, c, msg):
+        kind = str(msg.get("kind", ""))
+        search = CTRL_RE.sub(" ", str(msg.get("q", ""))).strip()[:60]
+        raw = msg.get("cards", [])
+        card_ids = [str(x) for x in (raw if isinstance(raw, list) else [])[:40] if CARD_ID_RE.fullmatch(str(x))]
+        c.sugg_view = 0
+        c.send({"t": "sugg_list", "kind": kind, "q": search,
+                "topics": self.history.suggestion_topics(kind, search, card_ids)})
+
+    def on_sugg_thread(self, c, msg):
+        topic = self.history.suggestion_thread(_int(msg.get("id"), 0, 2 ** 62))
+        if topic is None:
+            return c.send({"t": "error", "code": "sugg_missing", "msg": c.t("Ce sujet n'existe plus.")})
+        c.sugg_view = topic["id"]
+        c.send({"t": "sugg_thread", "created": False, "topic": topic})
+
+    def on_sugg_close(self, c, msg):
+        c.sugg_view = 0
+
+    def on_sugg_reply(self, c, msg):
+        sid = _int(msg.get("id"), 0, 2 ** 62)
+        text = CTRL_RE.sub(" ", str(msg.get("text", ""))).strip()[:REPLY_MAX_LEN]
+        if not text:
+            return
+        now = int(time.time())
+        if self.history.count_since("suggestion_replies", c.token, now - REPLY_RATE[1]) >= REPLY_RATE[0]:
+            return c.send({"t": "error", "code": "rate",
+                           "msg": c.t("Vous envoyez trop de messages : patientez quelques secondes.")})
+        if self.history.suggestion_thread(sid) is None:
+            return c.send({"t": "error", "code": "sugg_missing", "msg": c.t("Ce sujet n'existe plus.")})
+        self.history.add_reply(sid, now, c.token, c.account["name"], text)
+        topic = self.history.suggestion_thread(sid)
+        # Fil mis à jour chez tous ceux qui le lisent (discussion en direct).
+        for oc in list(self.online.values()):
+            if oc is c or getattr(oc, "sugg_view", 0) == sid:
+                oc.send({"t": "sugg_thread", "created": False, "topic": topic})
 
     # ------------------------------------------------------------ classement
     def ai_levels(self):

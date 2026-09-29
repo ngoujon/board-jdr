@@ -22,6 +22,8 @@ signal gold_changed
 signal global_stats_received(data: Dictionary)
 signal players_found(query: String, rows: Array)
 signal player_profile_received(data: Dictionary)
+signal sugg_list_received(topics: Array)                    # forum des suggestions : liste des sujets
+signal sugg_thread_received(topic: Dictionary, created: bool)   # un sujet et ses réponses (created : on vient de le créer)
 signal pass_claimed(data: Dictionary)   # récompenses du passe récupérées : {levels, po, gold}
 signal cosmetics_unlocked(items: Array)   # nouveaux titres / avatars / contours / dos / plateaux   # liste publique des parties (écran Multijoueur)
 
@@ -253,6 +255,10 @@ func _handle(msg: Dictionary) -> void:
 				Settings.auto_ai = -1
 				Net.close()
 				get_tree().change_scene_to_file("res://scenes/battle.tscn")
+		"sugg_list":
+			sugg_list_received.emit(msg.get("topics", []))
+		"sugg_thread":
+			sugg_thread_received.emit(msg.get("topic", {}), bool(msg.get("created", false)))
 		"profile":
 			profile = msg.profile
 			_cache_cosmetics()
@@ -747,6 +753,30 @@ func start_replay(data: Dictionary) -> void:
 
 func send_dm(to_name: String, text: String) -> void:
 	send({"t": "dm", "to": to_name, "text": text.strip_edges().left(300)})
+
+
+# ------------------------------------------------------------------ forum des suggestions
+
+## Nouveau sujet : cartes visées (5 au plus), "buff" | "nerf" | "bug" | "autre", texte libre.
+func send_suggestion(cards: Array, kind: String, text: String) -> void:
+	send({"t": "suggest", "cards": cards.slice(0, 5), "kind": kind, "text": text.strip_edges().left(600)})
+
+
+## Liste des sujets : filtre par type ("" = tous) et recherche (texte, auteur, réponses et cartes `card_ids`).
+func request_sugg_list(kind := "", query := "", card_ids: Array = []) -> void:
+	send({"t": "sugg_list", "kind": kind, "q": query.strip_edges().left(60), "cards": card_ids.slice(0, 40)})
+
+
+func request_sugg_thread(id: int) -> void:
+	send({"t": "sugg_thread", "id": id})
+
+
+func reply_sugg(id: int, text: String) -> void:
+	send({"t": "sugg_reply", "id": id, "text": text.strip_edges().left(400)})
+
+
+func close_sugg() -> void:
+	send({"t": "sugg_close"})
 
 
 func request_dm_history(with_name: String) -> void:

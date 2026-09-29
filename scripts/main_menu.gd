@@ -68,6 +68,7 @@ func _ready() -> void:
 	_add_btn(_buttons, Loc.t("Boutique"), func(): add_child(ShopPanel.new()))
 	_friends_btn = _add_btn(_buttons, Loc.t("Amis"), func(): add_child(FriendsPanel.new()))
 	_add_btn(_buttons, Loc.t("Règles du jeu"), func(): add_child(RulesPanel.new()))
+	_add_btn(_buttons, Loc.t("Suggestions"), func(): add_child(SuggestionPanel.new()))
 
 	# Icônes en bas à gauche : quitter le jeu (déconnexion) et paramètres (engrenage).
 	var quit_icon := IconButton.new("logout", Loc.t("Quitter le jeu"))
